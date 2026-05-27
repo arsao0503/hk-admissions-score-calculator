@@ -1,0 +1,48 @@
+# HK Admissions Score Calculator
+
+Static first version of a Hong Kong admissions score calculator.
+
+## What It Does
+
+- Converts HKDSE grades using `5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0`.
+- Calculates Best 5, Best 6, 4C + 2X, and a CSPE comparison score.
+- Checks common baseline eligibility patterns for sub-degree and local bachelor's routes.
+- Filters CSPE / iPASS 2025/26 programmes by award level, area, keyword, and score distance.
+- Links back to official programme and score sources when available.
+
+## Data Build
+
+Run from the project root:
+
+```bash
+python3 scripts/build_app_data.py
+```
+
+The script reads:
+
+- `data/processed/cspe_score_rows_raw_2025_26.csv`
+- `outputs/admissions_master_working.csv`
+
+and writes:
+
+- `app/assets/app-data.js`
+
+## Local Preview
+
+Because programme data is embedded as JavaScript, the app can be opened directly:
+
+```bash
+open app/index.html
+```
+
+For a server preview:
+
+```bash
+python3 -m http.server 5173 -d app
+```
+
+Then open `http://localhost:5173`.
+
+## Caveats
+
+This is a shortlist calculator, not a final admission decision tool. The current dataset is strongest for CSPE 2025/26 average scores. JUPAS score rows, institution-specific weighting, interviews, portfolios, and specific subject requirements should be added before treating it as a public production calculator.

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HK Admissions Score Calculator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="header-copy">
+        <p class="eyebrow">Hong Kong Admissions Score</p>
+        <h1>DSE 收生分數計算機</h1>
+        <p class="lede">輸入預計或實際 HKDSE 成績，即時換算分數、檢查基本門檻，並用 CSPE 2025/26 官方收生成績資料篩選可能選項。</p>
+      </div>
+      <div class="score-card" aria-live="polite">
+        <span class="label">Best 5</span>
+        <strong id="heroBest5">0</strong>
+        <span id="heroBand">未輸入成績</span>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="calculator-panel" aria-labelledby="calculatorTitle">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Calculator</p>
+            <h2 id="calculatorTitle">輸入 DSE 成績</h2>
+          </div>
+          <button class="ghost-button" id="resetScores" type="button">重設</button>
+        </div>
+
+        <div class="profile-tools" aria-label="Saved score profiles">
+          <label>
+            成績組合
+            <select id="profileSelect">
+              <option value="">未儲存</option>
+            </select>
+          </label>
+          <input id="profileName" type="text" placeholder="例如 Mock 1 / Predicted" />
+          <button class="primary-button" id="saveProfile" type="button">儲存</button>
+          <button class="ghost-button" id="deleteProfile" type="button">刪除</button>
+        </div>
+
+        <div class="subjects-grid" id="subjectsGrid"></div>
+
+        <div class="score-summary">
+          <article>
+            <span>Best 5</span>
+            <strong id="best5">0</strong>
+          </article>
+          <article>
+            <span>Best 6</span>
+            <strong id="best6">0</strong>
+          </article>
+          <article>
+            <span>4C + 2X</span>
+            <strong id="fourCoreTwoElectives">0</strong>
+          </article>
+          <article>
+            <span>CSPE 對照分</span>
+            <strong id="cspeScore">0</strong>
+          </article>
+        </div>
+
+        <div class="eligibility-box" id="eligibilityBox">
+          <strong>基本門檻檢查</strong>
+          <p>輸入成績後顯示。此檢查只作初步參考，實際要求以院校及課程官方資料為準。</p>
+        </div>
+      </section>
+
+      <section class="results-panel" aria-labelledby="resultsTitle">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Programme Finder</p>
+            <h2 id="resultsTitle">課程配對</h2>
+          </div>
+          <div class="result-count"><span id="resultCount">0</span> 個結果</div>
+        </div>
+
+        <div class="filters">
+          <label>
+            搜尋
+            <input id="searchInput" type="search" placeholder="課程 / 院校 / 範疇" />
+          </label>
+          <label>
+            課程級別
+            <select id="awardFilter">
+              <option value="">全部</option>
+            </select>
+          </label>
+          <label>
+            學科範疇
+            <select id="areaFilter">
+              <option value="">全部</option>
+            </select>
+          </label>
+          <label>
+            分數策略
+            <select id="matchMode">
+              <option value="realistic">穩陣 + 邊緣</option>
+              <option value="safe">只看較穩陣</option>
+              <option value="reach">包括挑戰</option>
+              <option value="all">不按分數篩選</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot safe"></i>較穩陣</span>
+          <span><i class="dot match"></i>接近平均</span>
+          <span><i class="dot reach"></i>挑戰</span>
+          <span><i class="dot unknown"></i>只供參考</span>
+        </div>
+
+        <div id="resultsList" class="results-list"></div>
+      </section>
+    </main>
+
+    <section class="notes-section">
+      <h2>使用說明</h2>
+      <div class="notes-grid">
+        <p>計分公式：5** = 7、5* = 6、5 = 5、4 = 4、3 = 3、2 = 2、1 = 1、U = 0。Best 5 / Best 6 會自動取最高分科目。</p>
+        <p>現階段前端資料來自 CSPE / iPASS 2025/26 admission score rows，多數為 Average Score。JUPAS bachelor score、院校加權、面試及作品集因素需要另行接入。</p>
+        <p>不同院校和課程可能有不同計分、指定科目或非分數收生因素。此工具用於 shortlist 和初步估算，不應代替官方要求。</p>
+      </div>
+    </section>
+
+    <script src="./assets/app-data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
