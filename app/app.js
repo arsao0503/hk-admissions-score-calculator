@@ -58,8 +58,8 @@ const state = {
     Array.from({ length: defaultElectiveCount }, (_, index) => [`x${index + 1}`, ""]),
   ),
   search: "",
-  award: "",
-  category: "",
+  awards: [],
+  categories: [],
   institutions: [],
   matchMode: "realistic",
   activeProfileId: "",
@@ -359,23 +359,69 @@ function modeAllows(status) {
   return status === "safe" || status === "match";
 }
 
-function populateFilters() {
-  const awardPriority = ["Bachelor's Degree", "Associate Degree", "Higher Diploma", "Not specified"];
-  const awards = [...new Set(data.programmes.map((p) => p.awardLevel).filter(Boolean))].sort(
-    (a, b) => awardPriority.indexOf(a) - awardPriority.indexOf(b) || a.localeCompare(b),
-  );
-  const categories = [...new Set(data.programmes.map((p) => p.detailedCategory || p.areaOfStudy).filter(Boolean))].sort();
-  const institutions = [...new Set(data.programmes.map((p) => p.institution).filter(Boolean))].sort();
+const awardPriority = ["Bachelor's Degree", "Associate Degree", "Higher Diploma", "Not specified"];
 
-  els.awardFilter.innerHTML += awards
-    .map((award) => `<option value="${escapeHtml(award)}">${escapeHtml(award)}</option>`)
+function awardSort(a, b) {
+  const aIndex = awardPriority.indexOf(a);
+  const bIndex = awardPriority.indexOf(b);
+  return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex) || a.localeCompare(b);
+}
+
+function programmeCategory(programme) {
+  return programme.detailedCategory || programme.areaOfStudy || "";
+}
+
+function selectedValues(select) {
+  return Array.from(select.selectedOptions).map((option) => option.value);
+}
+
+function renderMultiSelectOptions(select, options, selectedValues) {
+  const availableValues = new Set(options);
+  const validSelected = selectedValues.filter((value) => availableValues.has(value));
+  const selectedSet = new Set(validSelected);
+  select.innerHTML = options
+    .map(
+      (option) =>
+        `<option value="${escapeHtml(option)}" ${selectedSet.has(option) ? "selected" : ""}>${escapeHtml(option)}</option>`,
+    )
     .join("");
-  els.categoryFilter.innerHTML += categories
-    .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
-    .join("");
-  els.institutionFilter.innerHTML = institutions
-    .map((institution) => `<option value="${escapeHtml(institution)}">${escapeHtml(institution)}</option>`)
-    .join("");
+  return validSelected;
+}
+
+function programmePassesFilters(programme, match, excludeFilter = "") {
+  const query = state.search.trim().toLowerCase();
+  const searchable =
+    `${programme.title} ${programme.institution} ${programme.areaOfStudy} ${programme.detailedCategory} ${programme.selectionFormula} ${programme.subjectWeighting}`.toLowerCase();
+
+  return (
+    (!query || searchable.includes(query)) &&
+    (excludeFilter === "awards" || !state.awards.length || state.awards.includes(programme.awardLevel)) &&
+    (excludeFilter === "categories" || !state.categories.length || state.categories.includes(programmeCategory(programme))) &&
+    (excludeFilter === "institutions" ||
+      !state.institutions.length ||
+      state.institutions.includes(programme.institution)) &&
+    modeAllows(match.status)
+  );
+}
+
+function filteredRows(userScore, excludeFilter = "") {
+  return data.programmes
+    .map((programme) => ({ programme, match: matchProgramme(programme, userScore) }))
+    .filter(({ programme, match }) => programmePassesFilters(programme, match, excludeFilter));
+}
+
+function uniqueOptions(rows, getter, sorter = (a, b) => a.localeCompare(b)) {
+  return [...new Set(rows.map(({ programme }) => getter(programme)).filter(Boolean))].sort(sorter);
+}
+
+function updateFilterOptions(userScore) {
+  const awardOptions = uniqueOptions(filteredRows(userScore, "awards"), (programme) => programme.awardLevel, awardSort);
+  const categoryOptions = uniqueOptions(filteredRows(userScore, "categories"), programmeCategory);
+  const institutionOptions = uniqueOptions(filteredRows(userScore, "institutions"), (programme) => programme.institution);
+
+  state.awards = renderMultiSelectOptions(els.awardFilter, awardOptions, state.awards);
+  state.categories = renderMultiSelectOptions(els.categoryFilter, categoryOptions, state.categories);
+  state.institutions = renderMultiSelectOptions(els.institutionFilter, institutionOptions, state.institutions);
 }
 
 function loadProfiles() {
@@ -424,21 +470,9 @@ function renderEligibility() {
 
 function renderResults() {
   const userScore = topTotal(5);
-  const query = state.search.trim().toLowerCase();
+  updateFilterOptions(userScore);
 
-  const rows = data.programmes
-    .map((programme) => ({ programme, match: matchProgramme(programme, userScore) }))
-    .filter(({ programme, match }) => {
-      const searchable =
-        `${programme.title} ${programme.institution} ${programme.areaOfStudy} ${programme.detailedCategory} ${programme.selectionFormula} ${programme.subjectWeighting}`.toLowerCase();
-      return (
-        (!query || searchable.includes(query)) &&
-        (!state.award || programme.awardLevel === state.award) &&
-        (!state.category || (programme.detailedCategory || programme.areaOfStudy) === state.category) &&
-        (!state.institutions.length || state.institutions.includes(programme.institution)) &&
-        modeAllows(match.status)
-      );
-    })
+  const rows = filteredRows(userScore)
     .sort((a, b) => {
       const awardDelta = awardRank(a.programme.awardLevel) - awardRank(b.programme.awardLevel);
       if (awardDelta) return awardDelta;
@@ -595,16 +629,16 @@ function bindControls() {
     state.search = event.target.value;
     renderResults();
   });
-  els.awardFilter.addEventListener("change", (event) => {
-    state.award = event.target.value;
+  els.awardFilter.addEventListener("change", () => {
+    state.awards = selectedValues(els.awardFilter);
     renderResults();
   });
-  els.categoryFilter.addEventListener("change", (event) => {
-    state.category = event.target.value;
+  els.categoryFilter.addEventListener("change", () => {
+    state.categories = selectedValues(els.categoryFilter);
     renderResults();
   });
   els.institutionFilter.addEventListener("change", () => {
-    state.institutions = Array.from(els.institutionFilter.selectedOptions).map((option) => option.value);
+    state.institutions = selectedValues(els.institutionFilter);
     renderResults();
   });
   els.matchMode.addEventListener("change", (event) => {
@@ -660,7 +694,6 @@ function bindControls() {
 }
 
 renderSubjects();
-populateFilters();
 renderProfiles();
 bindControls();
 update();
