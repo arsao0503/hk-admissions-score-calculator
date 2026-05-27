@@ -527,7 +527,7 @@ function scoreStatsTable(programme) {
     ["Median", stats.median],
     ["Mean", stats.mean],
     ["Upper Quartile", stats.upperQuartile],
-    ["Highest", stats.highest],
+    ["Highest / Highest attainable", stats.highest],
     ["Lowest / Minimum admitted", stats.lowestOrMinimumAdmitted],
   ];
 

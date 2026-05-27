@@ -193,7 +193,7 @@ def main() -> None:
             "median": score_stat(row, "median"),
             "mean": score_stat(row, "mean"),
             "upperQuartile": score_stat(row, "upper_quartile"),
-            "highest": {"text": "", "low": None, "high": None},
+            "highest": score_stat(row, "highest_attainable"),
             "lowestOrMinimumAdmitted": {"text": "", "low": None, "high": None},
             "minOrOtherScore": {"text": "", "low": None, "high": None},
         }

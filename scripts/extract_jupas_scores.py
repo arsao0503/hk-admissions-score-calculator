@@ -30,6 +30,7 @@ HEADER = [
     "median",
     "lower_quartile",
     "mean",
+    "highest_attainable",
     "reference_score",
     "raw_score_text",
     "source_url",
@@ -115,6 +116,7 @@ def row_dict(
     median: str = "",
     lower: str = "",
     mean: str = "",
+    highest: str = "",
     page: int = 0,
     section: str = "",
 ) -> dict[str, str] | None:
@@ -135,9 +137,10 @@ def row_dict(
         "median": number(median),
         "lower_quartile": number(lower),
         "mean": number(mean),
+        "highest_attainable": number(highest),
         "reference_score": number(reference),
         "raw_score_text": clean(
-            f"JUPAS {code} | {title} | Upper Quartile: {upper or 'N/A'} | Median: {median or 'N/A'} | Lower Quartile: {lower or 'N/A'} | Mean: {mean or 'N/A'}"
+            f"JUPAS {code} | {title} | Upper Quartile: {upper or 'N/A'} | Median: {median or 'N/A'} | Lower Quartile: {lower or 'N/A'} | Mean: {mean or 'N/A'} | Highest Attainable: {highest or 'N/A'}"
         ),
         "source_url": SOURCE_URL,
         "source_page": str(page),
@@ -214,7 +217,9 @@ def extract_cuhk(table: list[list[object]], institution: str, page: int, rows: l
         if current and target in {"UQ", "M", "LQ"}:
             score = number(cell(r, 13))
             if target == "UQ":
-                current["upper_quartile"] = score
+                # CUHK UQ rows often precede the programme-code row in the PDF table.
+                # Leaving UQ blank is safer than attaching it to the previous programme.
+                continue
             elif target == "M":
                 current["median"] = score
                 current["reference_score"] = current.get("reference_score") or score
@@ -267,6 +272,7 @@ def extract_polyu(table: list[list[object]], institution: str, page: int, rows: 
 
 def extract_hkust(table: list[list[object]], institution: str, page: int, rows: list[dict[str, str]], seen: set[str]) -> None:
     pending_title = ""
+    pending_median = ""
     section = ""
     for r in table:
         if cell(r, 0).startswith(("School", "Academy", "Joint")):
@@ -277,11 +283,28 @@ def extract_hkust(table: list[list[object]], institution: str, page: int, rows: 
             title_text = cell(r, 1) or cell(r, 0)
             if title_text and not any(word in title_text for word in ["PROGRAM", "WEIGHTED", "HIGHEST", "LOWER"]):
                 pending_title = clean(f"{pending_title} {title_text}")
+                pending_median = cell(r, 3)
             continue
         code, title = parsed
         title = title or pending_title or cell(r, 1)
+        median = cell(r, 3) or pending_median
         pending_title = ""
-        add(rows, seen, row_dict(institution, code, title, "Best 5 subjects + 6th subject bonus", upper=cell(r, 2), median=cell(r, 3), lower=cell(r, 4), page=page, section=section))
+        pending_median = ""
+        add(
+            rows,
+            seen,
+            row_dict(
+                institution,
+                code,
+                title,
+                "Best 5 subjects + 6th subject bonus",
+                median=median,
+                lower=cell(r, 4),
+                highest=cell(r, 2),
+                page=page,
+                section=section,
+            ),
+        )
 
 
 def extract_hku(table: list[list[object]], institution: str, page: int, rows: list[dict[str, str]], seen: set[str]) -> None:
