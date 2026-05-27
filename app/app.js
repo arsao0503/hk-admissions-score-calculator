@@ -332,6 +332,9 @@ function eligibility() {
 }
 
 function matchProgramme(programme, score) {
+  if (programme.sourceSystem === "JUPAS") {
+    return { status: "unknown", label: "JUPAS 公式參考", delta: 0 };
+  }
   const target = programme.averageScoreHigh;
   if (!Number.isFinite(target)) {
     return { status: "unknown", label: "缺分數資料", delta: 0 };
@@ -440,6 +443,10 @@ function renderResults() {
       const aScore = Number.isFinite(a.programme.averageScoreHigh) ? a.programme.averageScoreHigh : Number.POSITIVE_INFINITY;
       const bScore = Number.isFinite(b.programme.averageScoreHigh) ? b.programme.averageScoreHigh : Number.POSITIVE_INFINITY;
       if (!userScore) return aScore - bScore;
+      if (a.programme.sourceSystem !== b.programme.sourceSystem) {
+        return a.programme.sourceSystem === "JUPAS" ? -1 : 1;
+      }
+      if (a.programme.sourceSystem === "JUPAS") return bScore - aScore;
       const aDistance = Math.abs(userScore - aScore);
       const bDistance = Math.abs(userScore - bScore);
       return aDistance - bDistance || aScore - bScore;
@@ -464,7 +471,10 @@ function awardRank(award) {
 }
 
 function programmeCard(programme, match) {
-  const delta = topTotal(5) ? `${match.delta >= 0 ? "+" : ""}${match.delta.toFixed(1)}` : "N/A";
+  const delta =
+    programme.sourceSystem === "JUPAS" || !topTotal(5)
+      ? "N/A"
+      : `${match.delta >= 0 ? "+" : ""}${match.delta.toFixed(1)}`;
   const links = [
     programme.programmeUrl
       ? `<a href="${programme.programmeUrl}" target="_blank" rel="noreferrer">課程頁</a>`
@@ -486,6 +496,8 @@ function programmeCard(programme, match) {
         <span class="badge ${match.status}">${escapeHtml(match.label)}</span>
       </header>
       <div class="programme-meta">
+        <span>來源: ${escapeHtml(programme.sourceSystem || "N/A")}</span>
+        ${programme.programmeCode ? `<span>編號: ${escapeHtml(programme.programmeCode)}</span>` : ""}
         <span>級別: ${escapeHtml(programme.awardLevel)}</span>
         <span>細分: ${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
         <span>官方範疇: ${escapeHtml(programme.areaOfStudy)}</span>
@@ -493,6 +505,7 @@ function programmeCard(programme, match) {
         <span>差距: ${escapeHtml(delta)}</span>
         <span>資料狀態: ${escapeHtml(sourceStatusLabel(programme.sourceConfidence))}</span>
       </div>
+      ${programme.selectionFormula ? `<p><strong>Selection formula:</strong> ${escapeHtml(programme.selectionFormula)}</p>` : ""}
       ${scoreStatsTable(programme)}
       <p>${escapeHtml(programme.rawScoreText || "CSPE score row")}</p>
       <div class="programme-actions">${links}</div>
@@ -502,6 +515,7 @@ function programmeCard(programme, match) {
 
 function sourceStatusLabel(value) {
   if (value === "official_html_extracted_needs_review") return "官方來源抽取，待人工複核";
+  if (value === "official_pdf_extracted_needs_review") return "官方 PDF 抽取，待人工複核";
   if (!value) return "N/A";
   return value;
 }

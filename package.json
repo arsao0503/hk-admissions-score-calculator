@@ -4,8 +4,9 @@
   "private": true,
   "description": "Static HKDSE admissions score calculator and programme finder.",
   "scripts": {
-    "build:data": "python3 scripts/build_app_data.py",
-    "check": "node --check app/app.js && python3 scripts/build_app_data.py",
+    "extract:jupas": "python3 scripts/extract_jupas_scores.py",
+    "build:data": "python3 scripts/extract_jupas_scores.py && python3 scripts/build_app_data.py",
+    "check": "node --check app/app.js && python3 scripts/extract_jupas_scores.py && python3 scripts/build_app_data.py",
     "serve": "python3 -m http.server --bind 127.0.0.1 --directory app 5173"
   }
 }

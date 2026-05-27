@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCORE_ROWS = ROOT / "data/processed/cspe_score_rows_raw_2025_26.csv"
+JUPAS_ROWS = ROOT / "data/processed/jupas_score_rows_2025.csv"
 CATALOG = ROOT / "outputs/admissions_master_working.csv"
 OUT = ROOT / "app/assets/app-data.js"
 
@@ -96,6 +97,13 @@ def load_score_rows() -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def load_jupas_rows() -> list[dict[str, str]]:
+    if not JUPAS_ROWS.exists():
+        return []
+    with JUPAS_ROWS.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
 def find_score_row(catalog_row: dict[str, str], score_rows: list[dict[str, str]]) -> dict[str, str] | None:
     institution = normalize_text(catalog_row.get("institution", ""))
     title = normalize_text(catalog_row.get("programme_title", ""))
@@ -117,6 +125,7 @@ def find_score_row(catalog_row: dict[str, str], score_rows: list[dict[str, str]]
 def main() -> None:
     catalog = load_catalog()
     score_rows = load_score_rows()
+    jupas_rows = load_jupas_rows()
     programmes = []
 
     for idx, extra in enumerate(catalog, start=1):
@@ -172,10 +181,52 @@ def main() -> None:
             }
         )
 
+    for idx, row in enumerate(jupas_rows, start=1):
+        institution = row.get("institution", "").strip()
+        title = row.get("programme_title", "").strip()
+        reference_low, reference_high, reference_text = score_bounds(row.get("reference_score", ""))
+        if not institution or not title:
+            continue
+
+        stats = {
+            "lowerQuartile": score_stat(row, "lower_quartile"),
+            "median": score_stat(row, "median"),
+            "mean": score_stat(row, "mean"),
+            "upperQuartile": score_stat(row, "upper_quartile"),
+            "highest": {"text": "", "low": None, "high": None},
+            "lowestOrMinimumAdmitted": {"text": "", "low": None, "high": None},
+            "minOrOtherScore": {"text": "", "low": None, "high": None},
+        }
+
+        programmes.append(
+            {
+                "id": f"jupas-2025-{idx}",
+                "academicYear": row.get("academic_year", "").strip(),
+                "sourceSystem": "JUPAS",
+                "institution": institution,
+                "providerId": "JUPAS",
+                "programmeCode": row.get("programme_code", "").strip(),
+                "title": title,
+                "awardLevel": row.get("award_level", "").strip() or "Bachelor's Degree",
+                "areaOfStudy": row.get("area_of_study", "").strip() or "JUPAS Programmes",
+                "detailedCategory": detailed_category(title, row.get("area_of_study", "")),
+                "averageScoreLow": reference_low,
+                "averageScoreHigh": reference_high,
+                "averageScoreText": reference_text,
+                "referenceScoreLabel": "JUPAS reference score",
+                "scoreStats": stats,
+                "scoreSourceUrl": row.get("source_url", "").strip(),
+                "programmeUrl": "",
+                "rawScoreText": row.get("raw_score_text", "").strip(),
+                "selectionFormula": row.get("selection_formula", "").strip(),
+                "sourceConfidence": row.get("source_confidence", "").strip(),
+            }
+        )
+
     payload = {
         "generatedAt": "2026-05-27",
         "scoreFormula": "HKDSE 5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0",
-        "note": "CSPE 2025/26 average score rows extracted from official CSPE/iPASS sources; review flags remain visible in the UI.",
+        "note": "CSPE 2025/26 rows and JUPAS 2025 rows are extracted from official sources. JUPAS rows use institution/programme-specific scoring formulae and must not be compared directly with the CSPE common scale.",
         "programmes": programmes,
     }
 
