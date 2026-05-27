@@ -430,7 +430,7 @@ function renderResults() {
     .map((programme) => ({ programme, match: matchProgramme(programme, userScore) }))
     .filter(({ programme, match }) => {
       const searchable =
-        `${programme.title} ${programme.institution} ${programme.areaOfStudy} ${programme.detailedCategory}`.toLowerCase();
+        `${programme.title} ${programme.institution} ${programme.areaOfStudy} ${programme.detailedCategory} ${programme.selectionFormula} ${programme.subjectWeighting}`.toLowerCase();
       return (
         (!query || searchable.includes(query)) &&
         (!state.award || programme.awardLevel === state.award) &&
@@ -514,7 +514,12 @@ function programmeCard(programme, match) {
         <span>差距: ${escapeHtml(delta)}</span>
         <span>資料狀態: ${escapeHtml(sourceStatusLabel(programme.sourceConfidence))}</span>
       </div>
-      ${programme.selectionFormula ? `<p><strong>Selection formula:</strong> ${escapeHtml(programme.selectionFormula)}</p>` : ""}
+      ${programme.selectionFormula ? `<p><strong>Selection formula / multiplier:</strong> ${escapeHtml(programme.selectionFormula)}</p>` : ""}
+      ${
+        programme.subjectWeighting
+          ? `<p class="weighting-note"><strong>Subject multiplier:</strong> ${escapeHtml(programme.subjectWeighting)}</p>`
+          : ""
+      }
       ${scoreStatsTable(programme)}
       <p>${escapeHtml(programme.rawScoreText || "CSPE score row")}</p>
       <div class="programme-actions">${links}</div>

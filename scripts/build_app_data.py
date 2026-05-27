@@ -48,6 +48,7 @@ def jupas_admission_raw_text(row: dict[str, str]) -> str:
         ("Median", "median"),
         ("Lower Quartile", "lower_quartile"),
         ("Mean", "mean"),
+        ("Subject Weighting", "subject_weighting"),
     ]:
         value = row.get(field, "").strip()
         if value:
@@ -242,6 +243,7 @@ def main() -> None:
                 "programmeUrl": "",
                 "rawScoreText": jupas_admission_raw_text(row),
                 "selectionFormula": row.get("selection_formula", "").strip(),
+                "subjectWeighting": row.get("subject_weighting", "").strip(),
                 "sourceConfidence": row.get("source_confidence", "").strip(),
             }
         )

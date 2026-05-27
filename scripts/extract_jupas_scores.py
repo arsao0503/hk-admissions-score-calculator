@@ -26,6 +26,7 @@ HEADER = [
     "award_level",
     "area_of_study",
     "selection_formula",
+    "subject_weighting",
     "upper_quartile",
     "median",
     "lower_quartile",
@@ -41,6 +42,22 @@ HEADER = [
 
 def clean(value: object) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def clean_subject_weighting(value: object) -> str:
+    text = clean(str(value or "").replace("\n", " "))
+    return "" if text in {"", "--", "-"} else text
+
+
+def append_subject_weighting(current: str, extra: object) -> str:
+    extra_text = clean_subject_weighting(extra)
+    if not extra_text:
+        return current
+    parts = [part.strip() for part in current.split(" • ") if part.strip()]
+    existing = " ".join(parts)
+    if extra_text in existing:
+        return current
+    return clean(" ".join(part for part in [current, extra_text] if part))
 
 
 def cell(row: list[object], index: int) -> str:
@@ -117,6 +134,7 @@ def row_dict(
     code: str,
     title: str,
     formula: str = "",
+    subject_weighting: str = "",
     upper: str = "",
     median: str = "",
     lower: str = "",
@@ -152,6 +170,7 @@ def row_dict(
         "award_level": "Bachelor's Degree" if "HD in " not in title else "Higher Diploma",
         "area_of_study": category(title, section),
         "selection_formula": clean(formula),
+        "subject_weighting": clean_subject_weighting(subject_weighting),
         "upper_quartile": upper_score,
         "median": median_score,
         "lower_quartile": lower_score,
@@ -216,21 +235,37 @@ def extract_lingnan_text(text: str, institution: str, page: int, rows: list[dict
 def extract_cuhk(table: list[list[object]], institution: str, page: int, rows: list[dict[str, str]], seen: set[str]) -> None:
     current: dict[str, str] | None = None
     section = ""
+    pending_uq_subject_weighting = ""
     for r in table:
         if cell(r, 0).startswith("Faculty"):
             section = cell(r, 0)
+            pending_uq_subject_weighting = ""
             continue
         parsed = code_and_title(cell(r, 0))
         target = cell(r, 2)
+        if not parsed and target == "UQ":
+            pending_uq_subject_weighting = clean_subject_weighting(cell(r, 15))
+            continue
         if parsed:
             if current:
                 add(rows, seen, current)
             code, title = parsed
             title = clean(f"{title} {cell(r, 1)}")
-            current = row_dict(institution, code, title, cell(r, 14), page=page, section=section) or {}
+            current = row_dict(
+                institution,
+                code,
+                title,
+                cell(r, 14),
+                subject_weighting=append_subject_weighting(pending_uq_subject_weighting, cell(r, 15)),
+                page=page,
+                section=section,
+            ) or {}
+            pending_uq_subject_weighting = ""
         elif current and cell(r, 1):
             current["programme_title"] = clean(f"{current['programme_title']} {cell(r, 1)}")
             current["area_of_study"] = category(current["programme_title"], section)
+        if current and cell(r, 15) and not parsed and target in {"M", "LQ"}:
+            current["subject_weighting"] = append_subject_weighting(current.get("subject_weighting", ""), cell(r, 15))
         if current and target in {"UQ", "M", "LQ"}:
             score = number(cell(r, 13))
             if target == "UQ":

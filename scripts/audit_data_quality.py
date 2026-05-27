@@ -68,6 +68,13 @@ def main() -> None:
     jupas_missing_quartile_pair = [
         row for row in jupas if not row.get("median", "").strip() or not row.get("lower_quartile", "").strip()
     ]
+    jupas_with_subject_weighting = [row for row in jupas if row.get("subject_weighting", "").strip()]
+    jupas_weighting_by_institution = Counter(row.get("institution", "") for row in jupas_with_subject_weighting)
+    multiplier_pattern = re.compile(r"(?:\bx\s*\d|\d+(?:\.\d+)?\s*x)", re.I)
+    jupas_formula_multiplier_rows = [
+        row for row in jupas if multiplier_pattern.search(row.get("selection_formula", ""))
+    ]
+    jupas_formula_multiplier_by_institution = Counter(row.get("institution", "") for row in jupas_formula_multiplier_rows)
 
     master_confidence = Counter(row.get("source_confidence") for row in master)
     master_score_fields = ["upper_quartile", "median", "lower_quartile", "mean", "highest", "lowest_or_minimum_admitted"]
@@ -87,6 +94,14 @@ def main() -> None:
         f"- {row.get('institution')} | {row.get('programme_code')} | {row.get('programme_title')}"
         for row in jupas_missing_reference[:12]
     )
+    sample_weighting = "\n".join(
+        f"- {row.get('institution')} | {row.get('programme_code')} | {row.get('programme_title')} | {row.get('subject_weighting')}"
+        for row in jupas_with_subject_weighting[:18]
+    )
+    sample_formula_multiplier = "\n".join(
+        f"- {row.get('institution')} | {row.get('programme_code')} | {row.get('programme_title')} | {row.get('selection_formula')}"
+        for row in jupas_formula_multiplier_rows[:18]
+    )
 
     report = f"""# Data Audit - 2026-05-28
 
@@ -105,6 +120,16 @@ def main() -> None:
 - JUPAS extracted score rows: {len(jupas)}
 - JUPAS rows missing reference score: {len(jupas_missing_reference)}
 - JUPAS rows missing median or lower quartile: {len(jupas_missing_quartile_pair)}
+- JUPAS rows with extracted subject weighting / multiplier notes: {len(jupas_with_subject_weighting)}
+- JUPAS rows whose selection formula itself contains multiplier syntax: {len(jupas_formula_multiplier_rows)}
+
+JUPAS subject weighting rows by institution:
+
+{top(jupas_weighting_by_institution) or '- None'}
+
+JUPAS formula-multiplier rows by institution:
+
+{top(jupas_formula_multiplier_by_institution) or '- None'}
 
 ## Master CSV Warning
 `outputs/admissions_master_working.csv` currently has {len(master)} rows and source confidence:
@@ -126,11 +151,18 @@ This means the app is using `data/processed/*` for score display, but the master
 ## JUPAS Missing Reference Score Sample
 {sample_jupas or '- None'}
 
+## JUPAS Subject Weighting / Multiplier Sample
+{sample_weighting or '- None'}
+
+## JUPAS Selection Formula Multiplier Sample
+{sample_formula_multiplier or '- None'}
+
 ## Recommended Fixes
 - Merge extracted CSPE/JUPAS score fields back into `outputs/admissions_master_working.csv` or rename it clearly as catalog seed only.
 - Review CSPE provider rows with blank `mean` and placeholder `-` score text; many appear to be officially unpublished scores, but some rows look like table-row merge problems.
 - Manually inspect the possible merged CSPE titles before trusting those rows in search/matching.
 - Manually spot-check JUPAS rows without reference score against the official PDF pages before treating them as complete.
+- Spot-check extracted JUPAS subject weighting rows against the official PDF, especially programmes with high weighted totals.
 """
     REPORT.write_text(report, encoding="utf-8")
     print(report)
