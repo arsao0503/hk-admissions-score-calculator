@@ -44,6 +44,12 @@ def normalize_text(value: str) -> str:
 def detailed_category(title: str, area: str) -> str:
     text = normalize_text(f"{title} {area}")
     rules = [
+        ("Hospitality / Tourism / Aviation", ["hospitality", "tourism", "aviation", "airline", "airport", "theme park", "hotel"]),
+        ("Culinary / Baking", ["culinary", "baking", "pastry"]),
+        ("Sports / Recreation", ["sports", "sport coaching", "sport performance", "fitness", "esports", "sports and recreation"]),
+        ("Environmental / Food / Laboratory Sciences", ["sustainability", "environmental", "food", "testing", "laboratory"]),
+        ("Design / Visual Arts", ["design", "visual", "fine arts", "arts practice"]),
+        ("Journalism / Media / Communication", ["journalism", "mass media", "communication", "public relations"]),
         ("Medicine", ["medicine", "medical sciences"]),
         ("Nursing", ["nursing"]),
         ("Allied Health / Rehabilitation", ["physiotherapy", "rehabilitation", "health care", "health and social care"]),
@@ -57,19 +63,13 @@ def detailed_category(title: str, area: str) -> str:
         ("Engineering", ["engineering", "mechanical", "electrical", "civil"]),
         ("Architecture / Surveying / Construction", ["architecture", "surveying", "building", "construction", "quantity surveying", "town planning"]),
         ("Accounting / Finance", ["accounting", "finance", "banking", "financial"]),
-        ("Business / Management", ["business", "management", "global business", "human resource", "supply chain", "real estate", "commerce"]),
         ("Marketing / Public Relations / Advertising", ["marketing", "public relations", "advertising"]),
-        ("Hospitality / Tourism / Aviation", ["hospitality", "tourism", "aviation", "airline", "theme park", "hotel"]),
-        ("Culinary / Baking", ["culinary", "baking", "pastry"]),
-        ("Sports / Recreation", ["sports", "sport coaching", "sport performance", "sports and recreation"]),
+        ("Business / Management", ["business", "management", "global business", "human resource", "supply chain", "real estate", "commerce"]),
         ("Education / Teaching", ["education", "teaching", "early childhood"]),
         ("Language / Translation / Communication", ["language", "translation", "english", "chinese", "putonghua", "linguistic", "bilingual", "professional communication"]),
-        ("Journalism / Media / Communication", ["journalism", "mass media", "communication", "public relations"]),
         ("Creative Media / Film / Animation", ["creative", "media", "animation", "film", "music"]),
-        ("Design / Visual Arts", ["design", "visual", "fine arts", "arts practice"]),
         ("Social Work / Human Services", ["social work", "human services"]),
         ("Social Sciences / Public Services", ["social sciences", "criminology", "public", "security"]),
-        ("Environmental / Food / Laboratory Sciences", ["environmental", "food", "testing", "laboratory"]),
         ("Sciences", ["science", "stem"]),
         ("Law", ["law"]),
         ("Humanities / Culture / History", ["humanities", "history", "philosophy", "cultural"]),
@@ -136,7 +136,7 @@ def main() -> None:
             "minOrOtherScore": score_stat(row, "min_or_other_score"),
         }
         low, high, raw_score = score_bounds(row.get("mean", ""))
-        if low is None or high is None or not institution or not title:
+        if not institution or not title:
             continue
 
         award = extra.get("award_level", "").strip()
@@ -162,7 +162,7 @@ def main() -> None:
                     "detailedCategory": detailed_category(title, area_of_study),
                     "averageScoreLow": low,
                     "averageScoreHigh": high,
-                    "averageScoreText": raw_score,
+                    "averageScoreText": raw_score or "N/A",
                     "referenceScoreLabel": "Mean",
                     "scoreStats": stats,
                     "scoreSourceUrl": row.get("score_source_url", "").strip(),

@@ -17,18 +17,26 @@ const electiveSubjectOptions = [
   ["biology", "Biology 生物"],
   ["chemistry", "Chemistry 化學"],
   ["physics", "Physics 物理"],
-  ["ict", "ICT 資訊及通訊科技"],
+  ["combinedScience", "Combined Science 組合科學"],
+  ["integratedScience", "Integrated Science 綜合科學"],
   ["m1", "M1 微積分與統計"],
   ["m2", "M2 代數與微積分"],
+  ["ict", "ICT 資訊及通訊科技"],
+  ["dat", "Design and Applied Technology 設計與應用科技"],
+  ["technologyAndLiving", "Technology and Living 科技與生活"],
   ["economics", "Economics 經濟"],
   ["bafs", "BAFS 企會財"],
   ["geography", "Geography 地理"],
   ["history", "History 歷史"],
   ["chineseHistory", "Chinese History 中史"],
-  ["literature", "Literature 文學"],
+  ["chineseLiterature", "Chinese Literature 中國文學"],
+  ["literatureInEnglish", "Literature in English 英語文學"],
+  ["ethicsAndReligiousStudies", "Ethics and Religious Studies 倫理與宗教"],
+  ["healthManagementAndSocialCare", "Health Management and Social Care 健康管理與社會關懷"],
+  ["tourismAndHospitalityStudies", "Tourism and Hospitality Studies 旅遊與款待"],
   ["visualArts", "Visual Arts 視覺藝術"],
-  ["tourism", "Tourism 旅款"],
-  ["other", "Other 其他"],
+  ["music", "Music 音樂"],
+  ["physicalEducation", "Physical Education 體育"],
 ];
 
 const coreSubjects = [
@@ -156,6 +164,7 @@ function renderSubjects() {
   els.subjectsGrid.querySelectorAll("[data-elective-subject]").forEach((select) => {
     select.addEventListener("change", (event) => {
       state.electiveSubjects[event.target.dataset.electiveSubject] = event.target.value;
+      syncSubjectControls();
       update();
     });
   });
@@ -164,10 +173,18 @@ function renderSubjects() {
 }
 
 function syncSubjectControls() {
+  const selectedElectives = new Set(Object.values(state.electiveSubjects).filter(Boolean));
   els.subjectsGrid.querySelectorAll("select").forEach((select) => {
     if (select.dataset.subject) select.value = state.scores[select.dataset.subject] || "";
     if (select.dataset.electiveSubject) {
       select.value = state.electiveSubjects[select.dataset.electiveSubject] || "";
+      Array.from(select.options).forEach((option) => {
+        option.disabled = Boolean(
+          option.value &&
+            option.value !== select.value &&
+            selectedElectives.has(option.value),
+        );
+      });
     }
   });
 }
@@ -183,7 +200,7 @@ function addElectiveSubject() {
 }
 
 function subjectEntries() {
-  return Object.entries(state.scores)
+  const rawEntries = Object.entries(state.scores)
     .filter(([key, value]) => key !== "citizenship" && value !== "")
     .filter(([key]) => !key.startsWith("x") || state.electiveSubjects[key])
     .map(([key, value]) => ({
@@ -191,6 +208,14 @@ function subjectEntries() {
       score: Number(value),
       subject: state.electiveSubjects[key] || key,
     }));
+  const bestBySubject = new Map();
+  rawEntries.forEach((entry) => {
+    const current = bestBySubject.get(entry.subject);
+    if (!current || entry.score > current.score) {
+      bestBySubject.set(entry.subject, entry);
+    }
+  });
+  return [...bestBySubject.values()];
 }
 
 function scoreValues() {
@@ -237,8 +262,18 @@ function selectedElectiveEntries() {
 
 function incompleteElectives() {
   return electiveKeys().filter(
-    (key) => state.scores[key] !== "" && !state.electiveSubjects[key],
+    (key) =>
+      (state.scores[key] !== "" && !state.electiveSubjects[key]) ||
+      (state.scores[key] === "" && state.electiveSubjects[key]),
   );
+}
+
+function duplicateElectiveSubjects() {
+  const counts = selectedElectiveEntries().reduce((acc, entry) => {
+    acc[entry.subject] = (acc[entry.subject] || 0) + 1;
+    return acc;
+  }, {});
+  return Object.keys(counts).filter((subject) => counts[subject] > 1);
 }
 
 function eligibility() {
@@ -252,7 +287,11 @@ function eligibility() {
 
   const incomplete = incompleteElectives();
   const electiveWarning = incomplete.length
-    ? `有 ${incomplete.length} 科選修只填了等級但未選科目，已不計入總分。`
+    ? `有 ${incomplete.length} 科選修未同時填妥科目及等級，已不計入總分。`
+    : "";
+  const duplicates = duplicateElectiveSubjects();
+  const duplicateWarning = duplicates.length
+    ? `重複選修科只按最高一個等級計算：${duplicates.join(", ")}。`
     : "";
   const level2Count = scoreValues().filter((value) => value >= 2).length;
   const subDegreeLikely = hasLevel("chi", 2) && hasLevel("eng", 2) && level2Count >= 5;
@@ -267,7 +306,7 @@ function eligibility() {
     return {
       tone: "good",
       title: "初步符合本地學士課程常見基本門檻",
-      body: ["仍要逐個課程檢查指定科目、加權公式、面試或作品集要求。", electiveWarning]
+      body: ["仍要逐個課程檢查指定科目、加權公式、面試或作品集要求。", electiveWarning, duplicateWarning]
         .filter(Boolean)
         .join(" "),
     };
@@ -277,7 +316,7 @@ function eligibility() {
     return {
       tone: "good",
       title: "初步符合副學位 / 高級文憑常見基本門檻",
-      body: ["可優先比較 Associate Degree / Higher Diploma。學士課程通常仍要更高核心科要求。", electiveWarning]
+      body: ["可優先比較 Associate Degree / Higher Diploma。學士課程通常仍要更高核心科要求。", electiveWarning, duplicateWarning]
         .filter(Boolean)
         .join(" "),
     };
@@ -286,18 +325,21 @@ function eligibility() {
   return {
     tone: "warn",
     title: "可能未滿足常見基本門檻",
-    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。", electiveWarning]
+    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。", electiveWarning, duplicateWarning]
       .filter(Boolean)
       .join(" "),
   };
 }
 
 function matchProgramme(programme, score) {
+  const target = programme.averageScoreHigh;
+  if (!Number.isFinite(target)) {
+    return { status: "unknown", label: "缺分數資料", delta: 0 };
+  }
   if (!score) {
     return { status: "unknown", label: "輸入分數後比較", delta: 0 };
   }
 
-  const target = programme.averageScoreHigh;
   const delta = score - target;
   if (delta >= 2) return { status: "safe", label: "較穩陣", delta };
   if (delta >= -1) return { status: "match", label: "接近平均", delta };
@@ -306,6 +348,7 @@ function matchProgramme(programme, score) {
 
 function modeAllows(status) {
   if (state.matchMode === "all") return true;
+  if (status === "unknown") return state.matchMode !== "safe";
   if (state.matchMode === "safe") return status === "safe";
   if (state.matchMode === "reach") return true;
   return status === "safe" || status === "match";
@@ -394,10 +437,12 @@ function renderResults() {
     .sort((a, b) => {
       const awardDelta = awardRank(a.programme.awardLevel) - awardRank(b.programme.awardLevel);
       if (awardDelta) return awardDelta;
-      if (!userScore) return a.programme.averageScoreHigh - b.programme.averageScoreHigh;
-      const aDistance = Math.abs(userScore - a.programme.averageScoreHigh);
-      const bDistance = Math.abs(userScore - b.programme.averageScoreHigh);
-      return aDistance - bDistance || a.programme.averageScoreHigh - b.programme.averageScoreHigh;
+      const aScore = Number.isFinite(a.programme.averageScoreHigh) ? a.programme.averageScoreHigh : Number.POSITIVE_INFINITY;
+      const bScore = Number.isFinite(b.programme.averageScoreHigh) ? b.programme.averageScoreHigh : Number.POSITIVE_INFINITY;
+      if (!userScore) return aScore - bScore;
+      const aDistance = Math.abs(userScore - aScore);
+      const bDistance = Math.abs(userScore - bScore);
+      return aDistance - bDistance || aScore - bScore;
     })
     .slice(0, 80);
 
@@ -441,18 +486,24 @@ function programmeCard(programme, match) {
         <span class="badge ${match.status}">${escapeHtml(match.label)}</span>
       </header>
       <div class="programme-meta">
-        <span>${escapeHtml(programme.awardLevel)}</span>
-        <span>${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
-        <span>${escapeHtml(programme.areaOfStudy)}</span>
-        <span>Match reference: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>
+        <span>級別: ${escapeHtml(programme.awardLevel)}</span>
+        <span>細分: ${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
+        <span>官方範疇: ${escapeHtml(programme.areaOfStudy)}</span>
+        <span>比較基準: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>
         <span>差距: ${escapeHtml(delta)}</span>
-        <span>Source status: ${escapeHtml(programme.sourceConfidence || "N/A")}</span>
+        <span>資料狀態: ${escapeHtml(sourceStatusLabel(programme.sourceConfidence))}</span>
       </div>
       ${scoreStatsTable(programme)}
       <p>${escapeHtml(programme.rawScoreText || "CSPE score row")}</p>
       <div class="programme-actions">${links}</div>
     </article>
   `;
+}
+
+function sourceStatusLabel(value) {
+  if (value === "official_html_extracted_needs_review") return "官方來源抽取，待人工複核";
+  if (!value) return "N/A";
+  return value;
 }
 
 function scoreStatsTable(programme) {
