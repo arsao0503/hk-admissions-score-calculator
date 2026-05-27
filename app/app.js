@@ -12,24 +12,47 @@ const gradeOptions = [
   ["0", "U"],
 ];
 
+const electiveSubjectOptions = [
+  ["", "先選科目"],
+  ["biology", "Biology 生物"],
+  ["chemistry", "Chemistry 化學"],
+  ["physics", "Physics 物理"],
+  ["ict", "ICT 資訊及通訊科技"],
+  ["m1", "M1 微積分與統計"],
+  ["m2", "M2 代數與微積分"],
+  ["economics", "Economics 經濟"],
+  ["bafs", "BAFS 企會財"],
+  ["geography", "Geography 地理"],
+  ["history", "History 歷史"],
+  ["chineseHistory", "Chinese History 中史"],
+  ["literature", "Literature 文學"],
+  ["visualArts", "Visual Arts 視覺藝術"],
+  ["tourism", "Tourism 旅款"],
+  ["other", "Other 其他"],
+];
+
 const subjects = [
   { key: "chi", label: "中國語文" },
   { key: "eng", label: "英國語文" },
   { key: "math", label: "數學" },
   { key: "citizenship", label: "公民與社會發展", type: "citizenship" },
-  { key: "x1", label: "選修科 1" },
-  { key: "x2", label: "選修科 2" },
-  { key: "x3", label: "選修科 3 / M1 / M2" },
-  { key: "x4", label: "其他科目" },
+  { key: "x1", label: "選修科 1", type: "elective" },
+  { key: "x2", label: "選修科 2", type: "elective" },
+  { key: "x3", label: "選修科 3", type: "elective" },
+  { key: "x4", label: "其他科目", type: "elective" },
 ];
 
 const state = {
   scores: Object.fromEntries(subjects.map((subject) => [subject.key, ""])),
+  electiveSubjects: Object.fromEntries(
+    subjects.filter((subject) => subject.type === "elective").map((subject) => [subject.key, ""]),
+  ),
   search: "",
   award: "",
   area: "",
   matchMode: "realistic",
   activeProfileId: "",
+  targetRule: "general",
 };
 
 const storageKey = "hkAdmissionsScoreProfiles.v1";
@@ -54,6 +77,7 @@ const els = {
   profileName: document.querySelector("#profileName"),
   saveProfile: document.querySelector("#saveProfile"),
   deleteProfile: document.querySelector("#deleteProfile"),
+  targetRule: document.querySelector("#targetRule"),
 };
 
 function renderSubjects() {
@@ -67,6 +91,30 @@ function renderSubjects() {
               ["N", "未達標"],
             ]
           : gradeOptions;
+
+      if (subject.type === "elective") {
+        return `
+        <div class="subject-row elective">
+          <label>${subject.label}</label>
+          <label>
+            <span class="field-caption">科目</span>
+            <select data-elective-subject="${subject.key}" aria-label="${subject.label} 科目">
+              ${electiveSubjectOptions
+                .map(([value, label]) => `<option value="${value}">${label}</option>`)
+                .join("")}
+            </select>
+          </label>
+          <label>
+            <span class="field-caption">等級</span>
+            <select id="${subject.key}" data-subject="${subject.key}" aria-label="${subject.label} 等級">
+              ${gradeOptions
+                .map(([value, label]) => `<option value="${value}">${label}</option>`)
+                .join("")}
+            </select>
+          </label>
+        </div>
+      `;
+      }
 
       return `
         <div class="subject-row">
@@ -87,12 +135,27 @@ function renderSubjects() {
       update();
     });
   });
+  els.subjectsGrid.querySelectorAll("[data-elective-subject]").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      state.electiveSubjects[event.target.dataset.electiveSubject] = event.target.value;
+      update();
+    });
+  });
+}
+
+function subjectEntries() {
+  return Object.entries(state.scores)
+    .filter(([key, value]) => key !== "citizenship" && value !== "")
+    .filter(([key]) => !key.startsWith("x") || state.electiveSubjects[key])
+    .map(([key, value]) => ({
+      key,
+      score: Number(value),
+      subject: state.electiveSubjects[key] || key,
+    }));
 }
 
 function scoreValues() {
-  return Object.entries(state.scores)
-    .filter(([key, value]) => key !== "citizenship" && value !== "")
-    .map(([, value]) => Number(value));
+  return subjectEntries().map((entry) => entry.score);
 }
 
 function topTotal(count) {
@@ -107,7 +170,8 @@ function fourCoreTwoX() {
     .map((key) => Number(state.scores[key] || 0))
     .reduce((sum, value) => sum + value, 0);
   const electives = ["x1", "x2", "x3", "x4"]
-    .map((key) => Number(state.scores[key] || 0))
+    .filter((key) => state.electiveSubjects[key] && state.scores[key] !== "")
+    .map((key) => Number(state.scores[key]))
     .sort((a, b) => b - a)
     .slice(0, 2)
     .reduce((sum, value) => sum + value, 0);
@@ -122,6 +186,55 @@ function hasLevel(key, min) {
   return Number(state.scores[key] || 0) >= min;
 }
 
+function selectedElectiveEntries() {
+  return ["x1", "x2", "x3", "x4"]
+    .filter((key) => state.electiveSubjects[key] && state.scores[key] !== "")
+    .map((key) => ({
+      key,
+      subject: state.electiveSubjects[key],
+      score: Number(state.scores[key]),
+    }));
+}
+
+function hasElective(subjectCode, min = 2) {
+  return selectedElectiveEntries().some(
+    (entry) => entry.subject === subjectCode && entry.score >= min,
+  );
+}
+
+function incompleteElectives() {
+  return ["x1", "x2", "x3", "x4"].filter(
+    (key) => state.scores[key] !== "" && !state.electiveSubjects[key],
+  );
+}
+
+function targetRequirementStatus() {
+  if (state.targetRule === "medicine") {
+    const missing = [];
+    if (!hasElective("chemistry", 3)) missing.push("Chemistry Level 3+");
+    if (!hasElective("biology", 3)) missing.push("Biology Level 3+");
+    return missing.length
+      ? `醫科/牙醫方向未滿足指定科目：${missing.join("、")}。`
+      : "已選 Chemistry + Biology，並達到醫科方向的初步指定科目檢查。";
+  }
+
+  if (state.targetRule === "health") {
+    const ok = ["biology", "chemistry", "physics"].some((subject) => hasElective(subject, 2));
+    return ok ? "已包含 Science 選修科，較適合醫療健康方向初步比較。" : "醫療健康方向通常建議至少一科 Science。";
+  }
+
+  if (state.targetRule === "engineering") {
+    const ok = ["physics", "ict", "m1", "m2"].some((subject) => hasElective(subject, 2));
+    return ok ? "已包含工程/科技常見優先科目。" : "工程/科技方向通常建議 Physics / ICT / M1 / M2。";
+  }
+
+  if (state.targetRule === "business") {
+    return "商科通常較少硬性 Science 要求，但仍要看個別院校加權。";
+  }
+
+  return "";
+}
+
 function eligibility() {
   if (enteredSubjectCount() === 0 && !state.scores.citizenship) {
     return {
@@ -131,6 +244,11 @@ function eligibility() {
     };
   }
 
+  const incomplete = incompleteElectives();
+  const electiveWarning = incomplete.length
+    ? `有 ${incomplete.length} 科選修只填了等級但未選科目，已不計入總分。`
+    : "";
+  const targetStatus = targetRequirementStatus();
   const level2Count = scoreValues().filter((value) => value >= 2).length;
   const subDegreeLikely = hasLevel("chi", 2) && hasLevel("eng", 2) && level2Count >= 5;
   const degreeLikely =
@@ -138,13 +256,15 @@ function eligibility() {
     hasLevel("eng", 3) &&
     hasLevel("math", 2) &&
     state.scores.citizenship === "A" &&
-    ["x1", "x2", "x3", "x4"].some((key) => Number(state.scores[key] || 0) >= 2);
+    selectedElectiveEntries().some((entry) => entry.score >= 2);
 
   if (degreeLikely) {
     return {
       tone: "good",
       title: "初步符合本地學士課程常見基本門檻",
-      body: "仍要逐個課程檢查指定科目、加權公式、面試或作品集要求。",
+      body: ["仍要逐個課程檢查指定科目、加權公式、面試或作品集要求。", targetStatus, electiveWarning]
+        .filter(Boolean)
+        .join(" "),
     };
   }
 
@@ -152,14 +272,18 @@ function eligibility() {
     return {
       tone: "good",
       title: "初步符合副學位 / 高級文憑常見基本門檻",
-      body: "可優先比較 Associate Degree / Higher Diploma。學士課程通常仍要更高核心科要求。",
+      body: ["可優先比較 Associate Degree / Higher Diploma。學士課程通常仍要更高核心科要求。", targetStatus, electiveWarning]
+        .filter(Boolean)
+        .join(" "),
     };
   }
 
   return {
     tone: "warn",
     title: "可能未滿足常見基本門檻",
-    body: "建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。",
+    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。", targetStatus, electiveWarning]
+      .filter(Boolean)
+      .join(" "),
   };
 }
 
@@ -218,10 +342,16 @@ function renderProfiles() {
 
 function applyProfile(profile) {
   state.scores = { ...state.scores, ...(profile?.scores || {}) };
+  state.electiveSubjects = { ...state.electiveSubjects, ...(profile?.electiveSubjects || {}) };
+  state.targetRule = profile?.targetRule || "general";
   state.activeProfileId = profile?.id || "";
   els.profileName.value = profile?.name || "";
+  els.targetRule.value = state.targetRule;
   els.subjectsGrid.querySelectorAll("select").forEach((select) => {
-    select.value = state.scores[select.dataset.subject] || "";
+    if (select.dataset.subject) select.value = state.scores[select.dataset.subject] || "";
+    if (select.dataset.electiveSubject) {
+      select.value = state.electiveSubjects[select.dataset.electiveSubject] || "";
+    }
   });
   renderProfiles();
   update();
@@ -340,10 +470,19 @@ function bindControls() {
     state.matchMode = event.target.value;
     renderResults();
   });
+  els.targetRule.addEventListener("change", (event) => {
+    state.targetRule = event.target.value;
+    renderEligibility();
+  });
   els.resetScores.addEventListener("click", () => {
     state.scores = Object.fromEntries(subjects.map((subject) => [subject.key, ""]));
+    state.electiveSubjects = Object.fromEntries(
+      subjects.filter((subject) => subject.type === "elective").map((subject) => [subject.key, ""]),
+    );
+    state.targetRule = "general";
     state.activeProfileId = "";
     els.profileName.value = "";
+    els.targetRule.value = "general";
     els.subjectsGrid.querySelectorAll("select").forEach((select) => {
       select.value = "";
     });
@@ -362,6 +501,8 @@ function bindControls() {
       id,
       name,
       scores: { ...state.scores },
+      electiveSubjects: { ...state.electiveSubjects },
+      targetRule: state.targetRule,
       updatedAt: new Date().toISOString(),
     };
     const existingIndex = profiles.findIndex((profile) => profile.id === id);

@@ -42,6 +42,17 @@
           <button class="ghost-button" id="deleteProfile" type="button">刪除</button>
         </div>
 
+        <label class="target-rule">
+          目標課程要求
+          <select id="targetRule">
+            <option value="general">一般學士 / 副學位</option>
+            <option value="medicine">醫科 / 牙醫方向：Chemistry + Biology</option>
+            <option value="health">護理 / 醫療健康：一科 Science 優先</option>
+            <option value="engineering">工程 / 科技：Physics / ICT / M1 / M2 優先</option>
+            <option value="business">商科：無指定 Science 要求</option>
+          </select>
+        </label>
+
         <div class="subjects-grid" id="subjectsGrid"></div>
 
         <div class="score-summary">
@@ -120,7 +131,7 @@
     <section class="notes-section">
       <h2>使用說明</h2>
       <div class="notes-grid">
-        <p>計分公式：5** = 7、5* = 6、5 = 5、4 = 4、3 = 3、2 = 2、1 = 1、U = 0。Best 5 / Best 6 會自動取最高分科目。</p>
+        <p>計分公式：5** = 7、5* = 6、5 = 5、4 = 4、3 = 3、2 = 2、1 = 1、U = 0。選修科必須同時選科目及等級，否則不會計入 Best 5 / Best 6。</p>
         <p>現階段前端資料來自 CSPE / iPASS 2025/26 admission score rows，多數為 Average Score。JUPAS bachelor score、院校加權、面試及作品集因素需要另行接入。</p>
         <p>不同院校和課程可能有不同計分、指定科目或非分數收生因素。此工具用於 shortlist 和初步估算，不應代替官方要求。</p>
       </div>
