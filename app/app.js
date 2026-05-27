@@ -527,23 +527,27 @@ function scoreStatsTable(programme) {
     ["Median", stats.median],
     ["Mean", stats.mean],
     ["Upper Quartile", stats.upperQuartile],
-    ["Highest / Highest attainable", stats.highest],
+    ["Highest", stats.highest],
     ["Lowest / Minimum admitted", stats.lowestOrMinimumAdmitted],
-  ];
+  ].filter(([, stat]) => stat?.text);
 
   return `
-    <dl class="score-stats">
-      ${rows
-        .map(
-          ([label, stat]) => `
-            <div>
-              <dt>${escapeHtml(label)}</dt>
-              <dd>${escapeHtml(stat?.text || "N/A")}</dd>
-            </div>
-          `,
-        )
-        .join("")}
-    </dl>
+    ${
+      rows.length
+        ? `<dl class="score-stats">
+            ${rows
+              .map(
+                ([label, stat]) => `
+                  <div>
+                    <dt>${escapeHtml(label)}</dt>
+                    <dd>${escapeHtml(stat.text)}</dd>
+                  </div>
+                `,
+              )
+              .join("")}
+          </dl>`
+        : ""
+    }
   `;
 }
 

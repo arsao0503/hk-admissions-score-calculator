@@ -10,7 +10,8 @@ Static first version of a Hong Kong admissions score calculator.
 - Covers standard HKDSE Category A elective subjects and Mathematics extended modules in the subject selector.
 - Checks common baseline eligibility patterns for sub-degree and local bachelor's routes.
 - Filters CSPE / iPASS 2025/26 programmes by institution, award level, detailed subject category, keyword, and score distance.
-- Shows available programme score statistics such as Lower Quartile, Median, Mean, Upper Quartile, Highest, and Lowest / Minimum admitted. Missing official fields are displayed as `N/A`.
+- Shows only official score statistics present in the source row, such as Lower Quartile, Median, Mean, Upper Quartile, Highest, and Lowest / Minimum admitted. Missing official fields are omitted instead of filled with generated `N/A` values.
+- JUPAS `Highest Attainable` is treated as a formula ceiling, not an admitted-score statistic, and is not used for matching or sorting.
 - Links back to official programme and score sources when available.
 
 ## Data Build

@@ -124,6 +124,17 @@ def row_dict(
     if not code or not title:
         return None
     reference = median or lower or mean or upper
+    raw_parts = [f"JUPAS {code}", title]
+    for label, value in [
+        ("Upper Quartile", upper),
+        ("Median", median),
+        ("Lower Quartile", lower),
+        ("Mean", mean),
+        ("Highest Attainable", highest),
+    ]:
+        value = clean(value)
+        if value:
+            raw_parts.append(f"{label}: {value}")
     return {
         "academic_year": "2025",
         "source_system": "JUPAS",
@@ -139,9 +150,7 @@ def row_dict(
         "mean": number(mean),
         "highest_attainable": number(highest),
         "reference_score": number(reference),
-        "raw_score_text": clean(
-            f"JUPAS {code} | {title} | Upper Quartile: {upper or 'N/A'} | Median: {median or 'N/A'} | Lower Quartile: {lower or 'N/A'} | Mean: {mean or 'N/A'} | Highest Attainable: {highest or 'N/A'}"
-        ),
+        "raw_score_text": clean(" | ".join(raw_parts)),
         "source_url": SOURCE_URL,
         "source_page": str(page),
         "source_confidence": "official_pdf_extracted_needs_review",
@@ -366,7 +375,7 @@ def main() -> None:
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with OUT.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=HEADER)
+        writer = csv.DictWriter(handle, fieldnames=HEADER, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     print(f"Wrote {len(rows)} JUPAS rows to {OUT}")

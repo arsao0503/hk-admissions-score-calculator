@@ -34,6 +34,27 @@ def score_stat(row: dict[str, str], field: str) -> dict[str, float | str | None]
     return {"text": text, "low": low, "high": high}
 
 
+def empty_score_stat() -> dict[str, float | str | None]:
+    return {"text": "", "low": None, "high": None}
+
+
+def jupas_admission_raw_text(row: dict[str, str]) -> str:
+    parts = [
+        f"JUPAS {row.get('programme_code', '').strip()}",
+        row.get("programme_title", "").strip(),
+    ]
+    for label, field in [
+        ("Upper Quartile", "upper_quartile"),
+        ("Median", "median"),
+        ("Lower Quartile", "lower_quartile"),
+        ("Mean", "mean"),
+    ]:
+        value = row.get(field, "").strip()
+        if value:
+            parts.append(f"{label}: {value}")
+    return " | ".join(part for part in parts if part)
+
+
 def programme_key(institution: str, title: str) -> str:
     return f"{institution.strip().lower()}||{title.strip().lower()}"
 
@@ -193,9 +214,11 @@ def main() -> None:
             "median": score_stat(row, "median"),
             "mean": score_stat(row, "mean"),
             "upperQuartile": score_stat(row, "upper_quartile"),
-            "highest": score_stat(row, "highest_attainable"),
-            "lowestOrMinimumAdmitted": {"text": "", "low": None, "high": None},
-            "minOrOtherScore": {"text": "", "low": None, "high": None},
+            # JUPAS "Highest Attainable" is a formula ceiling, not an admitted-score statistic.
+            # Keep it out of the app score table so users do not read it as an admissions result.
+            "highest": empty_score_stat(),
+            "lowestOrMinimumAdmitted": empty_score_stat(),
+            "minOrOtherScore": empty_score_stat(),
         }
 
         programmes.append(
@@ -217,7 +240,7 @@ def main() -> None:
                 "scoreStats": stats,
                 "scoreSourceUrl": row.get("source_url", "").strip(),
                 "programmeUrl": "",
-                "rawScoreText": row.get("raw_score_text", "").strip(),
+                "rawScoreText": jupas_admission_raw_text(row),
                 "selectionFormula": row.get("selection_formula", "").strip(),
                 "sourceConfidence": row.get("source_confidence", "").strip(),
             }
@@ -225,8 +248,8 @@ def main() -> None:
 
     payload = {
         "generatedAt": "2026-05-27",
-        "scoreFormula": "HKDSE 5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0",
-        "note": "CSPE 2025/26 rows and JUPAS 2025 rows are extracted from official sources. JUPAS rows use institution/programme-specific scoring formulae and must not be compared directly with the CSPE common scale.",
+        "scoreFormula": "CSPE calculator uses HKDSE 5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0. JUPAS rows preserve official institution/programme-specific weighted scores from the source PDF.",
+        "note": "CSPE 2025/26 rows and JUPAS 2025 rows are extracted from official sources. JUPAS rows use institution/programme-specific scoring formulae and must not be compared directly with the CSPE common scale. JUPAS formula ceilings are not admitted-score statistics.",
         "programmes": programmes,
     }
 
