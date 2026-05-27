@@ -52,6 +52,11 @@ def number(value: str) -> str:
     return match.group(0) if match else ""
 
 
+def score_value(value: str) -> str:
+    text = clean(value).replace(",", "")
+    return text if re.fullmatch(r"\d+(?:\.\d+)?", text) else ""
+
+
 def code_and_title(value: str) -> tuple[str, str] | None:
     match = re.search(r"\b(JS\d{4}|JSSU\d{2,4}|\d{4})\^?\b", value or "")
     if not match:
@@ -123,16 +128,19 @@ def row_dict(
     title = clean(title)
     if not code or not title:
         return None
-    reference = median or lower or mean or upper
+    upper_score = score_value(upper)
+    median_score = score_value(median)
+    lower_score = score_value(lower)
+    mean_score = score_value(mean)
+    highest_score = score_value(highest)
+    reference = median_score or lower_score or mean_score or upper_score
     raw_parts = [f"JUPAS {code}", title]
     for label, value in [
-        ("Upper Quartile", upper),
-        ("Median", median),
-        ("Lower Quartile", lower),
-        ("Mean", mean),
-        ("Highest Attainable", highest),
+        ("Upper Quartile", upper_score),
+        ("Median", median_score),
+        ("Lower Quartile", lower_score),
+        ("Mean", mean_score),
     ]:
-        value = clean(value)
         if value:
             raw_parts.append(f"{label}: {value}")
     return {
@@ -144,12 +152,12 @@ def row_dict(
         "award_level": "Bachelor's Degree" if "HD in " not in title else "Higher Diploma",
         "area_of_study": category(title, section),
         "selection_formula": clean(formula),
-        "upper_quartile": number(upper),
-        "median": number(median),
-        "lower_quartile": number(lower),
-        "mean": number(mean),
-        "highest_attainable": number(highest),
-        "reference_score": number(reference),
+        "upper_quartile": upper_score,
+        "median": median_score,
+        "lower_quartile": lower_score,
+        "mean": mean_score,
+        "highest_attainable": highest_score,
+        "reference_score": reference,
         "raw_score_text": clean(" | ".join(raw_parts)),
         "source_url": SOURCE_URL,
         "source_page": str(page),
@@ -282,6 +290,7 @@ def extract_polyu(table: list[list[object]], institution: str, page: int, rows: 
 def extract_hkust(table: list[list[object]], institution: str, page: int, rows: list[dict[str, str]], seen: set[str]) -> None:
     pending_title = ""
     pending_median = ""
+    pending_lower = ""
     section = ""
     for r in table:
         if cell(r, 0).startswith(("School", "Academy", "Joint")):
@@ -293,12 +302,15 @@ def extract_hkust(table: list[list[object]], institution: str, page: int, rows: 
             if title_text and not any(word in title_text for word in ["PROGRAM", "WEIGHTED", "HIGHEST", "LOWER"]):
                 pending_title = clean(f"{pending_title} {title_text}")
                 pending_median = cell(r, 3)
+                pending_lower = cell(r, 4)
             continue
         code, title = parsed
         title = title or pending_title or cell(r, 1)
         median = cell(r, 3) or pending_median
+        lower = cell(r, 4) or pending_lower
         pending_title = ""
         pending_median = ""
+        pending_lower = ""
         add(
             rows,
             seen,
@@ -308,7 +320,7 @@ def extract_hkust(table: list[list[object]], institution: str, page: int, rows: 
                 title,
                 "Best 5 subjects + 6th subject bonus",
                 median=median,
-                lower=cell(r, 4),
+                lower=lower,
                 highest=cell(r, 2),
                 page=page,
                 section=section,
@@ -331,16 +343,34 @@ def extract_hku(table: list[list[object]], institution: str, page: int, rows: li
 
 def extract_hkmu(table: list[list[object]], institution: str, page: int, rows: list[dict[str, str]], seen: set[str]) -> None:
     section = ""
+    pending: dict[str, str] | None = None
     for r in table:
         if cell(r, 0).startswith("School"):
+            if pending:
+                add(rows, seen, pending)
+                pending = None
             section = cell(r, 0)
             continue
         parsed = code_and_title(cell(r, 0))
-        if not parsed:
+        if parsed:
+            if pending:
+                add(rows, seen, pending)
+            code, title0 = parsed
+            title = clean(" ".join([title0, cell(r, 1), cell(r, 2), cell(r, 3)]))
+            pending = row_dict(institution, code, title, "Best 5", median=cell(r, 4), lower=cell(r, 5), page=page, section=section)
             continue
-        code, title0 = parsed
-        title = clean(" ".join([title0, cell(r, 1), cell(r, 2), cell(r, 3)]))
-        add(rows, seen, row_dict(institution, code, title, "Best 5", median=cell(r, 4), lower=cell(r, 5), page=page, section=section))
+
+        continuation = clean(" ".join([cell(r, 1), cell(r, 2), cell(r, 3)]))
+        if pending and continuation:
+            pending["programme_title"] = clean(f"{pending['programme_title']} {continuation}")
+            pending["area_of_study"] = category(pending["programme_title"], section)
+            pending["raw_score_text"] = re.sub(
+                r"^(JUPAS\s+\S+\s+\|).*?(\s+\| Median:)",
+                rf"\1 {pending['programme_title']}\2",
+                pending["raw_score_text"],
+            )
+    if pending:
+        add(rows, seen, pending)
 
 
 def main() -> None:

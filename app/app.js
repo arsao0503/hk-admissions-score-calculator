@@ -501,7 +501,11 @@ function programmeCard(programme, match) {
         <span>級別: ${escapeHtml(programme.awardLevel)}</span>
         <span>細分: ${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
         <span>官方範疇: ${escapeHtml(programme.areaOfStudy)}</span>
-        <span>比較基準: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>
+        ${
+          programme.averageScoreText
+            ? `<span>比較基準: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>`
+            : ""
+        }
         <span>差距: ${escapeHtml(delta)}</span>
         <span>資料狀態: ${escapeHtml(sourceStatusLabel(programme.sourceConfidence))}</span>
       </div>
