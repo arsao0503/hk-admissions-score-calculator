@@ -4,7 +4,7 @@ Static first version of a Hong Kong admissions score calculator.
 
 ## What It Does
 
-- Converts HKDSE grades using `5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0`.
+- Converts HKDSE grades using the CSPE common scale: `5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0`.
 - Calculates Best 5, Best 6, 4C + 2X, and a CSPE comparison score.
 - Requires each elective to have both a subject name and grade before it is counted.
 - Checks common baseline eligibility patterns for sub-degree and local bachelor's routes.
@@ -47,4 +47,4 @@ Then open `http://localhost:5173`.
 
 ## Caveats
 
-This is a shortlist calculator, not a final admission decision tool. The current public app dataset is strongest for CSPE 2025/26 average scores. JUPAS quartile rows, institution-specific weighting, interviews, portfolios, and specific subject requirements must be official-source extracted before treating it as a public production calculator.
+This is a shortlist calculator, not a final admission decision tool. The current public app dataset is strongest for CSPE 2025/26 average scores. JUPAS quartile rows must be extracted from official JUPAS PDFs and kept under their own institution/programme formula scale; they should not be mixed with the CSPE common scale.
