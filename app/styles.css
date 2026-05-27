@@ -163,6 +163,23 @@ h2 {
   gap: 12px;
 }
 
+.add-subject-button {
+  min-height: 42px;
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+  background: #eef8f6;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.add-subject-button:disabled {
+  border-color: var(--line);
+  background: #f3f4f6;
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
 .profile-tools {
   display: grid;
   grid-template-columns: 1fr 1.2fr auto auto;
@@ -279,8 +296,9 @@ input:focus-visible {
 
 .filters {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  grid-template-columns: minmax(160px, 1.3fr) minmax(130px, 0.9fr) minmax(150px, 1fr) minmax(190px, 1.2fr) minmax(130px, 0.9fr);
   gap: 12px;
+  align-items: start;
 }
 
 .filters label {
@@ -292,6 +310,11 @@ input:focus-visible {
 .filters input,
 .filters select {
   margin-top: 6px;
+}
+
+.filters select[multiple] {
+  min-height: 124px;
+  padding: 8px 10px;
 }
 
 .result-count {

@@ -31,25 +31,28 @@ const electiveSubjectOptions = [
   ["other", "Other 其他"],
 ];
 
-const subjects = [
+const coreSubjects = [
   { key: "chi", label: "中國語文" },
   { key: "eng", label: "英國語文" },
   { key: "math", label: "數學" },
   { key: "citizenship", label: "公民與社會發展", type: "citizenship" },
-  { key: "x1", label: "選修科 1", type: "elective" },
-  { key: "x2", label: "選修科 2", type: "elective" },
-  { key: "x3", label: "選修科 3", type: "elective" },
-  { key: "x4", label: "其他科目", type: "elective" },
 ];
 
+const maxElectives = 6;
+const defaultElectiveCount = 2;
+
 const state = {
-  scores: Object.fromEntries(subjects.map((subject) => [subject.key, ""])),
+  scores: {
+    ...Object.fromEntries(coreSubjects.map((subject) => [subject.key, ""])),
+    ...Object.fromEntries(Array.from({ length: defaultElectiveCount }, (_, index) => [`x${index + 1}`, ""])),
+  },
   electiveSubjects: Object.fromEntries(
-    subjects.filter((subject) => subject.type === "elective").map((subject) => [subject.key, ""]),
+    Array.from({ length: defaultElectiveCount }, (_, index) => [`x${index + 1}`, ""]),
   ),
   search: "",
   award: "",
-  area: "",
+  category: "",
+  institutions: [],
   matchMode: "realistic",
   activeProfileId: "",
 };
@@ -67,7 +70,8 @@ const els = {
   eligibilityBox: document.querySelector("#eligibilityBox"),
   searchInput: document.querySelector("#searchInput"),
   awardFilter: document.querySelector("#awardFilter"),
-  areaFilter: document.querySelector("#areaFilter"),
+  categoryFilter: document.querySelector("#categoryFilter"),
+  institutionFilter: document.querySelector("#institutionFilter"),
   matchMode: document.querySelector("#matchMode"),
   resultCount: document.querySelector("#resultCount"),
   resultsList: document.querySelector("#resultsList"),
@@ -78,8 +82,23 @@ const els = {
   deleteProfile: document.querySelector("#deleteProfile"),
 };
 
+function electiveKeys() {
+  return Object.keys(state.electiveSubjects).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+}
+
+function allSubjects() {
+  return [
+    ...coreSubjects,
+    ...electiveKeys().map((key, index) => ({
+      key,
+      label: `選修科 ${index + 1}`,
+      type: "elective",
+    })),
+  ];
+}
+
 function renderSubjects() {
-  els.subjectsGrid.innerHTML = subjects
+  els.subjectsGrid.innerHTML = allSubjects()
     .map((subject) => {
       const options =
         subject.type === "citizenship"
@@ -125,9 +144,10 @@ function renderSubjects() {
         </div>
       `;
     })
-    .join("");
+    .join("") +
+    `<button class="add-subject-button" id="addSubject" type="button" ${electiveKeys().length >= maxElectives ? "disabled" : ""}>新增學科</button>`;
 
-  els.subjectsGrid.querySelectorAll("select").forEach((select) => {
+  els.subjectsGrid.querySelectorAll("[data-subject]").forEach((select) => {
     select.addEventListener("change", (event) => {
       state.scores[event.target.dataset.subject] = event.target.value;
       update();
@@ -139,6 +159,27 @@ function renderSubjects() {
       update();
     });
   });
+  els.subjectsGrid.querySelector("#addSubject")?.addEventListener("click", addElectiveSubject);
+  syncSubjectControls();
+}
+
+function syncSubjectControls() {
+  els.subjectsGrid.querySelectorAll("select").forEach((select) => {
+    if (select.dataset.subject) select.value = state.scores[select.dataset.subject] || "";
+    if (select.dataset.electiveSubject) {
+      select.value = state.electiveSubjects[select.dataset.electiveSubject] || "";
+    }
+  });
+}
+
+function addElectiveSubject() {
+  if (electiveKeys().length >= maxElectives) return;
+  const nextNumber = electiveKeys().reduce((max, key) => Math.max(max, Number(key.slice(1))), 0) + 1;
+  const key = `x${nextNumber}`;
+  state.scores[key] = "";
+  state.electiveSubjects[key] = "";
+  renderSubjects();
+  update();
 }
 
 function subjectEntries() {
@@ -167,7 +208,7 @@ function fourCoreTwoX() {
   const core = ["chi", "eng", "math"]
     .map((key) => Number(state.scores[key] || 0))
     .reduce((sum, value) => sum + value, 0);
-  const electives = ["x1", "x2", "x3", "x4"]
+  const electives = electiveKeys()
     .filter((key) => state.electiveSubjects[key] && state.scores[key] !== "")
     .map((key) => Number(state.scores[key]))
     .sort((a, b) => b - a)
@@ -185,7 +226,7 @@ function hasLevel(key, min) {
 }
 
 function selectedElectiveEntries() {
-  return ["x1", "x2", "x3", "x4"]
+  return electiveKeys()
     .filter((key) => state.electiveSubjects[key] && state.scores[key] !== "")
     .map((key) => ({
       key,
@@ -195,7 +236,7 @@ function selectedElectiveEntries() {
 }
 
 function incompleteElectives() {
-  return ["x1", "x2", "x3", "x4"].filter(
+  return electiveKeys().filter(
     (key) => state.scores[key] !== "" && !state.electiveSubjects[key],
   );
 }
@@ -271,14 +312,21 @@ function modeAllows(status) {
 }
 
 function populateFilters() {
-  const awards = [...new Set(data.programmes.map((p) => p.awardLevel).filter(Boolean))].sort();
-  const areas = [...new Set(data.programmes.map((p) => p.areaOfStudy).filter(Boolean))].sort();
+  const awardPriority = ["Bachelor's Degree", "Associate Degree", "Higher Diploma", "Not specified"];
+  const awards = [...new Set(data.programmes.map((p) => p.awardLevel).filter(Boolean))].sort(
+    (a, b) => awardPriority.indexOf(a) - awardPriority.indexOf(b) || a.localeCompare(b),
+  );
+  const categories = [...new Set(data.programmes.map((p) => p.detailedCategory || p.areaOfStudy).filter(Boolean))].sort();
+  const institutions = [...new Set(data.programmes.map((p) => p.institution).filter(Boolean))].sort();
 
   els.awardFilter.innerHTML += awards
     .map((award) => `<option value="${escapeHtml(award)}">${escapeHtml(award)}</option>`)
     .join("");
-  els.areaFilter.innerHTML += areas
-    .map((area) => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`)
+  els.categoryFilter.innerHTML += categories
+    .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+    .join("");
+  els.institutionFilter.innerHTML = institutions
+    .map((institution) => `<option value="${escapeHtml(institution)}">${escapeHtml(institution)}</option>`)
     .join("");
 }
 
@@ -307,14 +355,14 @@ function renderProfiles() {
 function applyProfile(profile) {
   state.scores = { ...state.scores, ...(profile?.scores || {}) };
   state.electiveSubjects = { ...state.electiveSubjects, ...(profile?.electiveSubjects || {}) };
+  if (!Object.keys(state.electiveSubjects).length) {
+    state.electiveSubjects = Object.fromEntries(
+      Array.from({ length: defaultElectiveCount }, (_, index) => [`x${index + 1}`, ""]),
+    );
+  }
   state.activeProfileId = profile?.id || "";
   els.profileName.value = profile?.name || "";
-  els.subjectsGrid.querySelectorAll("select").forEach((select) => {
-    if (select.dataset.subject) select.value = state.scores[select.dataset.subject] || "";
-    if (select.dataset.electiveSubject) {
-      select.value = state.electiveSubjects[select.dataset.electiveSubject] || "";
-    }
-  });
+  renderSubjects();
   renderProfiles();
   update();
 }
@@ -333,15 +381,19 @@ function renderResults() {
   const rows = data.programmes
     .map((programme) => ({ programme, match: matchProgramme(programme, userScore) }))
     .filter(({ programme, match }) => {
-      const searchable = `${programme.title} ${programme.institution} ${programme.areaOfStudy}`.toLowerCase();
+      const searchable =
+        `${programme.title} ${programme.institution} ${programme.areaOfStudy} ${programme.detailedCategory}`.toLowerCase();
       return (
         (!query || searchable.includes(query)) &&
         (!state.award || programme.awardLevel === state.award) &&
-        (!state.area || programme.areaOfStudy === state.area) &&
+        (!state.category || (programme.detailedCategory || programme.areaOfStudy) === state.category) &&
+        (!state.institutions.length || state.institutions.includes(programme.institution)) &&
         modeAllows(match.status)
       );
     })
     .sort((a, b) => {
+      const awardDelta = awardRank(a.programme.awardLevel) - awardRank(b.programme.awardLevel);
+      if (awardDelta) return awardDelta;
       if (!userScore) return a.programme.averageScoreHigh - b.programme.averageScoreHigh;
       const aDistance = Math.abs(userScore - a.programme.averageScoreHigh);
       const bDistance = Math.abs(userScore - b.programme.averageScoreHigh);
@@ -357,6 +409,13 @@ function renderResults() {
   }
 
   els.resultsList.innerHTML = rows.map(({ programme, match }) => programmeCard(programme, match)).join("");
+}
+
+function awardRank(award) {
+  if (award === "Bachelor's Degree") return 0;
+  if (award === "Associate Degree") return 1;
+  if (award === "Higher Diploma") return 2;
+  return 3;
 }
 
 function programmeCard(programme, match) {
@@ -383,6 +442,7 @@ function programmeCard(programme, match) {
       </header>
       <div class="programme-meta">
         <span>${escapeHtml(programme.awardLevel)}</span>
+        <span>${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
         <span>${escapeHtml(programme.areaOfStudy)}</span>
         <span>Match reference: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>
         <span>差距: ${escapeHtml(delta)}</span>
@@ -453,8 +513,12 @@ function bindControls() {
     state.award = event.target.value;
     renderResults();
   });
-  els.areaFilter.addEventListener("change", (event) => {
-    state.area = event.target.value;
+  els.categoryFilter.addEventListener("change", (event) => {
+    state.category = event.target.value;
+    renderResults();
+  });
+  els.institutionFilter.addEventListener("change", () => {
+    state.institutions = Array.from(els.institutionFilter.selectedOptions).map((option) => option.value);
     renderResults();
   });
   els.matchMode.addEventListener("change", (event) => {
@@ -462,15 +526,16 @@ function bindControls() {
     renderResults();
   });
   els.resetScores.addEventListener("click", () => {
-    state.scores = Object.fromEntries(subjects.map((subject) => [subject.key, ""]));
+    state.scores = {
+      ...Object.fromEntries(coreSubjects.map((subject) => [subject.key, ""])),
+      ...Object.fromEntries(Array.from({ length: defaultElectiveCount }, (_, index) => [`x${index + 1}`, ""])),
+    };
     state.electiveSubjects = Object.fromEntries(
-      subjects.filter((subject) => subject.type === "elective").map((subject) => [subject.key, ""]),
+      Array.from({ length: defaultElectiveCount }, (_, index) => [`x${index + 1}`, ""]),
     );
     state.activeProfileId = "";
     els.profileName.value = "";
-    els.subjectsGrid.querySelectorAll("select").forEach((select) => {
-      select.value = "";
-    });
+    renderSubjects();
     renderProfiles();
     update();
   });

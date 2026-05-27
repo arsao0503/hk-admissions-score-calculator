@@ -37,52 +37,120 @@ def programme_key(institution: str, title: str) -> str:
     return f"{institution.strip().lower()}||{title.strip().lower()}"
 
 
-def load_catalog() -> dict[str, dict[str, str]]:
-    lookup: dict[str, dict[str, str]] = {}
+def normalize_text(value: str) -> str:
+    return re.sub(r"\s+", " ", (value or "").strip().lower())
+
+
+def detailed_category(title: str, area: str) -> str:
+    text = normalize_text(f"{title} {area}")
+    rules = [
+        ("Medicine", ["medicine", "medical sciences"]),
+        ("Nursing", ["nursing"]),
+        ("Allied Health / Rehabilitation", ["physiotherapy", "rehabilitation", "health care", "health and social care"]),
+        ("Pharmacy / Pharmaceutical Sciences", ["pharmaceutical", "pharmacy", "dispensing"]),
+        ("Biomedical / Life Sciences", ["biomedical", "molecular", "life science"]),
+        ("Dental / Oral Health", ["dental", "dentistry"]),
+        ("Psychology / Counselling", ["psychology", "counselling"]),
+        ("Computer Science / Software", ["computer science", "software", "computing"]),
+        ("AI / Data Science / FinTech", ["artificial intelligence", "data science", "fintech", "financial technology"]),
+        ("Cybersecurity / Information Technology", ["cyber", "information technology", "ict", "intelligent technologies"]),
+        ("Engineering", ["engineering", "mechanical", "electrical", "civil"]),
+        ("Architecture / Surveying / Construction", ["architecture", "surveying", "building", "construction", "quantity surveying", "town planning"]),
+        ("Accounting / Finance", ["accounting", "finance", "banking", "financial"]),
+        ("Business / Management", ["business", "management", "global business", "human resource", "supply chain", "real estate", "commerce"]),
+        ("Marketing / Public Relations / Advertising", ["marketing", "public relations", "advertising"]),
+        ("Hospitality / Tourism / Aviation", ["hospitality", "tourism", "aviation", "airline", "theme park", "hotel"]),
+        ("Culinary / Baking", ["culinary", "baking", "pastry"]),
+        ("Sports / Recreation", ["sports", "sport coaching", "sport performance", "sports and recreation"]),
+        ("Education / Teaching", ["education", "teaching", "early childhood"]),
+        ("Language / Translation / Communication", ["language", "translation", "english", "chinese", "putonghua", "linguistic", "bilingual", "professional communication"]),
+        ("Journalism / Media / Communication", ["journalism", "mass media", "communication", "public relations"]),
+        ("Creative Media / Film / Animation", ["creative", "media", "animation", "film", "music"]),
+        ("Design / Visual Arts", ["design", "visual", "fine arts", "arts practice"]),
+        ("Social Work / Human Services", ["social work", "human services"]),
+        ("Social Sciences / Public Services", ["social sciences", "criminology", "public", "security"]),
+        ("Environmental / Food / Laboratory Sciences", ["environmental", "food", "testing", "laboratory"]),
+        ("Sciences", ["science", "stem"]),
+        ("Law", ["law"]),
+        ("Humanities / Culture / History", ["humanities", "history", "philosophy", "cultural"]),
+    ]
+    for label, keywords in rules:
+        if any(keyword in text for keyword in keywords):
+            return label
+    return area or "Unclassified"
+
+
+def load_catalog() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
     if not CATALOG.exists():
-        return lookup
+        return rows
 
     with CATALOG.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
-            key = programme_key(row.get("institution", ""), row.get("programme_title", ""))
-            lookup[key] = row
-    return lookup
+            rows.append(row)
+    return rows
+
+
+def load_score_rows() -> list[dict[str, str]]:
+    with SCORE_ROWS.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
+def find_score_row(catalog_row: dict[str, str], score_rows: list[dict[str, str]]) -> dict[str, str] | None:
+    institution = normalize_text(catalog_row.get("institution", ""))
+    title = normalize_text(catalog_row.get("programme_title", ""))
+    if not institution or not title:
+        return None
+
+    candidates = [row for row in score_rows if normalize_text(row.get("institution", "")) == institution]
+    for row in candidates:
+        score_title = normalize_text(row.get("programme_title", ""))
+        if score_title == title:
+            return row
+    for row in candidates:
+        score_title = normalize_text(row.get("programme_title", ""))
+        if title in score_title or score_title in title:
+            return row
+    return None
 
 
 def main() -> None:
     catalog = load_catalog()
+    score_rows = load_score_rows()
     programmes = []
 
-    with SCORE_ROWS.open(newline="", encoding="utf-8") as handle:
-        for idx, row in enumerate(csv.DictReader(handle), start=1):
-            institution = row.get("institution", "").strip()
-            title = row.get("programme_title", "").strip()
-            stats = {
-                "lowerQuartile": score_stat(row, "lower_quartile"),
-                "median": score_stat(row, "median"),
-                "mean": score_stat(row, "mean"),
-                "upperQuartile": score_stat(row, "upper_quartile"),
-                "highest": score_stat(row, "highest"),
-                "lowestOrMinimumAdmitted": score_stat(row, "lowest_or_minimum_admitted"),
-                "minOrOtherScore": score_stat(row, "min_or_other_score"),
-            }
-            low, high, raw_score = score_bounds(row.get("mean", ""))
-            if low is None or high is None or not institution or not title:
-                continue
+    for idx, extra in enumerate(catalog, start=1):
+        row = find_score_row(extra, score_rows)
+        if not row:
+            continue
+        institution = extra.get("institution", "").strip() or row.get("institution", "").strip()
+        title = extra.get("programme_title", "").strip() or row.get("programme_title", "").strip()
+        area_of_study = row.get("area_of_study", "").strip() or "Not specified"
+        stats = {
+            "lowerQuartile": score_stat(row, "lower_quartile"),
+            "median": score_stat(row, "median"),
+            "mean": score_stat(row, "mean"),
+            "upperQuartile": score_stat(row, "upper_quartile"),
+            "highest": score_stat(row, "highest"),
+            "lowestOrMinimumAdmitted": score_stat(row, "lowest_or_minimum_admitted"),
+            "minOrOtherScore": score_stat(row, "min_or_other_score"),
+        }
+        low, high, raw_score = score_bounds(row.get("mean", ""))
+        if low is None or high is None or not institution or not title:
+            continue
 
-            extra = catalog.get(programme_key(institution, title), {})
-            award = extra.get("award_level", "").strip()
-            if not award:
-                lowered = title.lower()
-                if "bachelor" in lowered:
-                    award = "Bachelor's Degree"
-                elif "associate" in lowered:
-                    award = "Associate Degree"
-                elif "higher diploma" in lowered:
-                    award = "Higher Diploma"
+        award = extra.get("award_level", "").strip()
+        if not award:
+            lowered = title.lower()
+            if "bachelor" in lowered:
+                award = "Bachelor's Degree"
+            elif "associate" in lowered:
+                award = "Associate Degree"
+            elif "higher diploma" in lowered:
+                award = "Higher Diploma"
 
-            programmes.append(
-                {
+        programmes.append(
+            {
                     "id": f"cspe-{idx}",
                     "academicYear": row.get("academic_year", "").strip(),
                     "sourceSystem": "CSPE",
@@ -90,7 +158,8 @@ def main() -> None:
                     "providerId": row.get("provider_id", "").strip(),
                     "title": title,
                     "awardLevel": award or "Not specified",
-                    "areaOfStudy": row.get("area_of_study", "").strip() or "Not specified",
+                    "areaOfStudy": area_of_study,
+                    "detailedCategory": detailed_category(title, area_of_study),
                     "averageScoreLow": low,
                     "averageScoreHigh": high,
                     "averageScoreText": raw_score,
@@ -100,8 +169,8 @@ def main() -> None:
                     "programmeUrl": extra.get("programme_url", "").strip(),
                     "rawScoreText": row.get("raw_score_text", "").strip(),
                     "sourceConfidence": row.get("source_confidence", "").strip(),
-                }
-            )
+            }
+        )
 
     payload = {
         "generatedAt": "2026-05-27",
