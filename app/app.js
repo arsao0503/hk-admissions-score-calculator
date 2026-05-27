@@ -75,6 +75,8 @@ const els = {
   cspeScore: document.querySelector("#cspeScore"),
   heroBest5: document.querySelector("#heroBest5"),
   heroBand: document.querySelector("#heroBand"),
+  mobileBest5: document.querySelector("#mobileBest5"),
+  mobileResultCount: document.querySelector("#mobileResultCount"),
   eligibilityBox: document.querySelector("#eligibilityBox"),
   searchInput: document.querySelector("#searchInput"),
   awardFilter: document.querySelector("#awardFilter"),
@@ -454,6 +456,9 @@ function renderResults() {
     .slice(0, 80);
 
   els.resultCount.textContent = rows.length.toString();
+  if (els.mobileResultCount) {
+    els.mobileResultCount.textContent = rows.length.toString();
+  }
 
   if (!rows.length) {
     els.resultsList.innerHTML = `<div class="empty-state">沒有符合條件的課程。試下放寬分數策略或清除搜尋字。</div>`;
@@ -573,6 +578,9 @@ function update() {
   els.cspeScore.textContent = best5.toString();
   els.heroBest5.textContent = best5.toString();
   els.heroBand.textContent = best5 ? `${best5} 分附近的可選課程` : "未輸入成績";
+  if (els.mobileBest5) {
+    els.mobileBest5.textContent = best5.toString();
+  }
   renderEligibility();
   renderResults();
 }
