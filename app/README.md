@@ -7,9 +7,9 @@ Static first version of a Hong Kong admissions score calculator.
 - Converts HKDSE grades using `5**=7, 5*=6, 5=5, 4=4, 3=3, 2=2, 1=1, U=0`.
 - Calculates Best 5, Best 6, 4C + 2X, and a CSPE comparison score.
 - Requires each elective to have both a subject name and grade before it is counted.
-- Checks target-subject requirements, including Medicine / Dentistry requiring Chemistry and Biology in the first rule set.
 - Checks common baseline eligibility patterns for sub-degree and local bachelor's routes.
 - Filters CSPE / iPASS 2025/26 programmes by award level, area, keyword, and score distance.
+- Shows available programme score statistics such as Lower Quartile, Median, Mean, Upper Quartile, Highest, and Lowest / Minimum admitted. Missing official fields are displayed as `N/A`.
 - Links back to official programme and score sources when available.
 
 ## Data Build
@@ -47,4 +47,4 @@ Then open `http://localhost:5173`.
 
 ## Caveats
 
-This is a shortlist calculator, not a final admission decision tool. The current dataset is strongest for CSPE 2025/26 average scores. JUPAS score rows, institution-specific weighting, interviews, portfolios, and specific subject requirements should be added before treating it as a public production calculator.
+This is a shortlist calculator, not a final admission decision tool. The current public app dataset is strongest for CSPE 2025/26 average scores. JUPAS quartile rows, institution-specific weighting, interviews, portfolios, and specific subject requirements must be official-source extracted before treating it as a public production calculator.

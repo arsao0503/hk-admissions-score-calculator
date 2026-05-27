@@ -185,18 +185,6 @@ h2 {
   margin-top: 6px;
 }
 
-.target-rule {
-  display: block;
-  margin-bottom: 16px;
-  color: var(--muted);
-  font-size: 0.84rem;
-  font-weight: 800;
-}
-
-.target-rule select {
-  margin-top: 6px;
-}
-
 .subject-row {
   display: grid;
   grid-template-columns: minmax(120px, 1fr) 128px;
@@ -424,6 +412,34 @@ input:focus-visible {
   font-weight: 700;
 }
 
+.score-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+
+.score-stats div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfd;
+}
+
+.score-stats dt {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.score-stats dd {
+  margin: 4px 0 0;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
 .programme-actions {
   display: flex;
   flex-wrap: wrap;
@@ -504,6 +520,7 @@ input:focus-visible {
   }
 
   .subject-row,
+  .score-stats,
   .score-summary,
   .filters,
   .profile-tools {

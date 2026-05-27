@@ -28,6 +28,11 @@ def score_bounds(value: str) -> tuple[float | None, float | None, str]:
     return min(numbers), max(numbers), text
 
 
+def score_stat(row: dict[str, str], field: str) -> dict[str, float | str | None]:
+    low, high, text = score_bounds(row.get(field, ""))
+    return {"text": text, "low": low, "high": high}
+
+
 def programme_key(institution: str, title: str) -> str:
     return f"{institution.strip().lower()}||{title.strip().lower()}"
 
@@ -52,6 +57,15 @@ def main() -> None:
         for idx, row in enumerate(csv.DictReader(handle), start=1):
             institution = row.get("institution", "").strip()
             title = row.get("programme_title", "").strip()
+            stats = {
+                "lowerQuartile": score_stat(row, "lower_quartile"),
+                "median": score_stat(row, "median"),
+                "mean": score_stat(row, "mean"),
+                "upperQuartile": score_stat(row, "upper_quartile"),
+                "highest": score_stat(row, "highest"),
+                "lowestOrMinimumAdmitted": score_stat(row, "lowest_or_minimum_admitted"),
+                "minOrOtherScore": score_stat(row, "min_or_other_score"),
+            }
             low, high, raw_score = score_bounds(row.get("mean", ""))
             if low is None or high is None or not institution or not title:
                 continue
@@ -80,6 +94,8 @@ def main() -> None:
                     "averageScoreLow": low,
                     "averageScoreHigh": high,
                     "averageScoreText": raw_score,
+                    "referenceScoreLabel": "Mean",
+                    "scoreStats": stats,
                     "scoreSourceUrl": row.get("score_source_url", "").strip(),
                     "programmeUrl": extra.get("programme_url", "").strip(),
                     "rawScoreText": row.get("raw_score_text", "").strip(),

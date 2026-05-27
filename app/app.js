@@ -52,7 +52,6 @@ const state = {
   area: "",
   matchMode: "realistic",
   activeProfileId: "",
-  targetRule: "general",
 };
 
 const storageKey = "hkAdmissionsScoreProfiles.v1";
@@ -77,7 +76,6 @@ const els = {
   profileName: document.querySelector("#profileName"),
   saveProfile: document.querySelector("#saveProfile"),
   deleteProfile: document.querySelector("#deleteProfile"),
-  targetRule: document.querySelector("#targetRule"),
 };
 
 function renderSubjects() {
@@ -196,43 +194,10 @@ function selectedElectiveEntries() {
     }));
 }
 
-function hasElective(subjectCode, min = 2) {
-  return selectedElectiveEntries().some(
-    (entry) => entry.subject === subjectCode && entry.score >= min,
-  );
-}
-
 function incompleteElectives() {
   return ["x1", "x2", "x3", "x4"].filter(
     (key) => state.scores[key] !== "" && !state.electiveSubjects[key],
   );
-}
-
-function targetRequirementStatus() {
-  if (state.targetRule === "medicine") {
-    const missing = [];
-    if (!hasElective("chemistry", 3)) missing.push("Chemistry Level 3+");
-    if (!hasElective("biology", 3)) missing.push("Biology Level 3+");
-    return missing.length
-      ? `醫科/牙醫方向未滿足指定科目：${missing.join("、")}。`
-      : "已選 Chemistry + Biology，並達到醫科方向的初步指定科目檢查。";
-  }
-
-  if (state.targetRule === "health") {
-    const ok = ["biology", "chemistry", "physics"].some((subject) => hasElective(subject, 2));
-    return ok ? "已包含 Science 選修科，較適合醫療健康方向初步比較。" : "醫療健康方向通常建議至少一科 Science。";
-  }
-
-  if (state.targetRule === "engineering") {
-    const ok = ["physics", "ict", "m1", "m2"].some((subject) => hasElective(subject, 2));
-    return ok ? "已包含工程/科技常見優先科目。" : "工程/科技方向通常建議 Physics / ICT / M1 / M2。";
-  }
-
-  if (state.targetRule === "business") {
-    return "商科通常較少硬性 Science 要求，但仍要看個別院校加權。";
-  }
-
-  return "";
 }
 
 function eligibility() {
@@ -248,7 +213,6 @@ function eligibility() {
   const electiveWarning = incomplete.length
     ? `有 ${incomplete.length} 科選修只填了等級但未選科目，已不計入總分。`
     : "";
-  const targetStatus = targetRequirementStatus();
   const level2Count = scoreValues().filter((value) => value >= 2).length;
   const subDegreeLikely = hasLevel("chi", 2) && hasLevel("eng", 2) && level2Count >= 5;
   const degreeLikely =
@@ -262,7 +226,7 @@ function eligibility() {
     return {
       tone: "good",
       title: "初步符合本地學士課程常見基本門檻",
-      body: ["仍要逐個課程檢查指定科目、加權公式、面試或作品集要求。", targetStatus, electiveWarning]
+      body: ["仍要逐個課程檢查指定科目、加權公式、面試或作品集要求。", electiveWarning]
         .filter(Boolean)
         .join(" "),
     };
@@ -272,7 +236,7 @@ function eligibility() {
     return {
       tone: "good",
       title: "初步符合副學位 / 高級文憑常見基本門檻",
-      body: ["可優先比較 Associate Degree / Higher Diploma。學士課程通常仍要更高核心科要求。", targetStatus, electiveWarning]
+      body: ["可優先比較 Associate Degree / Higher Diploma。學士課程通常仍要更高核心科要求。", electiveWarning]
         .filter(Boolean)
         .join(" "),
     };
@@ -281,7 +245,7 @@ function eligibility() {
   return {
     tone: "warn",
     title: "可能未滿足常見基本門檻",
-    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。", targetStatus, electiveWarning]
+    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。", electiveWarning]
       .filter(Boolean)
       .join(" "),
   };
@@ -343,10 +307,8 @@ function renderProfiles() {
 function applyProfile(profile) {
   state.scores = { ...state.scores, ...(profile?.scores || {}) };
   state.electiveSubjects = { ...state.electiveSubjects, ...(profile?.electiveSubjects || {}) };
-  state.targetRule = profile?.targetRule || "general";
   state.activeProfileId = profile?.id || "";
   els.profileName.value = profile?.name || "";
-  els.targetRule.value = state.targetRule;
   els.subjectsGrid.querySelectorAll("select").forEach((select) => {
     if (select.dataset.subject) select.value = state.scores[select.dataset.subject] || "";
     if (select.dataset.electiveSubject) {
@@ -422,12 +384,41 @@ function programmeCard(programme, match) {
       <div class="programme-meta">
         <span>${escapeHtml(programme.awardLevel)}</span>
         <span>${escapeHtml(programme.areaOfStudy)}</span>
-        <span>Average: ${escapeHtml(programme.averageScoreText)}</span>
+        <span>Match reference: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>
         <span>差距: ${escapeHtml(delta)}</span>
+        <span>Source status: ${escapeHtml(programme.sourceConfidence || "N/A")}</span>
       </div>
+      ${scoreStatsTable(programme)}
       <p>${escapeHtml(programme.rawScoreText || "CSPE score row")}</p>
       <div class="programme-actions">${links}</div>
     </article>
+  `;
+}
+
+function scoreStatsTable(programme) {
+  const stats = programme.scoreStats || {};
+  const rows = [
+    ["Lower Quartile", stats.lowerQuartile],
+    ["Median", stats.median],
+    ["Mean", stats.mean],
+    ["Upper Quartile", stats.upperQuartile],
+    ["Highest", stats.highest],
+    ["Lowest / Minimum admitted", stats.lowestOrMinimumAdmitted],
+  ];
+
+  return `
+    <dl class="score-stats">
+      ${rows
+        .map(
+          ([label, stat]) => `
+            <div>
+              <dt>${escapeHtml(label)}</dt>
+              <dd>${escapeHtml(stat?.text || "N/A")}</dd>
+            </div>
+          `,
+        )
+        .join("")}
+    </dl>
   `;
 }
 
@@ -470,19 +461,13 @@ function bindControls() {
     state.matchMode = event.target.value;
     renderResults();
   });
-  els.targetRule.addEventListener("change", (event) => {
-    state.targetRule = event.target.value;
-    renderEligibility();
-  });
   els.resetScores.addEventListener("click", () => {
     state.scores = Object.fromEntries(subjects.map((subject) => [subject.key, ""]));
     state.electiveSubjects = Object.fromEntries(
       subjects.filter((subject) => subject.type === "elective").map((subject) => [subject.key, ""]),
     );
-    state.targetRule = "general";
     state.activeProfileId = "";
     els.profileName.value = "";
-    els.targetRule.value = "general";
     els.subjectsGrid.querySelectorAll("select").forEach((select) => {
       select.value = "";
     });
@@ -502,7 +487,6 @@ function bindControls() {
       name,
       scores: { ...state.scores },
       electiveSubjects: { ...state.electiveSubjects },
-      targetRule: state.targetRule,
       updatedAt: new Date().toISOString(),
     };
     const existingIndex = profiles.findIndex((profile) => profile.id === id);
