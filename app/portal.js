@@ -58,6 +58,8 @@ function renderSubjects() {
       subject.assessment,
       subject.fit,
       subject.caution,
+      ...(subject.syllabus || []),
+      ...(subject.facts || []),
       ...(subject.pathways || []),
     ]
       .join(" ")
@@ -75,6 +77,14 @@ function renderSubjects() {
           </header>
           <dl>
             <div>
+              <dt>Syllabus 主題</dt>
+              <dd>
+                <ul class="syllabus-list">
+                  ${(subject.syllabus || [subject.scope]).map((item) => `<li>${h(item)}</li>`).join("")}
+                </ul>
+              </dd>
+            </div>
+            <div>
               <dt>學習範圍</dt>
               <dd>${h(subject.scope)}</dd>
             </div>
@@ -91,6 +101,12 @@ function renderSubjects() {
               <dd>${h(subject.caution)}</dd>
             </div>
           </dl>
+          <section class="fact-box">
+            <h3>3 條 syllabus 小知識</h3>
+            <ol>
+              ${(subject.facts || []).slice(0, 3).map((fact) => `<li>${h(fact)}</li>`).join("")}
+            </ol>
+          </section>
           <div class="tag-row">
             ${(subject.pathways || []).map((pathway) => `<span>${h(pathway)}</span>`).join("")}
           </div>
