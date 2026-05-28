@@ -92,6 +92,7 @@ const state = {
   institutions: [],
   matchMode: "realistic",
   activeProfileId: "",
+  interests: [],
 };
 
 const storageKey = "hkAdmissionsScoreProfiles.v1";
@@ -100,6 +101,110 @@ const filterLabels = {
   categories: "學科範疇",
   institutions: "院校",
 };
+
+const interestOptions = [
+  { id: "health", label: "醫療 / 生命科學", subjects: ["biology", "chemistry"], programmes: "醫療、生命科學、護理、食品與營養" },
+  { id: "engineering", label: "工程 / 系統 / 解難", subjects: ["physics", "chemistry", "ict"], programmes: "工程、電腦、數據、建築環境" },
+  { id: "business", label: "商業 / 金融 / 管理", subjects: ["economics", "bafs"], programmes: "工商管理、會計、金融、經濟" },
+  { id: "people", label: "人群 / 社會 / 服務", subjects: ["geography", "biology", "economics"], programmes: "社會科學、教育、公共政策、健康服務" },
+  { id: "creative", label: "設計 / 影像 / 創作", subjects: ["visualArts", "ict"], programmes: "設計、傳理、創意媒體、建築相關" },
+  { id: "environment", label: "城市 / 環境 / 地理", subjects: ["geography", "biology", "chemistry"], programmes: "地理、環境科學、城市規劃、可持續發展" },
+  { id: "data", label: "科技 / 數據 / AI", subjects: ["ict", "physics", "economics"], programmes: "電腦科學、數據科學、金融科技、資訊管理" },
+  { id: "science", label: "實驗 / 理論 / 研究", subjects: ["biology", "chemistry", "physics"], programmes: "理學、科研、醫療相關、工程" },
+];
+
+const subjectGuides = [
+  {
+    key: "biology",
+    name: "Biology 生物",
+    category: "Science Education",
+    summary: "研究生命系統、人體、遺傳、生態和生物科技，適合對醫療、生命科學和環境議題有興趣的學生。",
+    assessment: "以公開試筆試為主，學校實驗和探究能力會影響日常學習表現。",
+    skills: ["概念理解", "實驗推論", "資料分析"],
+    programmes: ["醫療及健康", "生命科學", "環境科學", "食品與營養"],
+    careers: ["醫療相關", "科研", "環境顧問", "教育"],
+  },
+  {
+    key: "chemistry",
+    name: "Chemistry 化學",
+    category: "Science Education",
+    summary: "學習物質結構、反應、能量、分析化學和有機化學，常見於醫療、工程和理科相關課程要求或加權。",
+    assessment: "重視計算、化學概念、實驗設計和數據解讀。",
+    skills: ["定量計算", "實驗設計", "微觀推理"],
+    programmes: ["藥劑", "工程", "化學", "食品及材料"],
+    careers: ["化驗", "製藥", "工程", "科研"],
+  },
+  {
+    key: "physics",
+    name: "Physics 物理",
+    category: "Science Education",
+    summary: "涵蓋力學、波、電磁、能量和現代物理，適合喜歡用數學和模型理解世界的學生。",
+    assessment: "計算和概念題比重高，需要清楚表達推理步驟。",
+    skills: ["數學建模", "系統思考", "問題拆解"],
+    programmes: ["工程", "物理", "數據科學", "建築環境"],
+    careers: ["工程", "科技", "研究", "教育"],
+  },
+  {
+    key: "economics",
+    name: "Economics 經濟",
+    category: "Personal, Social and Humanities Education",
+    summary: "理解市場、價格、資源分配、宏觀經濟和政策取捨，適合對商業、社會議題和金融有興趣的學生。",
+    assessment: "需要概念應用、圖表分析和文字解釋。",
+    skills: ["邏輯推論", "圖表閱讀", "政策分析"],
+    programmes: ["經濟", "商業", "金融", "社會科學"],
+    careers: ["金融", "分析", "政策研究", "商業管理"],
+  },
+  {
+    key: "bafs",
+    name: "BAFS 企會財",
+    category: "Business Education",
+    summary: "涵蓋企業、會計、財務和管理基礎，適合想了解公司運作、會計或商業決策的學生。",
+    assessment: "會計單元重視程序和準確度，管理單元重視概念應用。",
+    skills: ["財務理解", "商業分析", "決策表達"],
+    programmes: ["會計", "工商管理", "金融", "市場學"],
+    careers: ["會計", "銀行", "營運", "創業"],
+  },
+  {
+    key: "ict",
+    name: "ICT 資訊及通訊科技",
+    category: "Technology Education",
+    summary: "學習電腦系統、網絡、數據、程式和資訊社會議題，適合想接觸科技和數碼產品的學生。",
+    assessment: "概念、應用和部分實作思維並重，不等於只學寫程式。",
+    skills: ["系統理解", "數據處理", "運算思維"],
+    programmes: ["電腦科學", "資訊系統", "數據科學", "金融科技"],
+    careers: ["軟件", "數據", "IT 支援", "產品營運"],
+  },
+  {
+    key: "geography",
+    name: "Geography 地理",
+    category: "Personal, Social and Humanities Education",
+    summary: "連接自然環境、城市、人口、災害和可持續發展，適合喜歡地圖、現象分析和社會議題的學生。",
+    assessment: "需要讀圖、資料回應、個案理解和長短題表達。",
+    skills: ["空間思考", "資料解讀", "議題分析"],
+    programmes: ["城市規劃", "環境", "社會科學", "旅遊"],
+    careers: ["規劃", "環境顧問", "教育", "公共政策"],
+  },
+  {
+    key: "visualArts",
+    name: "Visual Arts 視覺藝術",
+    category: "Arts Education",
+    summary: "訓練視覺表達、藝術評賞、創作過程和作品集思維，適合對設計、影像和創意方向有興趣的學生。",
+    assessment: "作品集和創作過程很重要，需要長期累積，不只是考試前溫習。",
+    skills: ["視覺表達", "創意思考", "作品發展"],
+    programmes: ["設計", "創意媒體", "建築相關", "藝術"],
+    careers: ["設計", "影像", "品牌", "展覽與文化"],
+  },
+];
+
+const graduateOutcomes = [
+  { category: "Medicine, Dentistry and Health", salary: 540, label: "醫療、牙科及健康" },
+  { category: "Education", salary: 362, label: "教育" },
+  { category: "Social Sciences", salary: 300, label: "社會科學" },
+  { category: "Sciences", salary: 292, label: "理學" },
+  { category: "Business and Management", salary: 291, label: "商業及管理" },
+  { category: "Engineering and Technology", salary: 288, label: "工程及科技" },
+  { category: "Arts and Humanities", salary: 269, label: "文學及人文" },
+];
 
 const els = {
   subjectsGrid: document.querySelector("#subjectsGrid"),
@@ -124,6 +229,10 @@ const els = {
   profileName: document.querySelector("#profileName"),
   saveProfile: document.querySelector("#saveProfile"),
   deleteProfile: document.querySelector("#deleteProfile"),
+  interestOptions: document.querySelector("#interestOptions"),
+  subjectRecommendations: document.querySelector("#subjectRecommendations"),
+  subjectLibrary: document.querySelector("#subjectLibrary"),
+  outcomeGrid: document.querySelector("#outcomeGrid"),
 };
 
 function electiveKeys() {
@@ -850,6 +959,119 @@ function scoreStatsTable(programme) {
   `;
 }
 
+function renderInterestOptions() {
+  if (!els.interestOptions) return;
+  const selected = new Set(state.interests);
+  els.interestOptions.innerHTML = interestOptions
+    .map(
+      (option) => `
+        <button class="interest-chip ${selected.has(option.id) ? "selected" : ""}" type="button" data-interest="${option.id}">
+          ${escapeHtml(option.label)}
+        </button>
+      `,
+    )
+    .join("");
+}
+
+function renderSubjectRecommendations() {
+  if (!els.subjectRecommendations) return;
+  const selectedInterests = interestOptions.filter((option) => state.interests.includes(option.id));
+  const subjectScores = new Map();
+  const programmeAreas = new Set();
+
+  selectedInterests.forEach((interest) => {
+    interest.subjects.forEach((subject, index) => {
+      subjectScores.set(subject, (subjectScores.get(subject) || 0) + 3 - Math.min(index, 2));
+    });
+    programmeAreas.add(interest.programmes);
+  });
+
+  const recommendedSubjects = [...subjectScores.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([subject]) => subjectGuides.find((guide) => guide.key === subject))
+    .filter(Boolean);
+
+  if (!selectedInterests.length) {
+    els.subjectRecommendations.innerHTML = `
+      <div class="empty-state compact">先選擇幾個興趣方向，這裡會顯示相關高中科目、升學範疇和需要人工核對的地方。</div>
+    `;
+    return;
+  }
+
+  els.subjectRecommendations.innerHTML = `
+    <div class="recommendation-summary">
+      <span>${selectedInterests.length} 個興趣方向</span>
+      <strong>建議先比較 ${recommendedSubjects.length} 個科目</strong>
+      <p>這是探索式配對，不代表院校要求。真正報讀前仍要回到 programme card 檢查指定科目和 multiplier。</p>
+    </div>
+    <div class="recommendation-subjects">
+      ${recommendedSubjects
+        .map(
+          (subject) => `
+            <article>
+              <h3>${escapeHtml(subject.name)}</h3>
+              <p>${escapeHtml(subject.summary)}</p>
+              <div>${subject.programmes.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
+            </article>
+          `,
+        )
+        .join("")}
+    </div>
+    <div class="pathway-tags">
+      ${[...programmeAreas].map((area) => `<span>${escapeHtml(area)}</span>`).join("")}
+    </div>
+  `;
+}
+
+function renderSubjectLibrary() {
+  if (!els.subjectLibrary) return;
+  els.subjectLibrary.innerHTML = subjectGuides
+    .map(
+      (subject) => `
+        <article class="subject-card">
+          <div>
+            <span>${escapeHtml(subject.category)}</span>
+            <h3>${escapeHtml(subject.name)}</h3>
+          </div>
+          <p>${escapeHtml(subject.summary)}</p>
+          <dl>
+            <div>
+              <dt>評核 / 學習重點</dt>
+              <dd>${escapeHtml(subject.assessment)}</dd>
+            </div>
+            <div>
+              <dt>訓練能力</dt>
+              <dd>${subject.skills.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</dd>
+            </div>
+            <div>
+              <dt>相關方向</dt>
+              <dd>${subject.careers.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</dd>
+            </div>
+          </dl>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderGraduateOutcomes() {
+  if (!els.outcomeGrid) return;
+  els.outcomeGrid.innerHTML = graduateOutcomes
+    .map((item) => {
+      const monthly = Math.round((item.salary * 1000) / 12 / 100) * 100;
+      return `
+        <article class="outcome-card">
+          <span>UGC 2023/24 Undergraduate</span>
+          <h3>${escapeHtml(item.label)}</h3>
+          <strong>HK$${escapeHtml(item.salary)}k / 年</strong>
+          <p>約 HK$${escapeHtml(monthly.toLocaleString("en-HK"))} / 月。只包括全職就業畢業生，按 broad academic programme category 統計。</p>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -876,6 +1098,16 @@ function update() {
 }
 
 function bindControls() {
+  els.interestOptions?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-interest]");
+    if (!button) return;
+    const interest = button.dataset.interest;
+    state.interests = state.interests.includes(interest)
+      ? state.interests.filter((item) => item !== interest)
+      : [...state.interests, interest].slice(-4);
+    renderInterestOptions();
+    renderSubjectRecommendations();
+  });
   els.searchInput.addEventListener("input", (event) => {
     state.search = event.target.value;
     renderResults();
@@ -951,5 +1183,9 @@ function bindControls() {
 
 renderSubjects();
 renderProfiles();
+renderInterestOptions();
+renderSubjectRecommendations();
+renderSubjectLibrary();
+renderGraduateOutcomes();
 bindControls();
 update();

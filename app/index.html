@@ -3,15 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HK Admissions Score Calculator</title>
+    <title>HK DSE Pathway Portal</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <nav class="portal-nav" aria-label="主要功能">
+      <a href="#calculatorTitle">計分器</a>
+      <a href="#subjectExplorerTitle">選科探索</a>
+      <a href="#subjectLibraryTitle">科目資料庫</a>
+      <a href="#outcomesTitle">出路與薪資</a>
+      <a href="#sourceMethodTitle">資料來源</a>
+    </nav>
+
     <header class="app-header">
       <div class="header-copy">
-        <p class="eyebrow">Hong Kong Admissions Score</p>
-        <h1>DSE 收生分數計算機</h1>
-        <p class="lede">輸入預計或實際 HKDSE 成績，即時按 CSPE common scoring scale 換算分數、檢查基本門檻，並用 CSPE 2025/26 及 JUPAS 2025 官方收生成績資料篩選可能選項。</p>
+        <p class="eyebrow">HKDSE Pathway Portal</p>
+        <h1>DSE 升學與選科支援門戶</h1>
+        <p class="lede">由計分開始，逐步連接選科、課程配對、出路與薪資資料。適合 DSE 考生比較 JUPAS / CSPE 選項，也適合初中學生初步理解高中科目和未來方向。</p>
       </div>
       <div class="score-card" aria-live="polite">
         <span class="label">Best 5</span>
@@ -30,6 +38,24 @@
         <strong><span id="mobileResultCount">0</span></strong>
       </div>
     </div>
+
+    <section class="portal-overview" aria-label="網站功能總覽">
+      <article>
+        <span>01</span>
+        <h2>先計分，再配對</h2>
+        <p>保留現有 HKDSE 成績輸入、subject weighting、programme matching 和風險標籤。</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h2>由興趣反推選科</h2>
+        <p>初中生可按興趣、能力和學習偏好，看到相關 DSE 科目群和可延伸的升學範疇。</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h2>出路不只看分數</h2>
+        <p>用 UGC 和院校 Graduate Employment Survey 作參考，顯示薪資資料的層級和限制。</p>
+      </article>
+    </section>
 
     <main class="app-shell">
       <section class="calculator-panel" aria-labelledby="calculatorTitle">
@@ -119,12 +145,58 @@
       </section>
     </main>
 
-    <section class="notes-section">
-      <h2>使用說明</h2>
+    <section class="portal-section" id="subjectExplorer" aria-labelledby="subjectExplorerTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Subject Explorer</p>
+          <h2 id="subjectExplorerTitle">按興趣探索高中選科</h2>
+        </div>
+      </div>
+      <div class="explorer-layout">
+        <div class="interest-panel">
+          <h3>你較想接觸甚麼？</h3>
+          <p>選 2-4 個最接近自己的方向。這裡只作初步探索，不會把任何科目標記成唯一答案。</p>
+          <div class="interest-options" id="interestOptions"></div>
+        </div>
+        <div class="recommendation-panel" id="subjectRecommendations" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="portal-section" aria-labelledby="subjectLibraryTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Syllabus Library</p>
+          <h2 id="subjectLibraryTitle">科目資料庫 MVP</h2>
+        </div>
+      </div>
+      <div class="subject-library" id="subjectLibrary"></div>
+    </section>
+
+    <section class="portal-section" id="outcomes" aria-labelledby="outcomesTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Graduate Outcomes</p>
+          <h2 id="outcomesTitle">出路與薪資資料預覽</h2>
+        </div>
+      </div>
+      <div class="outcome-grid" id="outcomeGrid"></div>
+      <div class="source-caveat">
+        <strong>重要提示</strong>
+        <p>薪資資料目前以 UGC 2023/24 全職就業畢業生 broad academic programme category 作第一層參考。它不是單一課程的保證薪金，之後應再接入各院校 Graduate Employment Survey 的 programme / faculty / institution level 資料。</p>
+      </div>
+    </section>
+
+    <section class="notes-section" aria-labelledby="sourceMethodTitle">
+      <h2 id="sourceMethodTitle">使用說明與資料來源</h2>
       <div class="notes-grid">
         <p>現時計分公式是 CSPE common scale：5** = 7、5* = 6、5 = 5、4 = 4、3 = 3、2 = 2、1 = 1、U = 0。選修科必須同時選科目及等級，否則不會計入 Best 5 / Best 6。</p>
         <p>課程卡只顯示資料集中已由官方來源抽出的收生成績統計欄位，例如 Lower Quartile、Median、Mean、Upper Quartile；缺資料不會自動推算或補值。</p>
-        <p>JUPAS 課程已接入 2025 官方 Admissions Scores PDF。JUPAS 分數採用院校及課程專屬公式，部分 weighted scores 可高於 35；本頁會列出作參考，但不會直接與 CSPE common scale 作差距比較。</p>
+        <p>JUPAS 課程已接入 2025 官方 Admissions Scores PDF。選科和出路資料會優先參考 EDB / HKEAA / UGC / 院校 Graduate Employment Survey，並標明資料層級和限制。</p>
+      </div>
+      <div class="source-links" aria-label="官方參考資料">
+        <a href="https://www.edb.gov.hk/en/curriculum-development/kla/overview.html" target="_blank" rel="noreferrer">EDB KLA / NSS 科目</a>
+        <a href="https://www.hkeaa.edu.hk/en/hkdse/assessment/subject_information/" target="_blank" rel="noreferrer">HKEAA HKDSE Subject Information</a>
+        <a href="https://data.gov.hk/en-data/dataset/hk-ugc-ugc-average-annual-salaries-graduates" target="_blank" rel="noreferrer">UGC / Data.gov 薪資資料</a>
       </div>
     </section>
 
