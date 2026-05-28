@@ -560,9 +560,10 @@ function renderMultiSelectOptions(container, options, selectedValues) {
   const summary = validSelected.length ? `${validSelected.length} 已選` : "全部";
   const isOpen = container.classList.contains("open");
   container.innerHTML = `
+    <span class="filter-label">${escapeHtml(label)}</span>
     <button class="filter-trigger" type="button" aria-expanded="${isOpen ? "true" : "false"}">
-      <span>${escapeHtml(label)}</span>
       <strong>${escapeHtml(summary)}</strong>
+      <span aria-hidden="true">▾</span>
     </button>
     <div class="filter-panel">
       ${
@@ -753,7 +754,6 @@ function programmeCard(programme, match) {
       ${weightingGrid(programme)}
       ${projectionGrid(match.projection)}
       ${scoreStatsTable(programme)}
-      <p>${escapeHtml(programme.rawScoreText || "CSPE score row")}</p>
       <div class="programme-actions">${links}</div>
     </article>
   `;

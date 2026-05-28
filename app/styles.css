@@ -323,20 +323,30 @@ input:focus-visible {
 
 .filters {
   display: grid;
-  grid-template-columns: minmax(160px, 1.3fr) minmax(130px, 0.9fr) minmax(150px, 1fr) minmax(190px, 1.2fr) minmax(130px, 0.9fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
-  align-items: start;
+  align-items: end;
 }
 
-.filters label {
+.filters label,
+.filter-label {
   color: var(--muted);
   font-size: 0.84rem;
   font-weight: 800;
 }
 
+.filters > label,
+.filter-menu {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
 .filters input,
-.filters select {
-  margin-top: 6px;
+.filters select,
+.filter-trigger {
+  width: 100%;
+  min-height: 42px;
 }
 
 .filter-menu {
@@ -349,7 +359,6 @@ input:focus-visible {
   min-height: 42px;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
   padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -367,6 +376,9 @@ input:focus-visible {
 .filter-trigger strong {
   color: var(--text);
   font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .filter-panel {
