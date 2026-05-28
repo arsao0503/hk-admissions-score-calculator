@@ -394,6 +394,21 @@ function programmeWeightings(programme) {
   return parseWeightingText(`${programme.subjectWeighting || ""} • ${programme.selectionFormula || ""}`);
 }
 
+function selectedWeightingEntries(programme) {
+  const selectedKeys = new Set(subjectEntries().map((entry) => entry.subject));
+  if (!selectedKeys.size) return [];
+  const bestBySubject = new Map();
+  programmeWeightings(programme)
+    .filter((entry) => selectedKeys.has(entry.subjectKey))
+    .forEach((entry) => {
+      const current = bestBySubject.get(entry.subjectKey);
+      if (!current || Number(entry.value) > Number(current.value)) {
+        bestBySubject.set(entry.subjectKey, entry);
+      }
+    });
+  return [...bestBySubject.values()];
+}
+
 function weightedProjection(programme) {
   const entries = subjectEntries();
   if (!entries.length) return null;
@@ -745,7 +760,7 @@ function programmeCard(programme, match) {
 }
 
 function weightingGrid(programme) {
-  const entries = programmeWeightings(programme);
+  const entries = selectedWeightingEntries(programme);
   if (!entries.length) return "";
   return `
     <section class="weighting-block">
