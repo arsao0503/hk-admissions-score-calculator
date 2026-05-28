@@ -94,18 +94,9 @@
             搜尋
             <input id="searchInput" type="search" placeholder="課程 / 院校 / 範疇" />
           </label>
-          <label>
-            課程級別（多選）
-            <select id="awardFilter" multiple size="4" aria-label="課程級別多選篩選"></select>
-          </label>
-          <label>
-            學科範疇（多選）
-            <select id="categoryFilter" multiple size="4" aria-label="學科範疇多選篩選"></select>
-          </label>
-          <label>
-            院校（多選）
-            <select id="institutionFilter" multiple size="4" aria-label="院校多選篩選"></select>
-          </label>
+          <div class="filter-menu" id="awardFilter" data-filter="awards"></div>
+          <div class="filter-menu" id="categoryFilter" data-filter="categories"></div>
+          <div class="filter-menu" id="institutionFilter" data-filter="institutions"></div>
           <label>
             分數策略
             <select id="matchMode">

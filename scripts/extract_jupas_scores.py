@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import csv
+import json
 import re
+import urllib.request
 from pathlib import Path
 
 import pdfplumber
@@ -15,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PDF = ROOT / "data/raw/jupas/af_2025_JUPAS.pdf"
 OUT = ROOT / "data/processed/jupas_score_rows_2025.csv"
 SOURCE_URL = "https://www.jupas.edu.hk/f/page/3667/af_2025_JUPAS.pdf"
+POLYU_WEIGHTING_DIR = ROOT / "data/raw/jupas/polyu_subject_weightings"
+POLYU_WEIGHTING_URL = "https://www.polyu.edu.hk/aradm/jupas/2025_{code}_SW.pdf"
 
 
 HEADER = [
@@ -27,6 +31,8 @@ HEADER = [
     "area_of_study",
     "selection_formula",
     "subject_weighting",
+    "subject_weighting_json",
+    "subject_weighting_source_url",
     "upper_quartile",
     "median",
     "lower_quartile",
@@ -47,6 +53,98 @@ def clean(value: object) -> str:
 def clean_subject_weighting(value: object) -> str:
     text = clean(str(value or "").replace("\n", " "))
     return "" if text in {"", "--", "-"} else text
+
+
+SUBJECT_KEYWORDS = [
+    ("technologyAndLiving", ["technology and living"]),
+    ("healthManagementAndSocialCare", ["health management and social care"]),
+    ("tourismAndHospitalityStudies", ["tourism and hospitality"]),
+    ("literatureInEnglish", ["literature in english"]),
+    ("chineseLiterature", ["chinese literature"]),
+    ("chineseHistory", ["chinese history"]),
+    ("ethicsAndReligiousStudies", ["ethics and religious"]),
+    ("combinedScience", ["combined science"]),
+    ("integratedScience", ["integrated science"]),
+    ("bafs", ["business, accounting and financial studies", "bafs"]),
+    ("ict", ["information and communication technology", "ict"]),
+    ("dat", ["design and applied technology"]),
+    ("visualArts", ["visual arts"]),
+    ("physicalEducation", ["physical education"]),
+    ("chi", ["chinese language", "chinese"]),
+    ("eng", ["english language", "english"]),
+    ("m1", ["calculus and statistics"]),
+    ("m2", ["algebra and calculus"]),
+    ("math", ["mathematics"]),
+    ("biology", ["biology"]),
+    ("chemistry", ["chemistry"]),
+    ("physics", ["physics"]),
+    ("economics", ["economics"]),
+    ("geography", ["geography"]),
+    ("history", ["history"]),
+    ("music", ["music"]),
+]
+
+
+def subject_key(name: str) -> str:
+    text = clean(name).lower()
+    for key, needles in SUBJECT_KEYWORDS:
+        if any(needle in text for needle in needles):
+            return key
+    return ""
+
+
+def weighting_json(entries: list[dict[str, object]]) -> str:
+    cleaned = [
+        {
+            "subject": clean(entry.get("subject", "")),
+            "subjectKey": entry.get("subjectKey", ""),
+            "value": float(entry.get("value", 1)),
+            "kind": entry.get("kind", "multiplier"),
+        }
+        for entry in entries
+        if clean(entry.get("subject", ""))
+    ]
+    return json.dumps(cleaned, ensure_ascii=False, separators=(",", ":")) if cleaned else ""
+
+
+def parse_polyu_weighting_pdf(code: str) -> tuple[str, str]:
+    POLYU_WEIGHTING_DIR.mkdir(parents=True, exist_ok=True)
+    pdf_path = POLYU_WEIGHTING_DIR / f"2025_{code}_SW.pdf"
+    url = POLYU_WEIGHTING_URL.format(code=code)
+    if not pdf_path.exists():
+        try:
+            urllib.request.urlretrieve(url, pdf_path)
+        except Exception:
+            return "", ""
+
+    try:
+        reader = PdfReader(pdf_path)
+        text = "\n".join(page.extract_text() or "" for page in reader.pages)
+    except Exception:
+        return "", ""
+
+    entries: list[dict[str, object]] = []
+    for raw_line in text.splitlines():
+        line = clean(raw_line)
+        if not line or line.startswith(("JUPAS Code", "Programme Title", "Category", "Subject Name", "*", "#")):
+            continue
+        match = re.match(r"(.+?)\s+(\d+(?:\.\d+)?)$", line)
+        if not match:
+            continue
+        subject, value = match.groups()
+        entries.append(
+            {
+                "subject": subject,
+                "subjectKey": subject_key(subject),
+                "value": float(value),
+                "kind": "weight",
+            }
+        )
+
+    if not entries:
+        return "", ""
+    summary = " • ".join(f"{entry['subject']} ({entry['value']:g})" for entry in entries)
+    return summary, weighting_json(entries)
 
 
 def append_subject_weighting(current: str, extra: object) -> str:
@@ -135,6 +233,8 @@ def row_dict(
     title: str,
     formula: str = "",
     subject_weighting: str = "",
+    subject_weighting_json: str = "",
+    subject_weighting_source_url: str = "",
     upper: str = "",
     median: str = "",
     lower: str = "",
@@ -171,6 +271,8 @@ def row_dict(
         "area_of_study": category(title, section),
         "selection_formula": clean(formula),
         "subject_weighting": clean_subject_weighting(subject_weighting),
+        "subject_weighting_json": subject_weighting_json,
+        "subject_weighting_source_url": subject_weighting_source_url,
         "upper_quartile": upper_score,
         "median": median_score,
         "lower_quartile": lower_score,
@@ -309,7 +411,20 @@ def extract_polyu(table: list[list[object]], institution: str, page: int, rows: 
                 if clean(c) == "Lower Quartile":
                     lower = next((number(clean(x)) for x in r[i + 1 :] if number(clean(x))), "")
             mean = next((number(clean(c)) for c in r[code_index + 1 :] if number(clean(c))), "")
-            pending = row_dict(institution, code, title, mean=mean, median=median, lower=lower, page=page)
+            weighting_text, weighting_data = parse_polyu_weighting_pdf(code)
+            pending = row_dict(
+                institution,
+                code,
+                title,
+                "Best 5 subjects after subject weighting",
+                subject_weighting=weighting_text,
+                subject_weighting_json=weighting_data,
+                subject_weighting_source_url=POLYU_WEIGHTING_URL.format(code=code) if weighting_text else "",
+                mean=mean,
+                median=median,
+                lower=lower,
+                page=page,
+            )
         elif pending and "Lower Quartile" in joined:
             nums = [number(clean(c)) for c in r if number(clean(c))]
             if nums:

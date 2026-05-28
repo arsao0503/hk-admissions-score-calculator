@@ -126,6 +126,16 @@ def load_jupas_rows() -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def json_array(value: str) -> list[dict[str, object]]:
+    if not value:
+        return []
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError:
+        return []
+    return parsed if isinstance(parsed, list) else []
+
+
 def find_score_row(catalog_row: dict[str, str], score_rows: list[dict[str, str]]) -> dict[str, str] | None:
     institution = normalize_text(catalog_row.get("institution", ""))
     title = normalize_text(catalog_row.get("programme_title", ""))
@@ -244,6 +254,8 @@ def main() -> None:
                 "rawScoreText": jupas_admission_raw_text(row),
                 "selectionFormula": row.get("selection_formula", "").strip(),
                 "subjectWeighting": row.get("subject_weighting", "").strip(),
+                "subjectWeightings": json_array(row.get("subject_weighting_json", "")),
+                "subjectWeightingSourceUrl": row.get("subject_weighting_source_url", "").strip(),
                 "sourceConfidence": row.get("source_confidence", "").strip(),
             }
         )

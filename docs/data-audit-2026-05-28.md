@@ -15,12 +15,13 @@
 - JUPAS extracted score rows: 354
 - JUPAS rows missing reference score: 2
 - JUPAS rows missing median or lower quartile: 25
-- JUPAS rows with extracted subject weighting / multiplier notes: 48
+- JUPAS rows with extracted subject weighting / multiplier notes: 93
 - JUPAS rows whose selection formula itself contains multiplier syntax: 52
 
 JUPAS subject weighting rows by institution:
 
 - The Chinese University of Hong Kong: 48
+- The Hong Kong Polytechnic University: 45
 
 JUPAS formula-multiplier rows by institution:
 

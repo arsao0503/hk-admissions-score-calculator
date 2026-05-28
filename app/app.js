@@ -46,6 +46,35 @@ const coreSubjects = [
   { key: "citizenship", label: "公民與社會發展", type: "citizenship" },
 ];
 
+const subjectLabels = {
+  chi: "中國語文",
+  eng: "英國語文",
+  math: "數學",
+  biology: "Biology 生物",
+  chemistry: "Chemistry 化學",
+  physics: "Physics 物理",
+  combinedScience: "Combined Science 組合科學",
+  integratedScience: "Integrated Science 綜合科學",
+  m1: "M1 微積分與統計",
+  m2: "M2 代數與微積分",
+  ict: "ICT 資訊及通訊科技",
+  dat: "Design and Applied Technology 設計與應用科技",
+  technologyAndLiving: "Technology and Living 科技與生活",
+  economics: "Economics 經濟",
+  bafs: "BAFS 企會財",
+  geography: "Geography 地理",
+  history: "History 歷史",
+  chineseHistory: "Chinese History 中史",
+  chineseLiterature: "Chinese Literature 中國文學",
+  literatureInEnglish: "Literature in English 英語文學",
+  ethicsAndReligiousStudies: "Ethics and Religious Studies 倫理與宗教",
+  healthManagementAndSocialCare: "Health Management and Social Care 健康管理與社會關懷",
+  tourismAndHospitalityStudies: "Tourism and Hospitality Studies 旅遊與款待",
+  visualArts: "Visual Arts 視覺藝術",
+  music: "Music 音樂",
+  physicalEducation: "Physical Education 體育",
+};
+
 const maxElectives = 6;
 const defaultElectiveCount = 2;
 
@@ -66,6 +95,11 @@ const state = {
 };
 
 const storageKey = "hkAdmissionsScoreProfiles.v1";
+const filterLabels = {
+  awards: "課程級別",
+  categories: "學科範疇",
+  institutions: "院校",
+};
 
 const els = {
   subjectsGrid: document.querySelector("#subjectsGrid"),
@@ -122,7 +156,10 @@ function renderSubjects() {
       if (subject.type === "elective") {
         return `
         <div class="subject-row elective">
-          <label>${subject.label}</label>
+          <div class="subject-row-title">
+            <label>${subject.label}</label>
+            <button class="icon-button remove-subject-button" type="button" data-remove-elective="${subject.key}" aria-label="刪除 ${subject.label}">×</button>
+          </div>
           <label>
             <span class="field-caption">科目</span>
             <select data-elective-subject="${subject.key}" aria-label="${subject.label} 科目">
@@ -171,6 +208,11 @@ function renderSubjects() {
     });
   });
   els.subjectsGrid.querySelector("#addSubject")?.addEventListener("click", addElectiveSubject);
+  els.subjectsGrid.querySelectorAll("[data-remove-elective]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      removeElectiveSubject(event.currentTarget.dataset.removeElective);
+    });
+  });
   syncSubjectControls();
 }
 
@@ -197,6 +239,13 @@ function addElectiveSubject() {
   const key = `x${nextNumber}`;
   state.scores[key] = "";
   state.electiveSubjects[key] = "";
+  renderSubjects();
+  update();
+}
+
+function removeElectiveSubject(key) {
+  delete state.scores[key];
+  delete state.electiveSubjects[key];
   renderSubjects();
   update();
 }
@@ -278,6 +327,110 @@ function duplicateElectiveSubjects() {
   return Object.keys(counts).filter((subject) => counts[subject] > 1);
 }
 
+function subjectKeyFromText(value) {
+  const text = String(value || "").toLowerCase();
+  const rules = [
+    ["technologyAndLiving", ["technology and living"]],
+    ["healthManagementAndSocialCare", ["health management"]],
+    ["tourismAndHospitalityStudies", ["tourism and hospitality"]],
+    ["literatureInEnglish", ["literature in english"]],
+    ["chineseLiterature", ["chinese literature"]],
+    ["chineseHistory", ["chinese history"]],
+    ["ethicsAndReligiousStudies", ["ethics and religious"]],
+    ["combinedScience", ["combined science"]],
+    ["integratedScience", ["integrated science"]],
+    ["bafs", ["business, accounting", "bafs"]],
+    ["ict", ["information and communication technology", "ict"]],
+    ["dat", ["design and applied technology"]],
+    ["visualArts", ["visual arts"]],
+    ["physicalEducation", ["physical education"]],
+    ["chi", ["chinese language", "chinese"]],
+    ["eng", ["english language", "english"]],
+    ["m1", ["m1", "calculus and statistics"]],
+    ["m2", ["m2", "algebra and calculus"]],
+    ["math", ["mathematics", "math"]],
+    ["biology", ["biology"]],
+    ["chemistry", ["chemistry"]],
+    ["physics", ["physics"]],
+    ["economics", ["economics"]],
+    ["geography", ["geography"]],
+    ["history", ["history"]],
+    ["music", ["music"]],
+  ];
+  return rules.find(([, terms]) => terms.some((term) => text.includes(term)))?.[0] || "";
+}
+
+function weightingSubjectsFromText(value) {
+  const text = String(value || "").trim();
+  if (/math(?:ematics)?\s*,\s*m1\s*\/\s*m2/i.test(text)) return ["Mathematics", "M1", "M2"];
+  if (/m1\s*\/\s*m2|m1\s+or\s+m2/i.test(text)) return ["M1", "M2"];
+  return text.split(/,|\bor\b/i).map((subject) => subject.trim()).filter(Boolean);
+}
+
+function parseWeightingText(text) {
+  const entries = [];
+  const pattern = /([^()•]+?)\s*\(x\s*([\d.]+)\)/gi;
+  let match;
+  while ((match = pattern.exec(String(text || "")))) {
+    const value = Number(match[2]);
+    if (!Number.isFinite(value)) continue;
+    entries.push(
+      ...weightingSubjectsFromText(match[1])
+        .map((subject) => ({
+          subject,
+          subjectKey: subjectKeyFromText(subject),
+          value,
+          kind: "multiplier",
+        })),
+    );
+  }
+  return entries;
+}
+
+function programmeWeightings(programme) {
+  if (Array.isArray(programme.subjectWeightings) && programme.subjectWeightings.length) {
+    return programme.subjectWeightings;
+  }
+  return parseWeightingText(`${programme.subjectWeighting || ""} • ${programme.selectionFormula || ""}`);
+}
+
+function weightedProjection(programme) {
+  const entries = subjectEntries();
+  if (!entries.length) return null;
+  const weightings = programmeWeightings(programme);
+  if (!weightings.length) return null;
+
+  const kind = weightings.some((item) => item.kind === "weight") ? "weight" : "multiplier";
+  const explicitWeights = weightings
+    .filter((item) => item.subjectKey)
+    .map((item) => Number(item.value))
+    .filter(Number.isFinite);
+  const defaultValue =
+    kind === "weight"
+      ? Math.min(...explicitWeights, 5)
+      : 1;
+  const weightMap = new Map(
+    weightings
+      .filter((item) => item.subjectKey)
+      .map((item) => [item.subjectKey, Number(item.value)]),
+  );
+  const calculated = entries.map((entry) => {
+    const weight = Number.isFinite(weightMap.get(entry.subject)) ? weightMap.get(entry.subject) : defaultValue;
+    return {
+      ...entry,
+      label: subjectLabels[entry.subject] || entry.subject,
+      weight,
+      weightedScore: entry.score * weight,
+    };
+  });
+  const counted = calculated.sort((a, b) => b.weightedScore - a.weightedScore).slice(0, 5);
+  return {
+    kind,
+    total: counted.reduce((sum, entry) => sum + entry.weightedScore, 0),
+    counted,
+  };
+}
+
 function eligibility() {
   if (enteredSubjectCount() === 0 && !state.scores.citizenship) {
     return {
@@ -335,14 +488,23 @@ function eligibility() {
 
 function matchProgramme(programme, score) {
   if (programme.sourceSystem === "JUPAS") {
-    return { status: "unknown", label: "JUPAS 公式參考", delta: 0 };
+    const projection = weightedProjection(programme);
+    const target = programme.averageScoreHigh;
+    if (!projection || !Number.isFinite(target)) {
+      return { status: "unknown", label: "只供參考", delta: 0, projection };
+    }
+    const delta = projection.total - target;
+    const ratio = target ? delta / target : 0;
+    if (ratio >= 0.05) return { status: "safe", label: "較穩陣", delta, projection };
+    if (ratio >= -0.03) return { status: "match", label: "接近平均", delta, projection };
+    return { status: "reach", label: "挑戰", delta, projection };
   }
   const target = programme.averageScoreHigh;
   if (!Number.isFinite(target)) {
-    return { status: "unknown", label: "缺分數資料", delta: 0 };
+    return { status: "unknown", label: "只供參考", delta: 0 };
   }
   if (!score) {
-    return { status: "unknown", label: "輸入分數後比較", delta: 0 };
+    return { status: "unknown", label: "只供參考", delta: 0 };
   }
 
   const delta = score - target;
@@ -372,19 +534,38 @@ function programmeCategory(programme) {
 }
 
 function selectedValues(select) {
-  return Array.from(select.selectedOptions).map((option) => option.value);
+  return Array.from(select.querySelectorAll("input[type='checkbox']:checked")).map((option) => option.value);
 }
 
-function renderMultiSelectOptions(select, options, selectedValues) {
+function renderMultiSelectOptions(container, options, selectedValues) {
   const availableValues = new Set(options);
   const validSelected = selectedValues.filter((value) => availableValues.has(value));
   const selectedSet = new Set(validSelected);
-  select.innerHTML = options
-    .map(
-      (option) =>
-        `<option value="${escapeHtml(option)}" ${selectedSet.has(option) ? "selected" : ""}>${escapeHtml(option)}</option>`,
-    )
-    .join("");
+  const label = filterLabels[container.dataset.filter] || "Filter";
+  const summary = validSelected.length ? `${validSelected.length} 已選` : "全部";
+  const isOpen = container.classList.contains("open");
+  container.innerHTML = `
+    <button class="filter-trigger" type="button" aria-expanded="${isOpen ? "true" : "false"}">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(summary)}</strong>
+    </button>
+    <div class="filter-panel">
+      ${
+        options.length
+          ? options
+              .map(
+                (option) => `
+                  <label class="check-option">
+                    <input type="checkbox" value="${escapeHtml(option)}" ${selectedSet.has(option) ? "checked" : ""} />
+                    <span>${escapeHtml(option)}</span>
+                  </label>
+                `,
+              )
+              .join("")
+          : `<p class="filter-empty">沒有可選項</p>`
+      }
+    </div>
+  `;
   return validSelected;
 }
 
@@ -511,7 +692,7 @@ function awardRank(award) {
 
 function programmeCard(programme, match) {
   const delta =
-    programme.sourceSystem === "JUPAS" || !topTotal(5)
+    !Number.isFinite(match.delta) || (!topTotal(5) && !match.projection)
       ? "N/A"
       : `${match.delta >= 0 ? "+" : ""}${match.delta.toFixed(1)}`;
   const links = [
@@ -541,6 +722,11 @@ function programmeCard(programme, match) {
         <span>細分: ${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
         <span>官方範疇: ${escapeHtml(programme.areaOfStudy)}</span>
         ${
+          match.projection
+            ? `<span>Projection: ${escapeHtml(match.projection.total.toFixed(1))}</span>`
+            : ""
+        }
+        ${
           programme.averageScoreText
             ? `<span>比較基準: ${escapeHtml(programme.referenceScoreLabel || "Score")} ${escapeHtml(programme.averageScoreText)}</span>`
             : ""
@@ -549,15 +735,65 @@ function programmeCard(programme, match) {
         <span>資料狀態: ${escapeHtml(sourceStatusLabel(programme.sourceConfidence))}</span>
       </div>
       ${programme.selectionFormula ? `<p><strong>Selection formula / multiplier:</strong> ${escapeHtml(programme.selectionFormula)}</p>` : ""}
-      ${
-        programme.subjectWeighting
-          ? `<p class="weighting-note"><strong>Subject multiplier:</strong> ${escapeHtml(programme.subjectWeighting)}</p>`
-          : ""
-      }
+      ${weightingGrid(programme)}
+      ${projectionGrid(match.projection)}
       ${scoreStatsTable(programme)}
       <p>${escapeHtml(programme.rawScoreText || "CSPE score row")}</p>
       <div class="programme-actions">${links}</div>
     </article>
+  `;
+}
+
+function weightingGrid(programme) {
+  const entries = programmeWeightings(programme);
+  if (!entries.length) return "";
+  return `
+    <section class="weighting-block">
+      <div class="subsection-title">
+        <strong>Subject multiplier / weighting</strong>
+        ${
+          programme.subjectWeightingSourceUrl
+            ? `<a href="${programme.subjectWeightingSourceUrl}" target="_blank" rel="noreferrer">來源</a>`
+            : ""
+        }
+      </div>
+      <div class="weighting-grid">
+        ${entries
+          .map(
+            (entry) => `
+              <div>
+                <dt>${escapeHtml(entry.subject)}</dt>
+                <dd>${entry.kind === "weight" ? "Weight" : "x"} ${escapeHtml(Number(entry.value).toString())}</dd>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function projectionGrid(projection) {
+  if (!projection) return "";
+  return `
+    <section class="projection-block">
+      <div class="subsection-title">
+        <strong>你的 weighted projection</strong>
+        <span>${escapeHtml(projection.total.toFixed(1))}</span>
+      </div>
+      <div class="projection-grid">
+        ${projection.counted
+          .map(
+            (entry) => `
+              <div>
+                <dt>${escapeHtml(entry.label)}</dt>
+                <dd>${entry.score} × ${entry.weight} = ${entry.weightedScore.toFixed(1)}</dd>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
   `;
 }
 
@@ -629,17 +865,22 @@ function bindControls() {
     state.search = event.target.value;
     renderResults();
   });
-  els.awardFilter.addEventListener("change", () => {
-    state.awards = selectedValues(els.awardFilter);
-    renderResults();
+  [els.awardFilter, els.categoryFilter, els.institutionFilter].forEach((filter) => {
+    filter.addEventListener("click", (event) => {
+      if (event.target.closest(".filter-trigger")) {
+        filter.classList.toggle("open");
+      }
+    });
+    filter.addEventListener("change", () => {
+      state[filter.dataset.filter] = selectedValues(filter);
+      filter.classList.add("open");
+      renderResults();
+    });
   });
-  els.categoryFilter.addEventListener("change", () => {
-    state.categories = selectedValues(els.categoryFilter);
-    renderResults();
-  });
-  els.institutionFilter.addEventListener("change", () => {
-    state.institutions = selectedValues(els.institutionFilter);
-    renderResults();
+  document.addEventListener("click", (event) => {
+    [els.awardFilter, els.categoryFilter, els.institutionFilter].forEach((filter) => {
+      if (!filter.contains(event.target)) filter.classList.remove("open");
+    });
   });
   els.matchMode.addEventListener("change", (event) => {
     state.matchMode = event.target.value;
