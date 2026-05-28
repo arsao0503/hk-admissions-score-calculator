@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>學科興趣心理測驗 | HKDSE Pathway Portal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="portal-nav" aria-label="主要功能">
+      <a href="./index.html">生涯規劃首頁</a>
+      <a href="./quiz.html" aria-current="page">心理測驗</a>
+      <a href="./calculator.html">計分器</a>
+      <a href="./subjects.html">科目資料庫</a>
+      <a href="./outcomes.html">出路與薪資</a>
+      <a href="./planner.html">規劃流程</a>
+    </nav>
+
+    <header class="site-header compact">
+      <div>
+        <p class="eyebrow">Subject Interest Quiz</p>
+        <h1>20 題學科興趣心理測驗</h1>
+        <p class="lede">這個測驗用活動偏好、解難方式和學習壓力，判斷學生較容易被哪類中學學科吸引。結果不是心理診斷，也不是最終選科建議；它的用途是幫學生更快進入科目資料庫，對照完整 syllabus 再作判斷。</p>
+      </div>
+      <div class="hero-actions">
+        <a class="secondary-link" href="./subjects.html">直接看選修科</a>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="portal-section quiz-intro">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">How it works</p>
+            <h2>測驗會配對八個學科興趣方向</h2>
+          </div>
+          <div class="quiz-progress" id="quizProgress" aria-live="polite"></div>
+        </div>
+        <div class="logic-grid">
+          <article>
+            <strong>不是測性格標籤</strong>
+            <p>結果只反映你在學科活動中的偏好，例如實驗、數據、創作、照顧人或社會議題。</p>
+          </article>
+          <article>
+            <strong>不是直接選職業</strong>
+            <p>同一個興趣方向可以連到多個科目和職業；測驗只幫你排出優先比較的科目。</p>
+          </article>
+          <article>
+            <strong>要回到 syllabus</strong>
+            <p>完成後要查看每科實際學習範圍、評核方式和小知識，確認自己是否接受長期修讀。</p>
+          </article>
+          <article>
+            <strong>要再核對門檻</strong>
+            <p>若已有目標課程，仍要用計分器核對指定科目、weighting 和 admission score。</p>
+          </article>
+        </div>
+      </section>
+
+      <form class="quiz-form" id="quizForm"></form>
+
+      <section class="portal-section quiz-result" id="quizResult" hidden></section>
+    </main>
+
+    <script src="./assets/portal-data.js"></script>
+    <script src="./portal.js"></script>
+  </body>
+</html>

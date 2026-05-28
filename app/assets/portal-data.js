@@ -474,3 +474,206 @@ window.DSE_PORTAL_DATA.subjects = window.DSE_PORTAL_DATA.subjects
     ...subject,
     ...(subjectEnrichment[subject.id] || {}),
   }));
+
+window.DSE_PORTAL_DATA.quizQuestions = [
+  {
+    id: "q01",
+    text: "如果有一個自由專題日，你最想做哪一種任務？",
+    choices: [
+      { label: "訪問同學，了解他們遇到的學習或生活需要", scores: { care: 2, society: 1 } },
+      { label: "拆解一件產品或系統，看看它如何運作", scores: { systems: 2, applied: 1 } },
+      { label: "整理一組數據，找出趨勢和原因", scores: { numbers: 2, science: 1 } },
+      { label: "做一個視覺、音樂或文字作品表達主題", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q02",
+    text: "你看到一個社會新聞時，通常最先想知道甚麼？",
+    choices: [
+      { label: "這件事對不同人群的生活有甚麼影響", scores: { society: 2, care: 1 } },
+      { label: "背後的數字、成本、誘因和取捨", scores: { numbers: 2, society: 1 } },
+      { label: "事件中的技術、科學或環境因素", scores: { science: 2, systems: 1 } },
+      { label: "可以怎樣把故事講得更清楚、更有感染力", scores: { language: 2, creative: 1 } },
+    ],
+  },
+  {
+    id: "q03",
+    text: "面對一條難題時，你比較自然的反應是？",
+    choices: [
+      { label: "先畫流程圖，把步驟和關係拆開", scores: { systems: 2, numbers: 1 } },
+      { label: "先找例子和個案，理解人的處境", scores: { care: 2, society: 1 } },
+      { label: "先查證據和實驗結果，看看有沒有規律", scores: { science: 2, numbers: 1 } },
+      { label: "先換一種表達方式，把意思說清楚", scores: { language: 2, creative: 1 } },
+    ],
+  },
+  {
+    id: "q04",
+    text: "你較享受哪一類課堂活動？",
+    choices: [
+      { label: "實驗、觀察、測量和解釋現象", scores: { science: 2, applied: 1 } },
+      { label: "辯論、資料題、歷史或社會議題討論", scores: { society: 2, language: 1 } },
+      { label: "計算、建模、程式或商業決策遊戲", scores: { numbers: 2, systems: 1 } },
+      { label: "創作、設計、演出、寫作或作品集發展", scores: { creative: 2, applied: 1 } },
+    ],
+  },
+  {
+    id: "q05",
+    text: "如果要你長期追蹤一個主題，你會選？",
+    choices: [
+      { label: "疾病、營養、照顧服務或人的身心需要", scores: { care: 2, science: 1 } },
+      { label: "氣候、城市、人口、政策或國際關係", scores: { society: 2, science: 1 } },
+      { label: "公司、金融市場、消費和商業模式", scores: { numbers: 2, applied: 1 } },
+      { label: "影像、音樂、語言、文化或敘事方式", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q06",
+    text: "小組專題入面，你最願意負責哪個角色？",
+    choices: [
+      { label: "統籌訪問、理解用戶需要和照顧組員狀態", scores: { care: 2, applied: 1 } },
+      { label: "建立模型、設計方法或解決技術問題", scores: { systems: 2, science: 1 } },
+      { label: "整理數據、預算、表格和結論", scores: { numbers: 2, systems: 1 } },
+      { label: "設計簡報、海報、影片或文字表達", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q07",
+    text: "你比較容易被哪一種問題吸引？",
+    choices: [
+      { label: "為甚麼某種藥物、材料或自然現象會產生效果", scores: { science: 2, systems: 1 } },
+      { label: "為甚麼某個政策會幫到一群人，但影響另一群人", scores: { society: 2, care: 1 } },
+      { label: "為甚麼一間公司會賺錢、虧損或改變策略", scores: { numbers: 2, applied: 1 } },
+      { label: "為甚麼一段文字、畫面或音樂會令人有感覺", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q08",
+    text: "如果你要做一份研究報告，你最想研究哪類資料？",
+    choices: [
+      { label: "實驗數據、圖表、變量和科學解釋", scores: { science: 2, numbers: 1 } },
+      { label: "問卷、統計、財務數字和市場資料", scores: { numbers: 2, applied: 1 } },
+      { label: "史料、政策文件、地圖和社會個案", scores: { society: 2, language: 1 } },
+      { label: "作品、文本、影像、聲音和創作過程", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q09",
+    text: "你希望一科能訓練你哪一種能力？",
+    choices: [
+      { label: "理解人、溝通、服務設計和同理判斷", scores: { care: 2, language: 1 } },
+      { label: "抽象推理、建模、設計系統和解難", scores: { systems: 2, science: 1 } },
+      { label: "量化分析、決策、財務和風險判斷", scores: { numbers: 2, applied: 1 } },
+      { label: "審美、表達、敘事和作品發展", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q10",
+    text: "你較能接受哪一種學習壓力？",
+    choices: [
+      { label: "大量概念和術語，但能連到生命、健康或環境", scores: { science: 2, care: 1 } },
+      { label: "大量計算、圖表和準確程序", scores: { numbers: 2, systems: 1 } },
+      { label: "大量閱讀、資料分析和長答論證", scores: { society: 2, language: 1 } },
+      { label: "長期創作、修改作品和接受回饋", scores: { creative: 2, applied: 1 } },
+    ],
+  },
+  {
+    id: "q11",
+    text: "你會較想參加哪一個校外活動？",
+    choices: [
+      { label: "醫院、社福、教育或社區服務體驗", scores: { care: 2, society: 1 } },
+      { label: "科學實驗、工程、機械人或編程比賽", scores: { systems: 2, science: 1 } },
+      { label: "商業個案、理財、創業或投資模擬", scores: { numbers: 2, applied: 1 } },
+      { label: "藝術展、寫作、戲劇、音樂或設計工作坊", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q12",
+    text: "你看一個城市問題時，最想處理哪一面？",
+    choices: [
+      { label: "居民需要、照顧資源和生活質素", scores: { care: 2, society: 1 } },
+      { label: "交通、能源、建築和基建系統", scores: { systems: 2, applied: 1 } },
+      { label: "土地價格、成本、誘因和數據趨勢", scores: { numbers: 2, society: 1 } },
+      { label: "城市影像、文化記憶和公共空間設計", scores: { creative: 2, society: 1 } },
+    ],
+  },
+  {
+    id: "q13",
+    text: "你較喜歡哪一類答案？",
+    choices: [
+      { label: "有明確計算步驟和可驗證結果", scores: { numbers: 2, systems: 1 } },
+      { label: "有實驗證據和可重複觀察", scores: { science: 2, systems: 1 } },
+      { label: "有不同觀點，需要比較和判斷", scores: { society: 2, language: 1 } },
+      { label: "有個人風格，但需要說得出選擇理由", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q14",
+    text: "如果未來工作要經常面對人，你會希望是哪種方式？",
+    choices: [
+      { label: "支援、教育、照顧或改善人的生活", scores: { care: 2, applied: 1 } },
+      { label: "說服、寫作、簡報、翻譯或跨文化溝通", scores: { language: 2, society: 1 } },
+      { label: "研究用戶行為，再設計產品或服務", scores: { applied: 2, systems: 1 } },
+      { label: "分析客戶、消費者或市場數據來做決策", scores: { numbers: 2, applied: 1 } },
+    ],
+  },
+  {
+    id: "q15",
+    text: "你最想知道一件產品背後的哪件事？",
+    choices: [
+      { label: "材料、結構、電路或技術如何令它運作", scores: { systems: 2, science: 1 } },
+      { label: "成本、定價、品牌和商業模式", scores: { numbers: 2, applied: 1 } },
+      { label: "它是否對環境、社會或使用者有好處", scores: { society: 2, care: 1 } },
+      { label: "它的外觀、體驗、故事和風格是否吸引", scores: { creative: 2, applied: 1 } },
+    ],
+  },
+  {
+    id: "q16",
+    text: "你較願意花時間練習哪一種技能？",
+    choices: [
+      { label: "解題、計算、推導和檢查錯誤", scores: { numbers: 2, systems: 1 } },
+      { label: "實驗、觀察、假設和證據判斷", scores: { science: 2, applied: 1 } },
+      { label: "閱讀、寫作、引用資料和建立論點", scores: { language: 2, society: 1 } },
+      { label: "創作、排版、表演、編曲或設計", scores: { creative: 2, applied: 1 } },
+    ],
+  },
+  {
+    id: "q17",
+    text: "如果要你解釋一個現象，你最想用哪種工具？",
+    choices: [
+      { label: "實驗設計和科學模型", scores: { science: 2, systems: 1 } },
+      { label: "數據圖表和成本效益分析", scores: { numbers: 2, society: 1 } },
+      { label: "歷史脈絡、制度和個案比較", scores: { society: 2, language: 1 } },
+      { label: "故事、圖像、聲音或作品示範", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q18",
+    text: "你比較想保留哪一類升學可能？",
+    choices: [
+      { label: "醫療、健康、生命科學、社福或教育", scores: { care: 2, science: 1 } },
+      { label: "工程、電腦、物理、設計科技或數據", scores: { systems: 2, numbers: 1 } },
+      { label: "商業、會計、金融、經濟或管理", scores: { numbers: 2, applied: 1 } },
+      { label: "人文、傳理、法律、設計、藝術或文化", scores: { language: 2, creative: 1 } },
+    ],
+  },
+  {
+    id: "q19",
+    text: "你希望科目內容和日常生活的關係是？",
+    choices: [
+      { label: "能解釋身體、疾病、食物、運動或照顧議題", scores: { care: 2, science: 1 } },
+      { label: "能解釋科技、網絡、能源、交通或機械", scores: { systems: 2, applied: 1 } },
+      { label: "能解釋價格、消費、公司、政策或市場", scores: { numbers: 2, society: 1 } },
+      { label: "能解釋文字、影像、聲音、文化或身份", scores: { creative: 2, language: 1 } },
+    ],
+  },
+  {
+    id: "q20",
+    text: "完成測驗後，你最想下一步得到甚麼？",
+    choices: [
+      { label: "知道哪些科目能連到助人、健康或社會服務", scores: { care: 2, society: 1 } },
+      { label: "知道哪些科目能連到 STEM、工程和科技", scores: { systems: 2, science: 1 } },
+      { label: "知道哪些科目能連到商業、數據和決策", scores: { numbers: 2, applied: 1 } },
+      { label: "知道哪些科目能連到創意、語言和表達", scores: { creative: 2, language: 1 } },
+    ],
+  },
+];
