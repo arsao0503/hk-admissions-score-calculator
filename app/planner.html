@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>生涯規劃流程 | HKDSE Pathway Portal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="portal-nav" aria-label="主要功能">
+      <a href="./index.html">生涯規劃首頁</a>
+      <a href="./calculator.html">計分器</a>
+      <a href="./subjects.html">科目資料庫</a>
+      <a href="./outcomes.html">出路與薪資</a>
+      <a href="./planner.html" aria-current="page">規劃流程</a>
+    </nav>
+
+    <header class="site-header compact">
+      <div>
+        <p class="eyebrow">Planning Workflow</p>
+        <h1>由初中到 JUPAS 的規劃流程</h1>
+        <p class="lede">完整生涯規劃不應只問「邊科搵錢」或「我幾多分入到」。這頁把學生要完成的判斷拆成階段：自我理解、選科、能力驗證、課程配對、出路校準和行動清單。</p>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="portal-section" id="junior">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">S1-S3</p>
+            <h2>初中：先建立 2-3 個可測試方向</h2>
+          </div>
+        </div>
+        <div class="planner-steps">
+          <article>
+            <span>01</span>
+            <h3>列出活動偏好</h3>
+            <p>學生先不用選職業，只需標記自己更接近照顧人、拆系統、處理數據、做實驗、寫作表達、視覺創作或真實場景工作。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>查科目實際內容</h3>
+            <p>進入科目資料庫，逐科看學習範圍和評核方式。目標是排除不適合的學習方式，而不是只聽科名。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>組合兩個方案</h3>
+            <p>建立「保留專業門檻」和「配合興趣能力」兩個 subject set，例如 Bio+Chem vs Econ+BAFS，然後比較壓力和可延伸方向。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="portal-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Interest Map</p>
+            <h2>興趣方向對應科目</h2>
+          </div>
+        </div>
+        <div class="route-grid" id="interestPlanner"></div>
+      </section>
+
+      <section class="portal-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">S4-S6</p>
+            <h2>高中：把興趣轉成可申請的課程清單</h2>
+          </div>
+        </div>
+        <div class="planner-steps">
+          <article>
+            <span>04</span>
+            <h3>用 predicted grade 建第一版 shortlist</h3>
+            <p>到計分器輸入 predicted grade，先看 programme matching，再記錄每個 programme 的指定科目、weighting、Median / Lower Quartile。</p>
+          </article>
+          <article>
+            <span>05</span>
+            <h3>把 shortlist 分三層</h3>
+            <p>Band A 不應只有夢想科，也要有接近平均和較穩陣選項。每個選項都要寫清楚：為何想讀、分數風險、出路是否接受。</p>
+          </article>
+          <article>
+            <span>06</span>
+            <h3>用出路資料校準期望</h3>
+            <p>查 broad category salary、院校 GES、專業資格和常見入職職位。若出路現實和想像落差大，要回頭調整 programme list。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="notes-section">
+        <h2>學生最後應該產出的文件</h2>
+        <div class="notes-grid">
+          <p>一份 subject choice rationale：列出選科原因、能力證據、放棄哪些科以及原因。</p>
+          <p>一份 programme shortlist：每個 programme 有 admission score、指定科目、weighting、source link 和風險標籤。</p>
+          <p>一份 outcome check：列出相關行業、薪資資料層級、專業資格、可能升學 route 和自己仍要查證的問題。</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./assets/portal-data.js"></script>
+    <script src="./portal.js"></script>
+  </body>
+</html>

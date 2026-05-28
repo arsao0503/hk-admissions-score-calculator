@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>科目資料庫 | HKDSE Pathway Portal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="portal-nav" aria-label="主要功能">
+      <a href="./index.html">生涯規劃首頁</a>
+      <a href="./calculator.html">計分器</a>
+      <a href="./subjects.html" aria-current="page">科目資料庫</a>
+      <a href="./outcomes.html">出路與薪資</a>
+      <a href="./planner.html">規劃流程</a>
+    </nav>
+
+    <header class="site-header compact">
+      <div>
+        <p class="eyebrow">Subject Database</p>
+        <h1>高中科目資料庫</h1>
+        <p class="lede">每科都按「學習範圍、評核與準備、適合學生、選科前要小心、相關升學方向」拆開。用途不是叫學生盲目追熱門科，而是幫學生理解自己能否長期讀下去，以及該科會打開哪些路線。</p>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="portal-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Filter</p>
+            <h2>按學習領域、興趣和關鍵字查科目</h2>
+          </div>
+        </div>
+        <div class="filters subject-filters" id="subjectFilters"></div>
+      </section>
+
+      <section class="subject-detail-grid" id="subjectCards" aria-live="polite"></section>
+
+      <section class="notes-section">
+        <h2>資料使用方法</h2>
+        <div class="notes-grid">
+          <p>科目是否「有用」要分三層看：課程是否明確 required、是否有 multiplier / preferred treatment、以及它是否幫學生確認興趣和建立能力。</p>
+          <p>EDB Life Planning 資料指出，高中課程由核心科目、選修科目和其他學習經歷組成；學生通常可從 Category A、Applied Learning 或其他語言選擇選修。</p>
+          <p>HKEAA assessment framework 和 subject information 是考核安排的正式參考；若學生面向 2027 或之後考試，要核對是否有新修訂。</p>
+        </div>
+        <div class="source-links">
+          <a href="https://www.edb.gov.hk/en/curriculum-development/kla/overview.html" target="_blank" rel="noreferrer">EDB KLA</a>
+          <a href="https://lifeplanning.edb.gov.hk/en/parents/junior-senior-secondary-level.html" target="_blank" rel="noreferrer">EDB Life Planning</a>
+          <a href="https://www.hkeaa.edu.hk/en/hkdse/assessment/subject_information/" target="_blank" rel="noreferrer">HKEAA Subject Information</a>
+          <a href="https://www.hkeaa.edu.hk/en/hkdse/assessment/assessment_framework/" target="_blank" rel="noreferrer">HKEAA Assessment Frameworks</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="./assets/portal-data.js"></script>
+    <script src="./portal.js"></script>
+  </body>
+</html>

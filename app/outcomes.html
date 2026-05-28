@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>出路與薪資 | HKDSE Pathway Portal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="portal-nav" aria-label="主要功能">
+      <a href="./index.html">生涯規劃首頁</a>
+      <a href="./calculator.html">計分器</a>
+      <a href="./subjects.html">科目資料庫</a>
+      <a href="./outcomes.html" aria-current="page">出路與薪資</a>
+      <a href="./planner.html">規劃流程</a>
+    </nav>
+
+    <header class="site-header compact">
+      <div>
+        <p class="eyebrow">Graduate Outcomes</p>
+        <h1>出路與薪資資料</h1>
+        <p class="lede">薪資不應該用來替學生作唯一決定，但它可以幫學生理解不同學科大類的市場現實。這頁先用 UGC/Data.gov 最新 CSV，目前最新年度為 2023/24；數字是 broad academic programme category，不是單一課程保證薪金。</p>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="portal-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Latest UGC Dataset</p>
+            <h2>UGC-funded 畢業生平均年薪</h2>
+          </div>
+        </div>
+        <div class="filters outcome-controls" id="outcomeControls"></div>
+        <div class="outcome-list" id="outcomeRows" aria-live="polite"></div>
+      </section>
+
+      <section class="portal-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">How to Read</p>
+            <h2>如何避免誤讀薪資資料</h2>
+          </div>
+        </div>
+        <div class="logic-grid">
+          <article>
+            <strong>資料層級</strong>
+            <p>UGC CSV 是 broad academic programme category。它可以做方向基準，但不能說某個 JUPAS programme 畢業就等於該薪金。</p>
+          </article>
+          <article>
+            <strong>樣本範圍</strong>
+            <p>數字只包括 full-time employment 的畢業生。繼續升學、待業、freelance 或未回覆問卷者不一定反映在同一欄。</p>
+          </article>
+          <article>
+            <strong>平均值偏差</strong>
+            <p>醫療、教育、專業資格或高薪小樣本可能拉高平均。之後接入院校 GES 時要同時看 response rate 和 sample size。</p>
+          </article>
+          <article>
+            <strong>規劃用途</strong>
+            <p>薪資只回答「市場大概怎樣」，不能回答「我適不適合」。完整規劃仍要看能力、興趣、科目承受度和課程門檻。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="notes-section">
+        <h2>下一步資料接入</h2>
+        <div class="notes-grid">
+          <p>Programme-level：若院校公布 programme 或 department GES，優先接入 programme/faculty 層級。</p>
+          <p>Institution-level：HKU、CUHK、HKUST、PolyU、CityUHK、HKBU、EdUHK 等 GES 可補充就業率、平均薪金、行業分佈。</p>
+          <p>Career-level：之後可加入常見入職職位、專業資格、升學 route 和工作條件，避免只看 salary。</p>
+        </div>
+        <div class="source-links">
+          <a href="https://data.gov.hk/en-data/dataset/hk-ugc-ugc-average-annual-salaries-graduates" target="_blank" rel="noreferrer">UGC/Data.gov Dataset</a>
+          <a href="https://www.ugcs.gov.hk/datagovhk/Average_Annual_Salaries_FT_Employment(Eng).csv" target="_blank" rel="noreferrer">UGC CSV</a>
+          <a href="https://www.cedars.hku.hk/careers/graduate-employment-survey" target="_blank" rel="noreferrer">HKU GES</a>
+          <a href="https://career-new.ust.hk/web/public/documents/SurveyFindings_UG_2024.pdf" target="_blank" rel="noreferrer">HKUST UG GES 2024</a>
+          <a href="https://www.polyu.edu.hk/sao/careers-and-placement-section/employer-services/graduate-recruitment/graduate-employment-survey" target="_blank" rel="noreferrer">PolyU GES</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="./assets/portal-data.js"></script>
+    <script src="./portal.js"></script>
+  </body>
+</html>

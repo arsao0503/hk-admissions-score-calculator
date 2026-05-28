@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DSE 收生分數計算機 | HKDSE Pathway Portal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="portal-nav" aria-label="主要功能">
+      <a href="./index.html">生涯規劃首頁</a>
+      <a href="./calculator.html" aria-current="page">計分器</a>
+      <a href="./subjects.html">科目資料庫</a>
+      <a href="./outcomes.html">出路與薪資</a>
+      <a href="./planner.html">規劃流程</a>
+    </nav>
+
+    <header class="app-header">
+      <div class="header-copy">
+        <p class="eyebrow">Admissions Calculator</p>
+        <h1>DSE 收生分數計算機</h1>
+        <p class="lede">輸入 predicted / actual HKDSE 成績，按 CSPE common scale 換算分數，並用 JUPAS 2025、CSPE / iPASS 2025/26 官方資料配對課程、subject weighting 和風險狀態。</p>
+      </div>
+      <div class="score-card" aria-live="polite">
+        <span class="label">Best 5</span>
+        <strong id="heroBest5">0</strong>
+        <span id="heroBand">未輸入成績</span>
+      </div>
+    </header>
+
+    <div class="mobile-scorebar" aria-live="polite">
+      <div>
+        <span>Best 5</span>
+        <strong id="mobileBest5">0</strong>
+      </div>
+      <div>
+        <span>結果</span>
+        <strong><span id="mobileResultCount">0</span></strong>
+      </div>
+    </div>
+
+    <main class="app-shell">
+      <section class="calculator-panel" aria-labelledby="calculatorTitle">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Calculator</p>
+            <h2 id="calculatorTitle">輸入 DSE 成績</h2>
+          </div>
+          <button class="ghost-button" id="resetScores" type="button">重設</button>
+        </div>
+
+        <div class="profile-tools" aria-label="Saved score profiles">
+          <label>
+            成績組合
+            <select id="profileSelect">
+              <option value="">未儲存</option>
+            </select>
+          </label>
+          <input id="profileName" type="text" placeholder="例如 Mock 1 / Predicted" />
+          <button class="primary-button" id="saveProfile" type="button">儲存</button>
+          <button class="ghost-button" id="deleteProfile" type="button">刪除</button>
+        </div>
+
+        <div class="subjects-grid" id="subjectsGrid"></div>
+
+        <div class="score-summary">
+          <article>
+            <span>Best 5</span>
+            <strong id="best5">0</strong>
+          </article>
+          <article>
+            <span>Best 6</span>
+            <strong id="best6">0</strong>
+          </article>
+          <article>
+            <span>4C + 2X</span>
+            <strong id="fourCoreTwoElectives">0</strong>
+          </article>
+          <article>
+            <span>CSPE 對照分</span>
+            <strong id="cspeScore">0</strong>
+          </article>
+        </div>
+
+        <div class="eligibility-box" id="eligibilityBox">
+          <strong>基本門檻檢查</strong>
+          <p>輸入成績後顯示。此檢查只作初步參考，實際要求以院校及課程官方資料為準。</p>
+        </div>
+      </section>
+
+      <section class="results-panel" aria-labelledby="resultsTitle">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Programme Finder</p>
+            <h2 id="resultsTitle">課程配對</h2>
+          </div>
+          <div class="result-count"><span id="resultCount">0</span> 個結果</div>
+        </div>
+
+        <div class="filters">
+          <label>
+            搜尋
+            <input id="searchInput" type="search" placeholder="課程 / 院校 / 範疇" />
+          </label>
+          <div class="filter-menu" id="awardFilter" data-filter="awards"></div>
+          <div class="filter-menu" id="categoryFilter" data-filter="categories"></div>
+          <div class="filter-menu" id="institutionFilter" data-filter="institutions"></div>
+          <label>
+            分數策略
+            <select id="matchMode">
+              <option value="realistic">穩陣 + 邊緣</option>
+              <option value="safe">只看較穩陣</option>
+              <option value="reach">包括挑戰</option>
+              <option value="all">不按分數篩選</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot safe"></i>較穩陣</span>
+          <span><i class="dot match"></i>接近平均</span>
+          <span><i class="dot reach"></i>挑戰</span>
+          <span><i class="dot unknown"></i>只供參考</span>
+        </div>
+
+        <div id="resultsList" class="results-list"></div>
+      </section>
+    </main>
+
+    <section class="notes-section" aria-labelledby="sourceMethodTitle">
+      <h2 id="sourceMethodTitle">使用說明與資料來源</h2>
+      <div class="notes-grid">
+        <p>現時計分公式是 CSPE common scale：5** = 7、5* = 6、5 = 5、4 = 4、3 = 3、2 = 2、1 = 1、U = 0。選修科必須同時選科目及等級，否則不會計入 Best 5 / Best 6。</p>
+        <p>課程卡只顯示資料集中已由官方來源抽出的收生成績統計欄位，例如 Lower Quartile、Median、Mean、Upper Quartile；缺資料不會自動推算或補值。</p>
+        <p>JUPAS 課程已接入 2025 官方 Admissions Scores PDF。選科和出路資料會優先參考 EDB / HKEAA / UGC / 院校 Graduate Employment Survey，並標明資料層級和限制。</p>
+      </div>
+      <div class="source-links" aria-label="官方參考資料">
+        <a href="https://www.edb.gov.hk/en/curriculum-development/kla/overview.html" target="_blank" rel="noreferrer">EDB KLA / NSS 科目</a>
+        <a href="https://www.hkeaa.edu.hk/en/hkdse/assessment/subject_information/" target="_blank" rel="noreferrer">HKEAA HKDSE Subject Information</a>
+        <a href="https://data.gov.hk/en-data/dataset/hk-ugc-ugc-average-annual-salaries-graduates" target="_blank" rel="noreferrer">UGC / Data.gov 薪資資料</a>
+      </div>
+    </section>
+
+    <script src="./assets/app-data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
