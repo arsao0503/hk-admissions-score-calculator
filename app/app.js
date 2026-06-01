@@ -90,6 +90,7 @@ const state = {
   awards: [],
   categories: [],
   institutions: [],
+  programmeGroup: "ugcDegree",
   matchMode: "realistic",
   activeProfileId: "",
   interests: [],
@@ -101,6 +102,25 @@ const filterLabels = {
   categories: "學科範疇",
   institutions: "院校",
 };
+
+const ugcFundedInstitutions = new Set([
+  "City University of Hong Kong",
+  "Hong Kong Baptist University",
+  "Lingnan University",
+  "The Chinese University of Hong Kong",
+  "The Education University of Hong Kong",
+  "The Hong Kong Polytechnic University",
+  "The Hong Kong University of Science and Technology",
+  "The University of Hong Kong",
+]);
+
+const programmeGroups = [
+  { id: "ugcDegree", label: "UGC funded 資助學位", description: "JUPAS 八大資助學士" },
+  { id: "eappDegree", label: "E-APP 自資學位", description: "CSPE / iPASS 自資學士" },
+  { id: "subDegree", label: "副學位 / 高級文憑", description: "AD / HD" },
+  { id: "otherDegree", label: "其他學位", description: "非八大 JUPAS / 其他學士" },
+  { id: "all", label: "全部課程", description: "不按來源分組" },
+];
 
 const interestOptions = [
   { id: "health", label: "醫療 / 生命科學", subjects: ["biology", "chemistry"], programmes: "醫療、生命科學、護理、食品與營養" },
@@ -218,6 +238,7 @@ const els = {
   mobileResultCount: document.querySelector("#mobileResultCount"),
   eligibilityBox: document.querySelector("#eligibilityBox"),
   searchInput: document.querySelector("#searchInput"),
+  programmeGroupFilter: document.querySelector("#programmeGroupFilter"),
   awardFilter: document.querySelector("#awardFilter"),
   categoryFilter: document.querySelector("#categoryFilter"),
   institutionFilter: document.querySelector("#institutionFilter"),
@@ -657,6 +678,47 @@ function programmeCategory(programme) {
   return programme.detailedCategory || programme.areaOfStudy || "";
 }
 
+function programmeGroupId(programme) {
+  if (programme.awardLevel === "Bachelor's Degree" && programme.sourceSystem === "CSPE") return "eappDegree";
+  if (
+    programme.awardLevel === "Bachelor's Degree" &&
+    programme.sourceSystem === "JUPAS" &&
+    ugcFundedInstitutions.has(programme.institution)
+  ) {
+    return "ugcDegree";
+  }
+  if (programme.awardLevel === "Associate Degree" || programme.awardLevel === "Higher Diploma") return "subDegree";
+  if (programme.awardLevel === "Bachelor's Degree") return "otherDegree";
+  return "all";
+}
+
+function programmeGroupLabel(programme) {
+  return programmeGroups.find((group) => group.id === programmeGroupId(programme))?.label || "其他課程";
+}
+
+function programmePassesGroup(programme) {
+  return state.programmeGroup === "all" || programmeGroupId(programme) === state.programmeGroup;
+}
+
+function renderProgrammeGroupFilter() {
+  if (!els.programmeGroupFilter) return;
+  const rows = data.programmes || [];
+  els.programmeGroupFilter.innerHTML = programmeGroups
+    .map((group) => {
+      const count =
+        group.id === "all"
+          ? rows.length
+          : rows.filter((programme) => programmeGroupId(programme) === group.id).length;
+      return `
+        <button class="${state.programmeGroup === group.id ? "selected" : ""}" type="button" data-programme-group="${escapeHtml(group.id)}">
+          <strong>${escapeHtml(group.label)}</strong>
+          <span>${escapeHtml(group.description)} · ${count}</span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
 function selectedValues(select) {
   return Array.from(select.querySelectorAll("input[type='checkbox']:checked")).map((option) => option.value);
 }
@@ -701,6 +763,7 @@ function programmePassesFilters(programme, match, excludeFilter = "") {
 
   return (
     (!query || searchable.includes(query)) &&
+    programmePassesGroup(programme) &&
     (excludeFilter === "awards" || !state.awards.length || state.awards.includes(programme.awardLevel)) &&
     (excludeFilter === "categories" || !state.categories.length || state.categories.includes(programmeCategory(programme))) &&
     (excludeFilter === "institutions" ||
@@ -842,6 +905,7 @@ function programmeCard(programme, match) {
       </header>
       <div class="programme-meta">
         <span>來源: ${escapeHtml(programme.sourceSystem || "N/A")}</span>
+        <span>分類: ${escapeHtml(programmeGroupLabel(programme))}</span>
         ${programme.programmeCode ? `<span>編號: ${escapeHtml(programme.programmeCode)}</span>` : ""}
         <span>級別: ${escapeHtml(programme.awardLevel)}</span>
         <span>細分: ${escapeHtml(programme.detailedCategory || programme.areaOfStudy)}</span>
@@ -1112,6 +1176,16 @@ function bindControls() {
     state.search = event.target.value;
     renderResults();
   });
+  els.programmeGroupFilter?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-programme-group]");
+    if (!button) return;
+    state.programmeGroup = button.dataset.programmeGroup;
+    state.awards = [];
+    state.categories = [];
+    state.institutions = [];
+    renderProgrammeGroupFilter();
+    renderResults();
+  });
   [els.awardFilter, els.categoryFilter, els.institutionFilter].forEach((filter) => {
     filter.addEventListener("click", (event) => {
       if (event.target.closest(".filter-trigger")) {
@@ -1183,6 +1257,7 @@ function bindControls() {
 
 renderSubjects();
 renderProfiles();
+renderProgrammeGroupFilter();
 renderInterestOptions();
 renderSubjectRecommendations();
 renderSubjectLibrary();

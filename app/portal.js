@@ -1,4 +1,8 @@
 const portalData = window.DSE_PORTAL_DATA || { subjects: [], interestTags: [], salaryOutcomes: [], sources: {} };
+const quizState = {
+  currentIndex: 0,
+  answers: {},
+};
 
 function h(value) {
   return String(value ?? "")
@@ -176,12 +180,11 @@ function renderOutcomes() {
     .join("");
 }
 
-function scoreQuiz(form) {
+function scoreQuiz(answers) {
   const totals = Object.fromEntries(portalData.interestTags.map((interest) => [interest.id, 0]));
-  const answers = new Map(new FormData(form).entries());
 
   portalData.quizQuestions.forEach((question) => {
-    const selected = Number(answers.get(question.id));
+    const selected = Number(answers[question.id]);
     const choice = question.choices[selected];
     if (!choice) return;
     Object.entries(choice.scores).forEach(([interest, points]) => {
@@ -282,7 +285,10 @@ function renderQuizResult(totals) {
 
   document.querySelector("#quizReset")?.addEventListener("click", () => {
     document.querySelector("#quizForm")?.reset();
+    quizState.currentIndex = 0;
+    quizState.answers = {};
     result.hidden = true;
+    renderQuizQuestion();
     document.querySelector("#quizProgress")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   result.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -290,68 +296,104 @@ function renderQuizResult(totals) {
 
 function updateQuizProgress() {
   const progress = document.querySelector("#quizProgress");
-  const form = document.querySelector("#quizForm");
-  if (!progress || !form) return;
-  const answered = new FormData(form).entries();
-  const answeredCount = new Set([...answered].map(([key]) => key)).size;
+  if (!progress) return;
+  const answeredCount = Object.keys(quizState.answers).length;
   const total = portalData.quizQuestions.length;
   progress.innerHTML = `
     <strong>${answeredCount} / ${total}</strong>
-    <span>${answeredCount === total ? "可以查看結果" : `尚有 ${total - answeredCount} 題未完成`}</span>
+    <span>${answeredCount === total ? "可以查看結果" : `第 ${quizState.currentIndex + 1} 題`}</span>
   `;
+}
+
+function renderQuizQuestion() {
+  const form = document.querySelector("#quizForm");
+  if (!form) return;
+  const total = portalData.quizQuestions.length;
+  const question = portalData.quizQuestions[quizState.currentIndex];
+  if (!question) return;
+  const selectedAnswer = quizState.answers[question.id];
+  const isFirst = quizState.currentIndex === 0;
+  const isLast = quizState.currentIndex === total - 1;
+
+  form.innerHTML = `
+    <fieldset class="quiz-question">
+      <legend>
+        <span>${String(quizState.currentIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}</span>
+        ${h(question.text)}
+      </legend>
+      <div class="choice-grid">
+        ${question.choices
+          .map(
+            (choice, choiceIndex) => `
+              <label class="choice-option">
+                <input type="radio" name="${h(question.id)}" value="${choiceIndex}" ${String(selectedAnswer) === String(choiceIndex) ? "checked" : ""} required />
+                <span>${h(choice.label)}</span>
+              </label>
+            `,
+          )
+          .join("")}
+      </div>
+    </fieldset>
+    <div class="quiz-actions">
+      <button class="ghost-button" type="button" id="quizBack" ${isFirst ? "disabled" : ""}>上一題</button>
+      <button class="ghost-button" type="button" id="quizClear">清除答案</button>
+      <button class="primary-button" type="submit">${isLast ? "查看我的學科傾向" : "下一題"}</button>
+    </div>
+  `;
+  updateQuizProgress();
 }
 
 function renderQuiz() {
   const form = document.querySelector("#quizForm");
   if (!form) return;
 
-  form.innerHTML = `
-    ${portalData.quizQuestions
-      .map(
-        (question, questionIndex) => `
-          <fieldset class="quiz-question">
-            <legend>
-              <span>${String(questionIndex + 1).padStart(2, "0")}</span>
-              ${h(question.text)}
-            </legend>
-            <div class="choice-grid">
-              ${question.choices
-                .map(
-                  (choice, choiceIndex) => `
-                    <label class="choice-option">
-                      <input type="radio" name="${h(question.id)}" value="${choiceIndex}" required />
-                      <span>${h(choice.label)}</span>
-                    </label>
-                  `,
-                )
-                .join("")}
-            </div>
-          </fieldset>
-        `,
-      )
-      .join("")}
-    <div class="quiz-actions">
-      <button class="primary-button" type="submit">查看我的學科傾向</button>
-      <button class="ghost-button" type="reset">清除答案</button>
-    </div>
-  `;
+  renderQuizQuestion();
 
-  form.addEventListener("change", updateQuizProgress);
+  form.addEventListener("change", () => {
+    const question = portalData.quizQuestions[quizState.currentIndex];
+    const answer = new FormData(form).get(question.id);
+    if (answer !== null) quizState.answers[question.id] = answer;
+    updateQuizProgress();
+  });
   form.addEventListener("reset", () => {
+    quizState.currentIndex = 0;
+    quizState.answers = {};
     setTimeout(updateQuizProgress, 0);
     const result = document.querySelector("#quizResult");
     if (result) result.hidden = true;
+    renderQuizQuestion();
   });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const missing = portalData.quizQuestions.filter((question) => !new FormData(form).has(question.id));
-    if (missing.length) {
-      document.querySelector(`[name="${missing[0].id}"]`)?.closest(".quiz-question")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const question = portalData.quizQuestions[quizState.currentIndex];
+    const answer = new FormData(form).get(question.id);
+    if (answer === null) {
+      form.querySelector(".quiz-question")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    renderQuizResult(scoreQuiz(form));
+    quizState.answers[question.id] = answer;
+    if (quizState.currentIndex < portalData.quizQuestions.length - 1) {
+      quizState.currentIndex += 1;
+      renderQuizQuestion();
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    renderQuizResult(scoreQuiz(quizState.answers));
   });
-  updateQuizProgress();
+  form.addEventListener("click", (event) => {
+    if (event.target.closest("#quizBack")) {
+      quizState.currentIndex = Math.max(0, quizState.currentIndex - 1);
+      renderQuizQuestion();
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    if (event.target.closest("#quizClear")) {
+      quizState.currentIndex = 0;
+      quizState.answers = {};
+      const result = document.querySelector("#quizResult");
+      if (result) result.hidden = true;
+      renderQuizQuestion();
+    }
+  });
 }
 
 renderSubjectFilters();
