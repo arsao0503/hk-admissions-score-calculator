@@ -284,9 +284,13 @@ function renderQuizResult(totals) {
   `;
 
   document.querySelector("#quizReset")?.addEventListener("click", () => {
-    document.querySelector("#quizForm")?.reset();
+    const form = document.querySelector("#quizForm");
+    const intro = document.querySelector(".quiz-intro");
+    form?.reset();
     quizState.currentIndex = 0;
     quizState.answers = {};
+    if (intro) intro.hidden = true;
+    if (form) form.hidden = false;
     result.hidden = true;
     renderQuizQuestion();
     document.querySelector("#quizProgress")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -316,6 +320,7 @@ function renderQuizQuestion() {
   const isLast = quizState.currentIndex === total - 1;
 
   form.innerHTML = `
+    <div class="quiz-progress" id="quizProgress" aria-live="polite"></div>
     <fieldset class="quiz-question">
       <legend>
         <span>${String(quizState.currentIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}</span>
@@ -346,8 +351,27 @@ function renderQuizQuestion() {
 function renderQuiz() {
   const form = document.querySelector("#quizForm");
   if (!form) return;
+  const intro = document.querySelector(".quiz-intro");
+  const startButton = document.querySelector("#startQuiz");
 
-  renderQuizQuestion();
+  function startQuiz() {
+    quizState.currentIndex = 0;
+    quizState.answers = {};
+    if (intro) intro.hidden = true;
+    form.hidden = false;
+    const result = document.querySelector("#quizResult");
+    if (result) result.hidden = true;
+    renderQuizQuestion();
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  if (startButton) {
+    form.hidden = true;
+    startButton.addEventListener("click", startQuiz);
+    if (window.location.hash === "#start") startQuiz();
+  } else {
+    renderQuizQuestion();
+  }
 
   form.addEventListener("change", () => {
     const question = portalData.quizQuestions[quizState.currentIndex];
@@ -361,6 +385,8 @@ function renderQuiz() {
     setTimeout(updateQuizProgress, 0);
     const result = document.querySelector("#quizResult");
     if (result) result.hidden = true;
+    if (intro) intro.hidden = true;
+    form.hidden = false;
     renderQuizQuestion();
   });
   form.addEventListener("submit", (event) => {

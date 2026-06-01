@@ -53,6 +53,25 @@ select {
   backdrop-filter: blur(14px);
 }
 
+.nav-toggle {
+  display: none;
+  width: 42px;
+  min-height: 42px;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  margin: 5px 0;
+  border-radius: 999px;
+  background: #fff;
+}
+
 .portal-nav a {
   min-height: 34px;
   padding: 8px 12px;
@@ -228,6 +247,10 @@ h2 {
 
 .route-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.quiz-intro .logic-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .workflow-card,
@@ -1024,9 +1047,13 @@ input:focus-visible {
 .quiz-form {
   display: grid;
   gap: 14px;
+  width: min(100%, 860px);
+  margin: 0 auto;
 }
 
 .quiz-question {
+  display: block;
+  width: 100%;
   min-width: 0;
   margin: 0;
   padding: 18px;
@@ -1037,14 +1064,18 @@ input:focus-visible {
 }
 
 .quiz-question legend {
-  display: flex;
+  display: grid;
   gap: 10px;
-  align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
   margin-bottom: 14px;
   color: var(--text);
   font-size: 1.02rem;
   font-weight: 900;
   line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .quiz-question legend span,
@@ -1078,6 +1109,11 @@ input:focus-visible {
   line-height: 1.45;
 }
 
+.choice-option span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .choice-option input {
   width: 18px;
   min-height: 18px;
@@ -1096,6 +1132,16 @@ input:focus-visible {
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
+}
+
+.quiz-start-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.quiz-start-actions .primary-button {
+  min-width: 160px;
 }
 
 .quiz-progress {
@@ -1440,6 +1486,10 @@ input:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .quiz-intro .logic-grid {
+    grid-template-columns: 1fr;
+  }
+
   .score-card {
     max-width: 260px;
   }
@@ -1491,13 +1541,42 @@ input:focus-visible {
   }
 
   .portal-nav {
-    overflow-x: auto;
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 8px 10px;
+    align-items: center;
     padding: 8px 14px;
+    overflow-x: visible;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .portal-nav.nav-ready a {
+    display: none;
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .portal-nav.nav-ready.open a,
+  .portal-nav:not(.nav-ready) a {
+    display: flex;
+    align-items: center;
   }
 
   .portal-nav a {
-    flex: 0 0 auto;
     font-size: 0.8rem;
+  }
+
+  .portal-nav a[aria-current="page"] {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
   }
 
   .eyebrow {
@@ -1554,7 +1633,7 @@ input:focus-visible {
 
   .mobile-scorebar {
     position: sticky;
-    top: 0;
+    top: 59px;
     left: 0;
     right: 0;
     z-index: 20;
@@ -1664,6 +1743,31 @@ input:focus-visible {
 
   .quiz-intro .section-head {
     grid-template-columns: 1fr;
+  }
+
+  .quiz-intro .logic-grid {
+    gap: 8px;
+  }
+
+  .quiz-intro .logic-grid article {
+    padding: 12px;
+  }
+
+  .quiz-intro .logic-grid p {
+    max-width: 100%;
+    margin: 8px 0 0;
+    font-size: 0.9rem;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .quiz-start-actions {
+    justify-content: stretch;
+  }
+
+  .quiz-start-actions .primary-button {
+    width: 100%;
   }
 
   .quiz-progress {
@@ -1876,5 +1980,14 @@ input:focus-visible {
   .subject-row,
   .subject-row.elective {
     grid-template-columns: 1fr;
+  }
+
+  .programme-card header {
+    grid-template-columns: 1fr;
+  }
+
+  .badge {
+    justify-self: start;
+    white-space: normal;
   }
 }

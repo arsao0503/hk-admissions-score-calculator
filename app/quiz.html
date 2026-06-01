@@ -34,33 +34,32 @@
             <p class="eyebrow">How it works</p>
             <h2>測驗會配對八個學科興趣方向</h2>
           </div>
-          <div class="quiz-progress" id="quizProgress" aria-live="polite"></div>
         </div>
         <div class="logic-grid">
           <article>
-            <strong>不是測性格標籤</strong>
-            <p>結果只反映你在學科活動中的偏好，例如實驗、數據、創作、照顧人或社會議題。</p>
+            <strong>回答 20 條情境題</strong>
+            <p>每次只會出現一條問題，按自己的學習偏好選一個最接近的答案。</p>
           </article>
           <article>
-            <strong>不是直接選職業</strong>
-            <p>同一個興趣方向可以連到多個科目和職業；測驗只幫你排出優先比較的科目。</p>
+            <strong>配對學科興趣方向</strong>
+            <p>結果會整理你較接近的活動類型，例如實驗、數據、創作、照顧人或社會議題。</p>
           </article>
           <article>
-            <strong>要回到 syllabus</strong>
-            <p>完成後要查看每科實際學習範圍、評核方式和小知識，確認自己是否接受長期修讀。</p>
+            <strong>再核對科目和課程</strong>
+            <p>完成後再看 syllabus、指定科目、weighting 和 admission score。</p>
           </article>
-          <article>
-            <strong>要再核對門檻</strong>
-            <p>若已有目標課程，仍要用計分器核對指定科目、weighting 和 admission score。</p>
-          </article>
+        </div>
+        <div class="quiz-start-actions">
+          <button class="primary-button" id="startQuiz" type="button">開始作答</button>
         </div>
       </section>
 
-      <form class="quiz-form" id="quizForm"></form>
+      <form class="quiz-form" id="quizForm" hidden></form>
 
       <section class="portal-section quiz-result" id="quizResult" hidden></section>
     </main>
 
+    <script src="./nav.js"></script>
     <script src="./assets/portal-data.js"></script>
     <script src="./portal.js"></script>
   </body>
