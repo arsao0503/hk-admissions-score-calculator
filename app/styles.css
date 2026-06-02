@@ -53,6 +53,12 @@ select {
   backdrop-filter: blur(14px);
 }
 
+.nav-links {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
 .nav-toggle {
   display: none;
   width: 42px;
@@ -1066,10 +1072,11 @@ input:focus-visible {
 .quiz-question legend {
   display: grid;
   gap: 10px;
+  float: left;
   width: 100%;
   max-width: 100%;
   padding: 0;
-  margin-bottom: 14px;
+  margin: 0 0 14px;
   color: var(--text);
   font-size: 1.02rem;
   font-weight: 900;
@@ -1089,6 +1096,7 @@ input:focus-visible {
 }
 
 .choice-grid {
+  clear: both;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
@@ -1098,7 +1106,7 @@ input:focus-visible {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px;
-  align-items: start;
+  align-items: center;
   min-height: 58px;
   padding: 12px;
   border: 1px solid var(--line);
@@ -1117,7 +1125,7 @@ input:focus-visible {
 .choice-option input {
   width: 18px;
   min-height: 18px;
-  margin-top: 2px;
+  margin: 0;
   accent-color: var(--accent);
 }
 
@@ -1542,8 +1550,8 @@ input:focus-visible {
 
   .portal-nav {
     display: grid;
-    grid-template-columns: 42px 1fr;
-    gap: 8px 10px;
+    grid-template-columns: 1fr 42px;
+    gap: 10px;
     align-items: center;
     padding: 8px 14px;
     overflow-x: visible;
@@ -1551,30 +1559,55 @@ input:focus-visible {
 
   .nav-toggle {
     display: block;
+    grid-column: 2;
+    justify-self: end;
+    border: 0;
+    background: transparent;
   }
 
-  .portal-nav.nav-ready a {
-    display: none;
-    grid-column: 1 / -1;
-    width: 100%;
+  .nav-toggle:hover,
+  .nav-toggle:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.28);
+    outline-offset: 2px;
   }
 
-  .portal-nav.nav-ready.open a,
-  .portal-nav:not(.nav-ready) a {
-    display: flex;
-    align-items: center;
+  .portal-nav.nav-ready .nav-links {
+    position: fixed;
+    top: 58px;
+    right: 0;
+    z-index: 35;
+    display: grid;
+    width: min(78vw, 300px);
+    max-height: calc(100vh - 58px);
+    gap: 4px;
+    padding: 10px;
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(16, 32, 43, 0.98);
+    box-shadow: -18px 20px 42px rgba(24, 33, 43, 0.22);
+    clip-path: inset(0 0 0 100%);
+    visibility: hidden;
+    transition:
+      clip-path 220ms ease,
+      visibility 0s linear 220ms;
+    overflow-y: auto;
+    pointer-events: none;
+  }
+
+  .portal-nav.nav-ready.open .nav-links {
+    clip-path: inset(0);
+    visibility: visible;
+    transition: clip-path 220ms ease;
+    pointer-events: auto;
   }
 
   .portal-nav a {
+    display: flex;
+    align-items: center;
+    width: 100%;
     font-size: 0.8rem;
   }
 
   .portal-nav a[aria-current="page"] {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-    min-height: 42px;
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
   }
@@ -1722,12 +1755,18 @@ input:focus-visible {
   .subject-detail-card dd,
   .subject-detail-card li,
   .fact-box li,
-  .quiz-question legend,
-  .choice-option,
   .quiz-summary-grid p,
   .recommendation-grid p,
   .quiz-next-steps li {
     max-width: calc(100vw - 92px);
+  }
+
+  .quiz-question legend {
+    max-width: 100%;
+  }
+
+  .choice-option {
+    padding: 13px 16px;
   }
 
   .section-head {

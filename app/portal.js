@@ -341,7 +341,6 @@ function renderQuizQuestion() {
     </fieldset>
     <div class="quiz-actions">
       <button class="ghost-button" type="button" id="quizBack" ${isFirst ? "disabled" : ""}>上一題</button>
-      <button class="ghost-button" type="button" id="quizClear">清除答案</button>
       <button class="primary-button" type="submit">${isLast ? "查看我的學科傾向" : "下一題"}</button>
     </div>
   `;
@@ -411,13 +410,6 @@ function renderQuiz() {
       quizState.currentIndex = Math.max(0, quizState.currentIndex - 1);
       renderQuizQuestion();
       form.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    if (event.target.closest("#quizClear")) {
-      quizState.currentIndex = 0;
-      quizState.answers = {};
-      const result = document.querySelector("#quizResult");
-      if (result) result.hidden = true;
-      renderQuizQuestion();
     }
   });
 }
