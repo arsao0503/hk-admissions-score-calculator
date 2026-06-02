@@ -1073,6 +1073,7 @@ input:focus-visible {
   display: grid;
   gap: 10px;
   float: left;
+  inline-size: 100%;
   width: 100%;
   max-width: 100%;
   padding: 0;
@@ -1082,6 +1083,7 @@ input:focus-visible {
   font-weight: 900;
   line-height: 1.45;
   white-space: normal;
+  word-break: break-word;
   overflow-wrap: anywhere;
 }
 
@@ -1584,19 +1586,19 @@ input:focus-visible {
     border-left: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(16, 32, 43, 0.98);
     box-shadow: -18px 20px 42px rgba(24, 33, 43, 0.22);
-    clip-path: inset(0 0 0 100%);
+    transform: translateX(100%);
     visibility: hidden;
     transition:
-      clip-path 220ms ease,
+      transform 220ms ease,
       visibility 0s linear 220ms;
     overflow-y: auto;
     pointer-events: none;
   }
 
   .portal-nav.nav-ready.open .nav-links {
-    clip-path: inset(0);
+    transform: translateX(0);
     visibility: visible;
-    transition: clip-path 220ms ease;
+    transition: transform 220ms ease;
     pointer-events: auto;
   }
 
@@ -1766,7 +1768,7 @@ input:focus-visible {
   }
 
   .choice-option {
-    padding: 13px 16px;
+    padding: 13px 18px;
   }
 
   .section-head {
