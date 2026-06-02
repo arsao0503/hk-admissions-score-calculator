@@ -24,6 +24,7 @@
 
 body {
   margin: 0;
+  padding-top: 54px;
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
@@ -41,14 +42,16 @@ select {
 }
 
 .portal-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 30;
   display: flex;
   gap: 6px;
   align-items: center;
+  width: 100%;
   padding: 10px clamp(20px, 5vw, 72px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border: 0;
   background: rgba(16, 32, 43, 0.96);
   backdrop-filter: blur(14px);
 }
@@ -64,9 +67,9 @@ select {
   width: 42px;
   min-height: 42px;
   padding: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   cursor: pointer;
 }
 
@@ -115,8 +118,23 @@ select {
   color: #fff;
 }
 
+.site-header > *,
+.app-header > * {
+  min-width: 0;
+}
+
 .site-header.compact {
   padding-bottom: 34px;
+}
+
+.quiz-page .site-header.compact {
+  padding-top: 28px;
+  padding-bottom: 22px;
+}
+
+.quiz-page .page-shell {
+  gap: 16px;
+  padding-top: 16px;
 }
 
 .site-header > div:first-child {
@@ -128,18 +146,21 @@ select {
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
-  min-width: 260px;
+  min-width: 0;
 }
 
 .primary-link,
 .secondary-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 42px;
   padding: 0 14px;
   border-radius: 8px;
   font-weight: 900;
+  text-align: center;
   text-decoration: none;
+  white-space: normal;
 }
 
 .primary-link {
@@ -174,6 +195,7 @@ h2 {
 h1 {
   font-size: clamp(2.15rem, 4.2vw, 4.2rem);
   max-width: 980px;
+  overflow-wrap: anywhere;
 }
 
 h2 {
@@ -256,7 +278,21 @@ h2 {
 }
 
 .quiz-intro .logic-grid {
+  gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.quiz-intro {
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.quiz-intro .section-head {
+  margin-bottom: 12px;
+}
+
+.quiz-page .portal-section {
+  padding: 18px;
 }
 
 .workflow-card,
@@ -1527,9 +1563,14 @@ input:focus-visible {
 }
 
 @media (max-width: 640px) {
+  html {
+    scroll-padding-top: 58px;
+  }
+
   body {
     background: #f3f5f7;
     overflow-x: hidden;
+    padding-top: 58px;
   }
 
   .app-header {
@@ -1545,21 +1586,35 @@ input:focus-visible {
     overflow-x: hidden;
   }
 
+  .quiz-page .site-header.compact {
+    padding-top: 18px;
+    padding-bottom: 14px;
+  }
+
   .hero-actions {
     justify-content: flex-start;
     min-width: 0;
   }
 
   .portal-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
     display: grid;
     grid-template-columns: 1fr 42px;
     gap: 10px;
     align-items: center;
+    width: 100%;
+    min-height: 58px;
     padding: 8px 14px;
+    border: 0;
     overflow-x: visible;
   }
 
   .nav-toggle {
+    position: relative;
+    z-index: 70;
     display: block;
     grid-column: 2;
     justify-self: end;
@@ -1569,23 +1624,27 @@ input:focus-visible {
 
   .nav-toggle:hover,
   .nav-toggle:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.28);
-    outline-offset: 2px;
+    outline: none;
   }
 
   .portal-nav.nav-ready .nav-links {
     position: fixed;
-    top: 58px;
+    top: 0;
     right: 0;
-    z-index: 35;
+    bottom: 0;
+    left: 0;
+    z-index: 60;
     display: grid;
-    width: min(78vw, 300px);
-    max-height: calc(100vh - 58px);
+    align-content: start;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
     gap: 4px;
-    padding: 10px;
-    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 68px 14px 18px;
+    border: 0;
     background: rgba(16, 32, 43, 0.98);
-    box-shadow: -18px 20px 42px rgba(24, 33, 43, 0.22);
+    box-shadow: none;
     transform: translateX(100%);
     visibility: hidden;
     transition:
@@ -1610,7 +1669,7 @@ input:focus-visible {
   }
 
   .portal-nav a[aria-current="page"] {
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent;
     color: #fff;
   }
 
@@ -1629,13 +1688,9 @@ input:focus-visible {
   }
 
   .lede {
-    display: -webkit-box;
     margin-top: 12px;
-    overflow: hidden;
     font-size: 0.92rem;
     line-height: 1.55;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
   }
 
   .score-card {
@@ -1787,17 +1842,17 @@ input:focus-visible {
   }
 
   .quiz-intro .logic-grid {
-    gap: 8px;
+    gap: 7px;
   }
 
   .quiz-intro .logic-grid article {
-    padding: 12px;
+    padding: 10px 12px;
   }
 
   .quiz-intro .logic-grid p {
     max-width: 100%;
-    margin: 8px 0 0;
-    font-size: 0.9rem;
+    margin: 6px 0 0;
+    font-size: 0.86rem;
     overflow: visible;
     overflow-wrap: anywhere;
     word-break: break-word;
