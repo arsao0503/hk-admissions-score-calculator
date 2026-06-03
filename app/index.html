@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HKDSE Pathway Portal</title>
-    <link rel="stylesheet" href="./styles.css?v=20260603-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260603-2" />
   </head>
   <body class="home-page">
     <nav class="portal-nav" aria-label="主要功能">
@@ -27,20 +27,31 @@
           <span>Hong Kong context</span>
         </div>
       </div>
-      <aside class="portal-console" aria-label="門戶概覽">
-        <div class="console-topline">
-          <span>Pathway OS</span>
-          <strong>Live Framework</strong>
-        </div>
-        <div class="console-stack">
-          <div><span>Inputs</span><strong>Interest · Subjects · Scores</strong></div>
-          <div><span>Evidence</span><strong>JUPAS · CSPE · EDB · UGC</strong></div>
-          <div><span>Output</span><strong>Risk bands · Routes · Next actions</strong></div>
-        </div>
-      </aside>
     </header>
 
     <main class="page-shell home-shell">
+      <section class="portal-visual-row" aria-label="門戶視覺概覽">
+        <div class="portal-visual-copy">
+          <p class="eyebrow">Pathway OS</p>
+          <h2>將分散資料整理成一個升學決策作業層</h2>
+          <p>右側模組從 hero 拆出，成為獨立的產品說明 row：先展示系統如何接收興趣、科目與分數，再連接官方資料，最後輸出風險分層、路線和下一步行動。</p>
+        </div>
+        <figure class="portal-visual-card">
+          <img src="./assets/hkdse-pathway-intelligence-portal.png" alt="抽象升學資料門戶視覺，呈現課程路徑、分數區間和資料節點" />
+        </figure>
+        <aside class="portal-console" aria-label="門戶概覽">
+          <div class="console-topline">
+            <span>Pathway OS</span>
+            <strong>Live Framework</strong>
+          </div>
+          <div class="console-stack">
+            <div><span>Inputs</span><strong>Interest · Subjects · Scores</strong></div>
+            <div><span>Evidence</span><strong>JUPAS · CSPE · EDB · UGC</strong></div>
+            <div><span>Output</span><strong>Risk bands · Routes · Next actions</strong></div>
+          </div>
+        </aside>
+      </section>
+
       <section class="portal-section portal-intro">
         <div class="section-head">
           <div>
@@ -74,28 +85,40 @@
       </section>
 
       <section class="portal-section philosophy-panel">
-        <div class="section-head">
+        <div class="section-head philosophy-head">
           <div>
             <p class="eyebrow">Brand Point of View</p>
             <h2>高端不是裝飾，而是降低錯誤決策的成本</h2>
           </div>
         </div>
-        <div class="logic-grid">
+        <div class="philosophy-rows" aria-label="品牌觀點">
           <article>
-            <strong>1. 先保留不確定性</strong>
-            <p>興趣、能力與職涯想像都會變；好的升學規劃應該容許重新檢視，而不是太早鎖死答案。</p>
+            <span>01</span>
+            <div>
+              <strong>先保留不確定性</strong>
+              <p>興趣、能力與職涯想像都會變；好的升學規劃應該容許重新檢視，而不是太早鎖死答案。</p>
+            </div>
           </article>
           <article>
-            <strong>2. 用資料拆開印象</strong>
-            <p>熱門科目、名氣院校與職業標籤只是一層表象；真正需要比較的是內容、要求和長期路徑。</p>
+            <span>02</span>
+            <div>
+              <strong>用資料拆開印象</strong>
+              <p>熱門科目、名氣院校與職業標籤只是一層表象；真正需要比較的是內容、要求和長期路徑。</p>
+            </div>
           </article>
           <article>
-            <strong>3. 把選擇變成共同語言</strong>
-            <p>學生、家長和老師需要同一套資料框架，才能討論風險、取捨和下一步，而不是各說各話。</p>
+            <span>03</span>
+            <div>
+              <strong>把選擇變成共同語言</strong>
+              <p>學生、家長和老師需要同一套資料框架，才能討論風險、取捨和下一步，而不是各說各話。</p>
+            </div>
           </article>
           <article>
-            <strong>4. 將門檻視為動態訊號</strong>
-            <p>Admission score 不是單一排名，而是供需、課程要求與競爭環境的結果，需要配合後備方案解讀。</p>
+            <span>04</span>
+            <div>
+              <strong>將門檻視為動態訊號</strong>
+              <p>Admission score 不是單一排名，而是供需、課程要求與競爭環境的結果，需要配合後備方案解讀。</p>
+            </div>
           </article>
         </div>
       </section>
@@ -127,6 +150,6 @@
         </div>
       </section>
     </main>
-    <script src="./nav.js?v=20260603-1"></script>
+    <script src="./nav.js?v=20260603-2"></script>
   </body>
 </html>
