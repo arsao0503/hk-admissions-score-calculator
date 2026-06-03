@@ -2317,8 +2317,7 @@ input:focus-visible {
   padding: 22px;
   border-color: rgba(17, 24, 39, 0.08);
   border-radius: 22px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 247, 240, 0.90));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 247, 240, 0.90));
   box-shadow: 0 18px 45px rgba(17, 24, 39, 0.07);
 }
 
@@ -2361,347 +2360,35 @@ input:focus-visible {
 }
 
 @media (max-width: 640px) {
-  .home-hero {
-    min-height: auto;
-    padding: 42px 18px 28px;
-    grid-template-columns: 1fr;
-  }
-
-  .home-hero::before {
-    inset: 18px 12px 12px;
-    border-radius: 22px;
-  }
-
-  .home-hero h1 {
-    font-size: clamp(2.55rem, 15vw, 4.2rem);
-    line-height: 0.96;
-  }
-
-  .hero-proof {
-    gap: 7px;
-    margin-top: 20px;
-  }
-
-  .hero-proof span {
-    min-height: 32px;
-    font-size: 0.68rem;
-  }
-
-  .portal-console {
-    padding: 14px;
-    border-radius: 20px;
-  }
-
-  .console-stack div {
-    padding: 13px;
-  }
-
-  .home-shell .portal-section {
-    border-radius: 20px;
-  }
-
-  .home-shell .section-head {
-    align-items: flex-start;
-  }
-
-  .home-shell .section-head h2 {
-    font-size: 1.65rem;
-  }
-
-  .portal-gateway .workflow-card,
-  .philosophy-panel .logic-grid article,
-  .source-panel .source-matrix article {
-    min-height: 0;
-    padding: 18px;
-    border-radius: 18px;
-  }
-}
-
-@media (max-width: 640px) {
-  .home-page,
-  .home-page body,
-  .home-hero,
-  .home-shell,
-  .portal-intro,
-  .portal-console,
-  .hero-copy {
-    max-width: 100vw;
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
-  .home-hero h1 {
-    max-width: calc(100vw - 36px);
-    font-size: clamp(2.05rem, 10.8vw, 3rem);
-    letter-spacing: -0.035em;
-    line-height: 1.04;
+  .home-page .portal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;
+    max-width: 100vw;
+    overflow: hidden;
   }
 
-  .home-hero .lede {
-    max-width: calc(100vw - 36px);
-  }
-
-  .home-hero::before,
-  .home-hero::after {
-    display: none;
-  }
-
-  .hero-proof {
-    display: grid;
-    grid-template-columns: 1fr;
-    width: 100%;
-  }
-
-  .hero-proof span {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .portal-console {
-    width: 100%;
-    max-width: calc(100vw - 36px);
-  }
-
-  .console-topline,
-  .console-stack strong {
-    overflow-wrap: anywhere;
-  }
-
-  .home-shell .section-head {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .home-shell .section-head > p,
-  .home-shell .section-head h2 {
-    max-width: 100%;
-  }
-}
-
-
-@media (max-width: 640px) {
-  .home-hero {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-  }
-
-  .home-hero h1 {
-    max-width: 100% !important;
-    font-size: 2.05rem !important;
-    letter-spacing: -0.025em !important;
-    line-height: 1.08 !important;
-    overflow-wrap: anywhere !important;
-  }
-
-  .hero-copy,
-  .portal-console,
-  .console-topline,
-  .console-stack,
-  .console-stack div,
-  .home-shell,
-  .home-shell .portal-section,
-  .home-shell .section-head,
-  .home-shell .section-head > *,
-  .home-shell .section-head h2,
-  .home-shell .section-head p,
-  .portal-gateway,
-  .portal-gateway .workflow-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  .console-topline {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4px;
-  }
-
-  .console-topline strong,
-  .console-stack strong,
-  .home-shell h2,
-  .home-shell p {
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
+  .home-page .portal-nav.open {
+    overflow: visible;
   }
 
   .home-page .portal-nav::before {
     content: "HKDSE Portal";
-    grid-column: 1;
-    align-self: center;
+    flex: 1 1 auto;
+    min-width: 0;
     color: #fff;
     font-size: 0.88rem;
     font-weight: 900;
   }
-}
 
-
-@media (max-width: 640px) {
-  html,
-  body {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-  }
-
-  .home-page .portal-nav {
-    grid-template-columns: minmax(0, 1fr) 42px !important;
-  }
-
-  .home-page .nav-toggle {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  .home-page .nav-toggle span {
-    background: #fff !important;
-  }
-
-  .home-page .nav-links {
-    max-width: 100vw !important;
-  }
-
-  .home-hero,
-  .home-hero *:not(.nav-toggle):not(.nav-toggle span),
-  .home-shell,
-  .home-shell * {
-    max-width: 100% !important;
-  }
-
-  .home-hero {
-    overflow: clip !important;
-  }
-
-  .home-hero h1 {
-    display: block !important;
-    width: 100% !important;
-    font-size: clamp(1.9rem, 8.8vw, 2.45rem) !important;
-    line-height: 1.14 !important;
-    word-break: break-word !important;
-  }
-
-  .home-hero .lede,
-  .home-shell h2,
-  .home-shell h3,
-  .home-shell p,
-  .home-shell strong {
-    word-break: break-word !important;
-    overflow-wrap: anywhere !important;
-  }
-}
-
-
-@media (max-width: 640px) {
-  .home-page .portal-nav {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-  }
-
-  .home-page .portal-nav::before {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .home-page .nav-toggle {
-    position: relative !important;
-    z-index: 999 !important;
-    flex: 0 0 42px !important;
-    width: 42px !important;
-    height: 42px !important;
-    display: block !important;
-  }
-
-  .home-page .nav-toggle span {
-    display: block !important;
-    height: 2px !important;
-    margin: 6px 7px !important;
-    background: #ffffff !important;
-  }
-
-  .home-page .nav-links {
-    flex: none !important;
-  }
-
-  .home-page .home-hero,
-  .home-page .home-shell {
-    width: 100% !important;
-    max-width: 390px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  .home-page .home-shell .portal-section {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-
-  .home-page .home-hero h1,
-  .home-page .home-shell .section-head h2 {
-    max-width: calc(100vw - 52px) !important;
-    font-size: 1.85rem !important;
-    line-height: 1.18 !important;
-    letter-spacing: -0.015em !important;
-  }
-
-  .home-page .home-shell .section-head h2 {
-    font-size: 1.45rem !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .home-page .home-hero,
-  .home-page .home-shell {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  .home-page .home-hero {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
-  .home-page .home-shell {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-
-  .home-page .portal-nav {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    overflow: hidden !important;
-  }
-
-  .home-page .portal-nav.open {
-    overflow: visible !important;
-  }
-
-  .home-page .portal-nav.nav-ready .nav-links {
-    right: auto !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-  }
-
-  .home-page .home-hero h1 {
-    max-width: calc(100vw - 32px) !important;
-    font-size: clamp(1.72rem, 7.6vw, 2.15rem) !important;
-  }
-
-  .home-page .home-hero .lede,
-  .home-page .portal-console,
-  .home-page .hero-proof,
-  .home-page .home-shell .portal-section {
-    max-width: calc(100vw - 32px) !important;
-  }
-}
-
-@media (max-width: 640px) {
   .home-page .portal-nav::after {
     content: "☰";
     position: absolute;
@@ -2716,55 +2403,137 @@ input:focus-visible {
   }
 
   .home-page .nav-toggle {
-    color: transparent !important;
+    position: relative;
+    z-index: 999;
+    display: block;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    color: transparent;
   }
 
-  .home-page .home-hero,
-  .home-page .home-shell {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
+  .home-page .nav-toggle span {
+    display: block;
+    height: 2px;
+    margin: 6px 7px;
+    background: #fff;
   }
 
-  .home-page .hero-copy,
-  .home-page .portal-console,
-  .home-page .home-shell .portal-section,
-  .home-page .portal-gateway .workflow-card,
+  .home-page .portal-nav.nav-ready .nav-links {
+    right: auto;
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  .home-hero,
+  .home-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
+    padding-right: 14px;
+    padding-left: 14px;
+    overflow-x: hidden;
+  }
+
+  .home-hero {
+    min-height: auto;
+    padding-top: 42px;
+    padding-bottom: 28px;
+  }
+
+  .home-hero::before,
+  .home-hero::after {
+    display: none;
+  }
+
+  .hero-copy,
+  .portal-console,
+  .home-shell .portal-section,
+  .portal-gateway .workflow-card,
   .home-page .logic-grid article,
   .home-page .source-matrix article {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-right: 0;
+    margin-left: 0;
   }
 
-  .home-page .home-hero h1 {
-    width: auto !important;
-    max-width: 19ch !important;
-    font-size: 1.56rem !important;
-    line-height: 1.2 !important;
-    letter-spacing: 0 !important;
+  .home-hero h1 {
+    width: auto;
+    max-width: 19ch;
+    font-size: 1.56rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
-  .home-page .home-hero .lede,
-  .home-page .home-shell .section-head h2,
-  .home-page .workflow-card h2,
-  .home-page .logic-grid strong,
-  .home-page .source-matrix h3 {
-    max-width: 100% !important;
-    font-size-adjust: none;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
+  .home-hero .lede,
+  .home-shell h2,
+  .home-shell h3,
+  .home-shell p,
+  .home-shell strong {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
-  .home-page .home-shell .section-head h2 {
-    font-size: 1.28rem !important;
-    line-height: 1.25 !important;
+  .hero-proof {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 7px;
+    margin-top: 20px;
+  }
+
+  .hero-proof span {
+    width: 100%;
+    min-height: 32px;
+    justify-content: center;
+    font-size: 0.68rem;
+  }
+
+  .portal-console {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .console-topline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .console-stack div {
+    padding: 13px;
+  }
+
+  .home-shell .portal-section {
+    padding-right: 14px;
+    padding-left: 14px;
+    border-radius: 20px;
+  }
+
+  .home-shell .section-head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .home-shell .section-head h2 {
+    font-size: 1.28rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .portal-gateway .workflow-card,
+  .philosophy-panel .logic-grid article,
+  .source-panel .source-matrix article {
+    min-height: 0;
+    padding: 18px;
+    border-radius: 18px;
   }
 }
