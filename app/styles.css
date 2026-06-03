@@ -1,17 +1,17 @@
 :root {
-  --bg: #f6f5f1;
+  --bg: #f4f1ea;
   --surface: #ffffff;
-  --surface-alt: #eceff3;
-  --text: #18212b;
-  --muted: #65717f;
-  --line: #d8dde3;
-  --accent: #0f766e;
-  --accent-strong: #0b5f59;
+  --surface-alt: #eef0ed;
+  --text: #111827;
+  --muted: #667085;
+  --line: #d7d2c8;
+  --accent: #155e63;
+  --accent-strong: #0d4f55;
   --amber: #b7791f;
   --red: #b42318;
   --green: #247a42;
   --blue: #2563eb;
-  --shadow: 0 18px 45px rgba(24, 33, 43, 0.09);
+  --shadow: 0 24px 70px rgba(17, 24, 39, 0.10);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Noto Sans TC", sans-serif;
@@ -52,7 +52,7 @@ select {
   width: 100%;
   padding: 10px clamp(20px, 5vw, 72px);
   border: 0;
-  background: rgba(16, 32, 43, 0.96);
+  background: rgba(13, 25, 38, 0.92);
   backdrop-filter: blur(14px);
 }
 
@@ -104,7 +104,7 @@ select {
   gap: 32px;
   align-items: end;
   padding: 48px clamp(20px, 5vw, 72px) 28px;
-  background: #10202b;
+  background: #08111f;
   color: #fff;
 }
 
@@ -114,7 +114,9 @@ select {
   gap: 32px;
   align-items: end;
   padding: 58px clamp(20px, 5vw, 72px) 44px;
-  background: #10202b;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(192, 171, 120, 0.22), transparent 32%),
+    linear-gradient(135deg, #08111f 0%, #102337 48%, #e9e1d1 180%);
   color: #fff;
 }
 
@@ -179,7 +181,7 @@ select {
 
 .eyebrow {
   margin: 0 0 8px;
-  color: #5fb8ad;
+  color: #b9a06a;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0;
@@ -1586,6 +1588,61 @@ input:focus-visible {
     overflow-x: hidden;
   }
 
+  .home-hero {
+    min-height: auto;
+    padding: 42px 18px 28px;
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero::before {
+    inset: 18px 12px 12px;
+    border-radius: 22px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(2.55rem, 15vw, 4.2rem);
+    line-height: 0.96;
+  }
+
+  .hero-proof {
+    gap: 7px;
+    margin-top: 20px;
+  }
+
+  .hero-proof span {
+    min-height: 32px;
+    font-size: 0.68rem;
+  }
+
+  .portal-console {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .console-stack div {
+    padding: 13px;
+  }
+
+  .home-shell .portal-section {
+    border-radius: 20px;
+  }
+
+  .home-shell .section-head {
+    align-items: flex-start;
+  }
+
+  .home-shell .section-head h2 {
+    font-size: 1.65rem;
+  }
+
+  .portal-gateway .workflow-card,
+  .philosophy-panel .logic-grid article,
+  .source-panel .source-matrix article {
+    min-height: 0;
+    padding: 18px;
+    border-radius: 18px;
+  }
+
   .quiz-page .site-header.compact {
     padding-top: 18px;
     padding-bottom: 14px;
@@ -1615,8 +1672,9 @@ input:focus-visible {
   .nav-toggle {
     position: relative;
     z-index: 70;
-    display: block;
+    display: block !important;
     grid-column: 2;
+    grid-row: 1;
     justify-self: end;
     border: 0;
     background: transparent;
@@ -1628,6 +1686,8 @@ input:focus-visible {
   }
 
   .portal-nav.nav-ready .nav-links {
+    grid-column: 1;
+    grid-row: 1;
     position: fixed;
     top: 0;
     right: 0;
@@ -2085,5 +2145,626 @@ input:focus-visible {
   .badge {
     justify-self: start;
     white-space: normal;
+  }
+}
+
+/* Premium portal homepage refresh */
+.home-page {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(185, 160, 106, 0.16), transparent 30%),
+    linear-gradient(180deg, #f7f2e8 0%, #f4f1ea 42%, #eef1f2 100%);
+}
+
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 520px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+  align-items: center;
+  padding-top: 84px;
+  padding-bottom: 72px;
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 86px clamp(20px, 5vw, 72px) 36px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 30px;
+  pointer-events: none;
+}
+
+.home-hero::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  bottom: -170px;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(185, 160, 106, 0.30), transparent 64%);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.hero-copy,
+.portal-console {
+  position: relative;
+  z-index: 1;
+}
+
+.home-hero h1 {
+  max-width: 880px;
+  letter-spacing: -0.055em;
+  font-size: clamp(3.2rem, 7vw, 6.8rem);
+  line-height: 0.93;
+}
+
+.home-hero .lede {
+  max-width: 760px;
+  color: rgba(237, 244, 248, 0.82);
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+}
+
+.hero-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.hero-proof span {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.portal-console {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.06)),
+    rgba(4, 12, 24, 0.54);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(22px);
+}
+
+.console-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.console-topline strong {
+  color: #e8d6a1;
+}
+
+.console-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.console-stack div {
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.console-stack span {
+  display: block;
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.console-stack strong {
+  display: block;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.home-shell {
+  gap: 20px;
+  padding-top: 22px;
+}
+
+.home-shell .portal-section {
+  border-color: rgba(17, 24, 39, 0.08);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 24px 80px rgba(17, 24, 39, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.home-shell .section-head h2 {
+  max-width: 820px;
+  letter-spacing: -0.035em;
+  font-size: clamp(1.75rem, 3vw, 3.1rem);
+  line-height: 1.02;
+}
+
+.home-shell .section-head > p {
+  max-width: 390px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.portal-gateway .workflow-card,
+.philosophy-panel .logic-grid article,
+.source-panel .source-matrix article {
+  position: relative;
+  overflow: hidden;
+  min-height: 230px;
+  padding: 22px;
+  border-color: rgba(17, 24, 39, 0.08);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 247, 240, 0.90));
+  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.07);
+}
+
+.portal-gateway .workflow-card::after,
+.philosophy-panel .logic-grid article::after,
+.source-panel .source-matrix article::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #b9a06a;
+  box-shadow: 0 0 0 7px rgba(185, 160, 106, 0.11);
+}
+
+.portal-gateway .workflow-card:hover,
+.portal-gateway .workflow-card:focus-visible {
+  border-color: rgba(21, 94, 99, 0.42);
+  transform: translateY(-2px);
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.portal-gateway .workflow-card span,
+.source-panel .source-matrix h3 {
+  color: #8a7139;
+  letter-spacing: 0.02em;
+}
+
+.portal-gateway .workflow-card h2,
+.philosophy-panel .logic-grid strong {
+  font-size: 1.18rem;
+  letter-spacing: -0.02em;
+}
+
+.home-page .primary-link,
+.home-page .secondary-link {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .home-hero {
+    min-height: auto;
+    padding: 42px 18px 28px;
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero::before {
+    inset: 18px 12px 12px;
+    border-radius: 22px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(2.55rem, 15vw, 4.2rem);
+    line-height: 0.96;
+  }
+
+  .hero-proof {
+    gap: 7px;
+    margin-top: 20px;
+  }
+
+  .hero-proof span {
+    min-height: 32px;
+    font-size: 0.68rem;
+  }
+
+  .portal-console {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .console-stack div {
+    padding: 13px;
+  }
+
+  .home-shell .portal-section {
+    border-radius: 20px;
+  }
+
+  .home-shell .section-head {
+    align-items: flex-start;
+  }
+
+  .home-shell .section-head h2 {
+    font-size: 1.65rem;
+  }
+
+  .portal-gateway .workflow-card,
+  .philosophy-panel .logic-grid article,
+  .source-panel .source-matrix article {
+    min-height: 0;
+    padding: 18px;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page,
+  .home-page body,
+  .home-hero,
+  .home-shell,
+  .portal-intro,
+  .portal-console,
+  .hero-copy {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .home-hero h1 {
+    max-width: calc(100vw - 36px);
+    font-size: clamp(2.05rem, 10.8vw, 3rem);
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+  }
+
+  .home-hero .lede {
+    max-width: calc(100vw - 36px);
+  }
+
+  .home-hero::before,
+  .home-hero::after {
+    display: none;
+  }
+
+  .hero-proof {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .hero-proof span {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .portal-console {
+    width: 100%;
+    max-width: calc(100vw - 36px);
+  }
+
+  .console-topline,
+  .console-stack strong {
+    overflow-wrap: anywhere;
+  }
+
+  .home-shell .section-head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .home-shell .section-head > p,
+  .home-shell .section-head h2 {
+    max-width: 100%;
+  }
+}
+
+
+@media (max-width: 640px) {
+  .home-hero {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .home-hero h1 {
+    max-width: 100% !important;
+    font-size: 2.05rem !important;
+    letter-spacing: -0.025em !important;
+    line-height: 1.08 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .hero-copy,
+  .portal-console,
+  .console-topline,
+  .console-stack,
+  .console-stack div,
+  .home-shell,
+  .home-shell .portal-section,
+  .home-shell .section-head,
+  .home-shell .section-head > *,
+  .home-shell .section-head h2,
+  .home-shell .section-head p,
+  .portal-gateway,
+  .portal-gateway .workflow-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .console-topline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .console-topline strong,
+  .console-stack strong,
+  .home-shell h2,
+  .home-shell p {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .home-page .portal-nav::before {
+    content: "HKDSE Portal";
+    grid-column: 1;
+    align-self: center;
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 900;
+  }
+}
+
+
+@media (max-width: 640px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .home-page .portal-nav {
+    grid-template-columns: minmax(0, 1fr) 42px !important;
+  }
+
+  .home-page .nav-toggle {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .home-page .nav-toggle span {
+    background: #fff !important;
+  }
+
+  .home-page .nav-links {
+    max-width: 100vw !important;
+  }
+
+  .home-hero,
+  .home-hero *:not(.nav-toggle):not(.nav-toggle span),
+  .home-shell,
+  .home-shell * {
+    max-width: 100% !important;
+  }
+
+  .home-hero {
+    overflow: clip !important;
+  }
+
+  .home-hero h1 {
+    display: block !important;
+    width: 100% !important;
+    font-size: clamp(1.9rem, 8.8vw, 2.45rem) !important;
+    line-height: 1.14 !important;
+    word-break: break-word !important;
+  }
+
+  .home-hero .lede,
+  .home-shell h2,
+  .home-shell h3,
+  .home-shell p,
+  .home-shell strong {
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+
+@media (max-width: 640px) {
+  .home-page .portal-nav {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .home-page .portal-nav::before {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .home-page .nav-toggle {
+    position: relative !important;
+    z-index: 999 !important;
+    flex: 0 0 42px !important;
+    width: 42px !important;
+    height: 42px !important;
+    display: block !important;
+  }
+
+  .home-page .nav-toggle span {
+    display: block !important;
+    height: 2px !important;
+    margin: 6px 7px !important;
+    background: #ffffff !important;
+  }
+
+  .home-page .nav-links {
+    flex: none !important;
+  }
+
+  .home-page .home-hero,
+  .home-page .home-shell {
+    width: 100% !important;
+    max-width: 390px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .home-page .home-shell .portal-section {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .home-page .home-hero h1,
+  .home-page .home-shell .section-head h2 {
+    max-width: calc(100vw - 52px) !important;
+    font-size: 1.85rem !important;
+    line-height: 1.18 !important;
+    letter-spacing: -0.015em !important;
+  }
+
+  .home-page .home-shell .section-head h2 {
+    font-size: 1.45rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page .home-hero,
+  .home-page .home-shell {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .home-page .home-hero {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .home-page .home-shell {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .home-page .portal-nav {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+  }
+
+  .home-page .portal-nav.open {
+    overflow: visible !important;
+  }
+
+  .home-page .portal-nav.nav-ready .nav-links {
+    right: auto !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  .home-page .home-hero h1 {
+    max-width: calc(100vw - 32px) !important;
+    font-size: clamp(1.72rem, 7.6vw, 2.15rem) !important;
+  }
+
+  .home-page .home-hero .lede,
+  .home-page .portal-console,
+  .home-page .hero-proof,
+  .home-page .home-shell .portal-section {
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page .portal-nav::after {
+    content: "☰";
+    position: absolute;
+    right: 16px;
+    top: 13px;
+    z-index: 1000;
+    color: #fff;
+    font-size: 1.35rem;
+    line-height: 1;
+    font-weight: 900;
+    pointer-events: none;
+  }
+
+  .home-page .nav-toggle {
+    color: transparent !important;
+  }
+
+  .home-page .home-hero,
+  .home-page .home-shell {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .home-page .hero-copy,
+  .home-page .portal-console,
+  .home-page .home-shell .portal-section,
+  .home-page .portal-gateway .workflow-card,
+  .home-page .logic-grid article,
+  .home-page .source-matrix article {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .home-page .home-hero h1 {
+    width: auto !important;
+    max-width: 19ch !important;
+    font-size: 1.56rem !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .home-page .home-hero .lede,
+  .home-page .home-shell .section-head h2,
+  .home-page .workflow-card h2,
+  .home-page .logic-grid strong,
+  .home-page .source-matrix h3 {
+    max-width: 100% !important;
+    font-size-adjust: none;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  .home-page .home-shell .section-head h2 {
+    font-size: 1.28rem !important;
+    line-height: 1.25 !important;
   }
 }

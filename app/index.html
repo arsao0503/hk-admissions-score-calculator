@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HKDSE Pathway Portal</title>
-    <link rel="stylesheet" href="./styles.css?v=20260602-4" />
+    <link rel="stylesheet" href="./styles.css?v=20260603-1" />
   </head>
-  <body>
+  <body class="home-page">
     <nav class="portal-nav" aria-label="主要功能">
       <a href="./index.html" aria-current="page">生涯規劃首頁</a>
       <a href="./quiz.html">心理測驗</a>
@@ -16,71 +16,91 @@
       <a href="./planner.html">規劃流程</a>
     </nav>
 
-    <header class="site-header">
-      <div>
-        <p class="eyebrow">HKDSE Pathway Portal</p>
-        <h1>以專業資料和判斷力支援香港升學規劃</h1>
-        <p class="lede">HKDSE Pathway Portal 面向學生、家長和老師，把興趣探索、選修科理解、JUPAS / 自資課程收生成績和畢業出路放在同一個可追溯框架內。網站的目標不是替學生作決定，而是讓每個選擇都可以被解釋、核對和重新評估。</p>
+    <header class="site-header home-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">HKDSE Pathway Intelligence</p>
+        <h1>一個為香港升學決策而設的資料門戶</h1>
+        <p class="lede">把 DSE 成績、選修科內容、JUPAS / 自資課程門檻與畢業出路，整理成可核對、可比較、可討論的升學情報層。不是給學生一個即時答案，而是建立一套更專業的判斷環境。</p>
+        <div class="hero-proof" aria-label="資料信任基礎">
+          <span>Official-source first</span>
+          <span>Decision-grade framing</span>
+          <span>Hong Kong context</span>
+        </div>
       </div>
-      <div class="hero-actions">
-        <a class="primary-link" href="./planner.html">開始規劃</a>
-        <a class="secondary-link" href="./quiz.html">做學科興趣測驗</a>
-        <a class="secondary-link" href="./calculator.html">輸入 DSE 成績</a>
-      </div>
+      <aside class="portal-console" aria-label="門戶概覽">
+        <div class="console-topline">
+          <span>Pathway OS</span>
+          <strong>Live Framework</strong>
+        </div>
+        <div class="console-stack">
+          <div><span>Inputs</span><strong>Interest · Subjects · Scores</strong></div>
+          <div><span>Evidence</span><strong>JUPAS · CSPE · EDB · UGC</strong></div>
+          <div><span>Output</span><strong>Risk bands · Routes · Next actions</strong></div>
+        </div>
+      </aside>
     </header>
 
-    <main class="page-shell">
-      <section class="workflow-grid" aria-label="學生入口">
-        <a class="workflow-card" href="./quiz.html">
-          <span>初中 / S1-S3</span>
-          <h2>先建立學生自己的判斷語言</h2>
-          <p>用活動偏好和學習方式整理初步興趣方向，避免只憑科名、朋輩選擇或單一職業想像作決定。</p>
-        </a>
-        <a class="workflow-card" href="./subjects.html">
-          <span>高中選科</span>
-          <h2>把選修科還原成真實學習內容</h2>
-          <p>逐科比較 syllabus、評核模式、常見誤解和延伸課程，讓學生知道自己將會投入甚麼。</p>
-        </a>
-        <a class="workflow-card" href="./calculator.html">
-          <span>DSE / JUPAS</span>
-          <h2>用可追溯資料衡量課程可行性</h2>
-          <p>以 Best 5 / Best 6、科目 weighting、指定要求和 admission score 分佈，分辨穩陣、接近和挑戰選項。</p>
-        </a>
-        <a class="workflow-card" href="./outcomes.html">
-          <span>畢業後</span>
-          <h2>把畢業出路放回現實脈絡</h2>
-          <p>用 UGC 薪資及就業資料建立行業基準，再配合院校課程和專業資格資料理解長期路徑。</p>
-        </a>
-      </section>
-
-      <section class="portal-section">
+    <main class="page-shell home-shell">
+      <section class="portal-section portal-intro">
         <div class="section-head">
           <div>
-            <p class="eyebrow">Our Philosophy</p>
-            <h2>我們不替學生製造唯一答案，而是建立一套可被討論的決策方法</h2>
+            <p class="eyebrow">The Portal</p>
+            <h2>由探索到選擇，每一步都回到資料與脈絡</h2>
+          </div>
+          <p>首頁不再以「工具按鈕」推學生立即操作，而是先建立網站的專業定位：這是一個可持續更新的升學決策門戶。</p>
+        </div>
+        <div class="workflow-grid portal-gateway" aria-label="門戶入口">
+          <a class="workflow-card" href="./subjects.html">
+            <span>Subject Intelligence</span>
+            <h2>理解科目真實內容</h2>
+            <p>以 syllabus、評核模式、學習負荷與常見誤解，重建學生對選修科的認知。</p>
+          </a>
+          <a class="workflow-card" href="./calculator.html">
+            <span>Score Intelligence</span>
+            <h2>把分數轉化成風險語言</h2>
+            <p>用 Best 5 / Best 6、weighting、指定要求與 admission score 分佈，判斷課程可行性。</p>
+          </a>
+          <a class="workflow-card" href="./outcomes.html">
+            <span>Outcome Intelligence</span>
+            <h2>連接畢業出路與現實基準</h2>
+            <p>以 UGC / Data.gov 就業與薪資資料作校準，避免只用熱門程度理解前途。</p>
+          </a>
+          <a class="workflow-card" href="./planner.html">
+            <span>Planning System</span>
+            <h2>形成可追蹤的規劃流程</h2>
+            <p>把探索、資料核對、課程排序與後備方案放入同一個決策節奏。</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="portal-section philosophy-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Brand Point of View</p>
+            <h2>高端不是裝飾，而是降低錯誤決策的成本</h2>
           </div>
         </div>
         <div class="logic-grid">
           <article>
-            <strong>1. 先承認興趣會變</strong>
-            <p>興趣測驗只作探索入口，重點是找出學生願意投入的活動類型，再用科目資料檢驗是否吻合。</p>
+            <strong>1. 先保留不確定性</strong>
+            <p>興趣、能力與職涯想像都會變；好的升學規劃應該容許重新檢視，而不是太早鎖死答案。</p>
           </article>
           <article>
-            <strong>2. 以課程內容取代印象</strong>
-            <p>每個科目和課程都應回到 syllabus、評核、先修要求和學習負荷，而不是停留在熱門程度。</p>
+            <strong>2. 用資料拆開印象</strong>
+            <p>熱門科目、名氣院校與職業標籤只是一層表象；真正需要比較的是內容、要求和長期路徑。</p>
           </article>
           <article>
-            <strong>3. 將分數變成風險語言</strong>
-            <p>成績不是排名遊戲，而是用來理解選項的距離、彈性和需要準備的後備路線。</p>
+            <strong>3. 把選擇變成共同語言</strong>
+            <p>學生、家長和老師需要同一套資料框架，才能討論風險、取捨和下一步，而不是各說各話。</p>
           </article>
           <article>
-            <strong>4. 專業地看待出路資料</strong>
-            <p>薪資、就業和專業資格只作現實校準，不作單一排序標準；學生仍需要理解工作性質和價值取向。</p>
+            <strong>4. 將門檻視為動態訊號</strong>
+            <p>Admission score 不是單一排名，而是供需、課程要求與競爭環境的結果，需要配合後備方案解讀。</p>
           </article>
         </div>
       </section>
 
-      <section class="portal-section">
+      <section class="portal-section source-panel">
         <div class="section-head">
           <div>
             <p class="eyebrow">Data Standards</p>
@@ -100,9 +120,13 @@
             <h3>薪資與畢業出路</h3>
             <p>以 UGC / Data.gov 2023/24 broad category data 建立跨院校基準，並逐步補充各院校 Graduate Employment Survey。</p>
           </article>
+          <article>
+            <h3>規劃方法與解讀</h3>
+            <p>以可討論的風險分層、資料缺口標記和下一步行動，協助學生把資料轉成實際規劃。</p>
+          </article>
         </div>
       </section>
     </main>
-    <script src="./nav.js?v=20260602-4"></script>
+    <script src="./nav.js?v=20260603-1"></script>
   </body>
 </html>
