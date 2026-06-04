@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HKDSE Pathway Portal</title>
-    <link rel="stylesheet" href="./styles.css?v=20260604-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260604-2" />
   </head>
   <body class="home-page">
     <nav class="portal-nav" aria-label="主要功能">
@@ -16,140 +16,120 @@
       <a href="./planner.html">規劃流程</a>
     </nav>
 
-    <header class="site-header home-hero">
+    <header class="site-header home-hero notion-hero">
       <div class="hero-copy">
-        <p class="eyebrow">HKDSE Pathway Intelligence</p>
-        <h1>陪伴你升學路上左右</h1>
-        <p class="lede">把 DSE 成績、選修科內容、JUPAS / 自資課程門檻與畢業出路，整理成可核對、可比較、可討論的升學情報層。不是給學生一個即時答案，而是建立一套更專業的判斷環境。</p>
-        <div class="hero-proof" aria-label="資料信任基礎">
-          <span>Official-source first</span>
-          <span>Decision-grade framing</span>
-          <span>Hong Kong context</span>
+        <p class="eyebrow">HKDSE Pathway Portal</p>
+        <h1><span>陪伴你升學</span><span>路上左右</span></h1>
+        <p class="lede">一個乾淨、可核對的香港升學資料工作區。把科目、分數、課程門檻與畢業出路放在同一頁，讓學生、家長和老師用同一套語言討論下一步。</p>
+        <div class="hero-actions-row" aria-label="主要入口">
+          <a href="./calculator.html">開始計分</a>
+          <a href="./subjects.html">探索科目</a>
         </div>
       </div>
+      <figure class="hero-product-shot">
+        <img src="./assets/hkdse-pathway-intelligence-portal.png" alt="HKDSE 升學資料門戶視覺，呈現分數、課程與規劃資料模組" />
+      </figure>
     </header>
 
-    <main class="page-shell home-shell">
-      <section class="portal-visual-row" aria-label="門戶視覺概覽">
-        <div class="portal-visual-copy">
-          <p class="eyebrow">Pathway OS</p>
-          <h2>將分散資料整理成一個升學決策作業層</h2>
-          <p>右側模組從 hero 拆出，成為獨立的產品說明 row：先展示系統如何接收興趣、科目與分數，再連接官方資料，最後輸出風險分層、路線和下一步行動。</p>
-        </div>
-        <figure class="portal-visual-card">
-          <img src="./assets/hkdse-pathway-intelligence-portal.png" alt="抽象升學資料門戶視覺，呈現課程路徑、分數區間和資料節點" />
-        </figure>
-        <aside class="portal-console" aria-label="門戶概覽">
-          <div class="console-topline">
-            <span>Pathway OS</span>
-            <strong>Live Framework</strong>
-          </div>
-          <div class="console-stack">
-            <div><span>Inputs</span><strong>Interest · Subjects · Scores</strong></div>
-            <div><span>Evidence</span><strong>JUPAS · CSPE · EDB · UGC</strong></div>
-            <div><span>Output</span><strong>Risk bands · Routes · Next actions</strong></div>
-          </div>
-        </aside>
+    <main class="home-shell">
+      <section class="home-section home-intro" aria-label="首頁介紹">
+        <div class="section-kicker">One workspace for DSE decisions</div>
+        <h2>從「我應該點揀」變成「我知道要比較咩」</h2>
+        <p>首頁重新整理成 Notion 式的資料工作台：少一點裝飾，多一點清楚分層。每個 block 都回答一個實際升學問題，並指向下一個可操作頁面。</p>
       </section>
 
-      <section class="portal-section portal-intro">
-        <div class="section-head">
+      <section class="home-section workspace-grid" aria-label="升學工作區入口">
+        <a class="workspace-card card-large" href="./calculator.html">
+          <span class="card-icon">#</span>
           <div>
-            <p class="eyebrow">The Portal</p>
-            <h2>由探索到選擇，每一步都回到資料與脈絡</h2>
+            <p class="card-label">Score calculator</p>
+            <h2>用 DSE 分數建立可討論的風險範圍</h2>
+            <p>輸入 Best 5 / Best 6、指定科目與 weighting，將 raw score 轉成 reach、match、safer 的討論框架。</p>
           </div>
-          <p>首頁不再以「工具按鈕」推學生立即操作，而是先建立網站的專業定位：這是一個可持續更新的升學決策門戶。</p>
-        </div>
-        <div class="workflow-grid portal-gateway" aria-label="門戶入口">
-          <a class="workflow-card" href="./subjects.html">
-            <span>Subject Intelligence</span>
-            <h2>理解科目真實內容</h2>
-            <p>以 syllabus、評核模式、學習負荷與常見誤解，重建學生對選修科的認知。</p>
-          </a>
-          <a class="workflow-card" href="./calculator.html">
-            <span>Score Intelligence</span>
-            <h2>把分數轉化成風險語言</h2>
-            <p>用 Best 5 / Best 6、weighting、指定要求與 admission score 分佈，判斷課程可行性。</p>
-          </a>
-          <a class="workflow-card" href="./outcomes.html">
-            <span>Outcome Intelligence</span>
-            <h2>連接畢業出路與現實基準</h2>
-            <p>以 UGC / Data.gov 就業與薪資資料作校準，避免只用熱門程度理解前途。</p>
-          </a>
-          <a class="workflow-card" href="./planner.html">
-            <span>Planning System</span>
-            <h2>形成可追蹤的規劃流程</h2>
-            <p>把探索、資料核對、課程排序與後備方案放入同一個決策節奏。</p>
-          </a>
-        </div>
+        </a>
+        <a class="workspace-card" href="./subjects.html">
+          <span class="card-icon">S</span>
+          <div>
+            <p class="card-label">Subject database</p>
+            <h2>先理解科目內容</h2>
+            <p>用 syllabus、評核模式和常見誤解，拆開「聽落有興趣」同「真正適合」。</p>
+          </div>
+        </a>
+        <a class="workspace-card" href="./outcomes.html">
+          <span class="card-icon">O</span>
+          <div>
+            <p class="card-label">Outcomes</p>
+            <h2>把前途說法校準到資料</h2>
+            <p>用畢業出路、就業和薪資基準，避免只靠熱門程度判斷長期路線。</p>
+          </div>
+        </a>
+        <a class="workspace-card" href="./planner.html">
+          <span class="card-icon">P</span>
+          <div>
+            <p class="card-label">Planner</p>
+            <h2>把選擇變成流程</h2>
+            <p>整理探索、核對、排序、後備方案和下一步行動，不再只停留在想法。</p>
+          </div>
+        </a>
+        <a class="workspace-card" href="./quiz.html">
+          <span class="card-icon">Q</span>
+          <div>
+            <p class="card-label">Profile quiz</p>
+            <h2>用興趣作起點</h2>
+            <p>快速建立討論輪廓，再連到科目、課程和實際收生要求。</p>
+          </div>
+        </a>
       </section>
 
-      <section class="portal-section philosophy-panel">
-        <div class="section-head philosophy-head">
-          <div>
-            <p class="eyebrow">Brand Point of View</p>
-            <h2>高端不是裝飾，而是降低錯誤決策的成本</h2>
-          </div>
-        </div>
-        <div class="philosophy-rows" aria-label="品牌觀點">
+      <section class="home-section method-section" aria-label="決策方法">
+        <div class="section-kicker">Method</div>
+        <div class="method-list">
           <article>
             <span>01</span>
-            <div>
-              <strong>先保留不確定性</strong>
-              <p>興趣、能力與職涯想像都會變；好的升學規劃應該容許重新檢視，而不是太早鎖死答案。</p>
-            </div>
+            <h3>保留不確定性</h3>
+            <p>興趣、能力和職涯想像都會變，所以規劃不應太早鎖死答案。</p>
           </article>
           <article>
             <span>02</span>
-            <div>
-              <strong>用資料拆開印象</strong>
-              <p>熱門科目、名氣院校與職業標籤只是一層表象；真正需要比較的是內容、要求和長期路徑。</p>
-            </div>
+            <h3>用資料拆開印象</h3>
+            <p>把熱門、名氣和職業標籤拆成內容、要求、風險和長期路線。</p>
           </article>
           <article>
             <span>03</span>
-            <div>
-              <strong>把選擇變成共同語言</strong>
-              <p>學生、家長和老師需要同一套資料框架，才能討論風險、取捨和下一步，而不是各說各話。</p>
-            </div>
-          </article>
-          <article>
-            <span>04</span>
-            <div>
-              <strong>將門檻視為動態訊號</strong>
-              <p>Admission score 不是單一排名，而是供需、課程要求與競爭環境的結果，需要配合後備方案解讀。</p>
-            </div>
+            <h3>讓討論有共同語言</h3>
+            <p>學生、家長和老師用同一套 evidence block 討論取捨和下一步。</p>
           </article>
         </div>
       </section>
 
-      <section class="portal-section source-panel">
-        <div class="section-head">
+      <section class="home-section source-table" aria-label="資料來源標準">
+        <div class="source-table-head">
           <div>
-            <p class="eyebrow">Data Standards</p>
-            <h2>資料來源以官方、可追溯、可更新為原則</h2>
+            <div class="section-kicker">Data standards</div>
+            <h2>官方來源優先，所有結論都要可追溯</h2>
           </div>
+          <p>資料不是用來包裝答案，而是用來顯示限制、風險和下一個應核對的地方。</p>
         </div>
-        <div class="source-matrix">
+        <div class="source-rows">
           <article>
-            <h3>收生成績與課程清單</h3>
-            <p>整合 JUPAS 2025 Admissions Scores、CSPE / iPASS 2025/26 programme catalog 和 score detail，並保留來源欄位供核對。</p>
+            <span>Admissions</span>
+            <p>JUPAS admissions scores、CSPE / iPASS programme catalog、院校課程頁。</p>
           </article>
           <article>
-            <h3>科目與評核框架</h3>
-            <p>參照 EDB Key Learning Areas、Senior Secondary Curriculum Guide、HKEAA HKDSE Subject Information 及 Assessment Frameworks。</p>
+            <span>Subjects</span>
+            <p>EDB curriculum guide、HKEAA subject information、assessment framework。</p>
           </article>
           <article>
-            <h3>薪資與畢業出路</h3>
-            <p>以 UGC / Data.gov 2023/24 broad category data 建立跨院校基準，並逐步補充各院校 Graduate Employment Survey。</p>
+            <span>Outcomes</span>
+            <p>UGC / Data.gov 就業與薪資資料，配合院校 graduate employment survey。</p>
           </article>
           <article>
-            <h3>規劃方法與解讀</h3>
-            <p>以可討論的風險分層、資料缺口標記和下一步行動，協助學生把資料轉成實際規劃。</p>
+            <span>Planning</span>
+            <p>風險分層、資料缺口、後備方案和可執行下一步。</p>
           </article>
         </div>
       </section>
     </main>
-    <script src="./nav.js?v=20260604-1"></script>
+    <script src="./nav.js?v=20260604-2"></script>
   </body>
 </html>

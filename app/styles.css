@@ -2706,3 +2706,480 @@ input:focus-visible {
     font-size: 1.08rem;
   }
 }
+
+/* Final homepage overrides: keep the redesigned index independent from legacy page styles. */
+.home-page {
+  --home-bg: #f7f7f5;
+  --home-ink: #191919;
+  --home-muted: #66645f;
+  --home-line: #dedbd5;
+  --home-card: #ffffff;
+  --home-max: 1120px;
+  background: var(--home-bg);
+  color: var(--home-ink);
+}
+
+.home-page .portal-nav {
+  justify-content: center;
+  border-bottom: 1px solid rgba(25, 25, 25, 0.08);
+  background: rgba(247, 247, 245, 0.94);
+}
+
+.home-page .portal-nav a {
+  color: #343330;
+  font-weight: 750;
+}
+
+.home-page .portal-nav a:hover,
+.home-page .portal-nav a:focus-visible,
+.home-page .portal-nav a[aria-current="page"] {
+  background: #ecebe7;
+  color: #111;
+}
+
+.home-page .notion-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(340px, 0.74fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+  min-height: min(680px, calc(100vh - 54px));
+  padding: clamp(56px, 8vw, 104px) clamp(20px, 6vw, 84px) clamp(42px, 7vw, 84px);
+  overflow: hidden;
+  border-bottom: 1px solid var(--home-line);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 247, 245, 0.94)),
+    #f7f7f5;
+  color: var(--home-ink);
+}
+
+.home-page .notion-hero::before,
+.home-page .notion-hero::after {
+  display: none;
+}
+
+.home-page .notion-hero .hero-copy {
+  max-width: 760px;
+}
+
+.home-page .notion-hero .eyebrow,
+.home-page .section-kicker,
+.home-page .card-label {
+  margin: 0 0 12px;
+  color: var(--home-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.home-page .notion-hero h1 {
+  width: auto;
+  max-width: 740px;
+  color: var(--home-ink);
+  font-size: clamp(3.2rem, 7.8vw, 7.8rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.home-page .notion-hero h1 span {
+  display: block;
+}
+
+.home-page .notion-hero .lede {
+  max-width: 650px;
+  margin-top: 24px;
+  color: #4c4a46;
+  font-size: clamp(1.08rem, 1.5vw, 1.24rem);
+  line-height: 1.7;
+}
+
+.home-page .hero-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.home-page .hero-actions-row a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #191919;
+  border-radius: 8px;
+  color: #191919;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.home-page .hero-actions-row a:first-child {
+  background: #191919;
+  color: #fff;
+}
+
+.home-page .hero-product-shot {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #cac6bf;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 18px 55px rgba(25, 25, 25, 0.12);
+}
+
+.home-page .hero-product-shot::before {
+  content: "";
+  display: block;
+  height: 34px;
+  border-bottom: 1px solid #e1ded8;
+  background:
+    radial-gradient(circle at 18px 17px, #e45b50 0 4px, transparent 5px),
+    radial-gradient(circle at 34px 17px, #f0b449 0 4px, transparent 5px),
+    radial-gradient(circle at 50px 17px, #5aa469 0 4px, transparent 5px),
+    #fbfaf8;
+}
+
+.home-page .hero-product-shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.2;
+  object-fit: cover;
+}
+
+.home-page .home-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  width: min(var(--home-max), calc(100vw - 40px));
+  max-width: var(--home-max);
+  margin: 0 auto;
+  padding: 44px 0 64px;
+  overflow: visible;
+}
+
+.home-page .home-section {
+  display: grid;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--home-line);
+  border-radius: 8px;
+  background: var(--home-card);
+  box-shadow: none;
+}
+
+.home-page .home-intro {
+  grid-template-columns: minmax(0, 0.78fr) minmax(280px, 0.62fr);
+  gap: 24px;
+  align-items: end;
+}
+
+.home-page .home-intro .section-kicker {
+  grid-column: 1 / -1;
+}
+
+.home-page .home-intro h2,
+.home-page .source-table-head h2 {
+  max-width: 100%;
+  color: var(--home-ink);
+  font-size: clamp(2rem, 3.6vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.home-page .home-intro p,
+.home-page .source-table-head p,
+.home-page .workspace-card p:not(.card-label),
+.home-page .method-list p,
+.home-page .source-rows p {
+  color: var(--home-muted);
+  line-height: 1.6;
+}
+
+.home-page .home-intro p,
+.home-page .source-table-head p {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.home-page .workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.home-page .workspace-card {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 260px;
+  padding: 20px;
+  border: 1px solid var(--home-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--home-ink);
+  text-decoration: none;
+}
+
+.home-page .workspace-card:hover,
+.home-page .workspace-card:focus-visible {
+  border-color: #191919;
+  outline: none;
+}
+
+.home-page .workspace-card.card-large {
+  grid-column: span 2;
+  grid-row: span 2;
+  min-height: 532px;
+  background: #fbfaf8;
+}
+
+.home-page .card-icon {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid #d9d5ce;
+  border-radius: 8px;
+  background: #f1efeb;
+  color: #343330;
+  font-weight: 900;
+}
+
+.home-page .workspace-card h2 {
+  margin: 0;
+  color: var(--home-ink);
+  font-size: clamp(1.28rem, 2vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.home-page .workspace-card.card-large h2 {
+  font-size: clamp(2.2rem, 4.2vw, 4.5rem);
+  line-height: 0.98;
+}
+
+.home-page .workspace-card p:not(.card-label) {
+  margin: 14px 0 0;
+}
+
+.home-page .method-section {
+  padding: 0;
+  overflow: hidden;
+}
+
+.home-page .method-section .section-kicker {
+  padding: 24px 26px 0;
+}
+
+.home-page .method-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-page .method-list article {
+  min-height: 230px;
+  padding: 26px;
+  border-top: 1px solid var(--home-line);
+  border-right: 1px solid var(--home-line);
+}
+
+.home-page .method-list article:last-child {
+  border-right: 0;
+}
+
+.home-page .method-list span {
+  color: #9b9790;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.home-page .method-list h3 {
+  margin: 28px 0 10px;
+  color: var(--home-ink);
+  font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+  line-height: 1.08;
+}
+
+.home-page .source-table {
+  gap: 22px;
+}
+
+.home-page .source-table-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(280px, 0.48fr);
+  gap: 24px;
+  align-items: end;
+}
+
+.home-page .source-rows {
+  display: grid;
+  border: 1px solid var(--home-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.home-page .source-rows article {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--home-line);
+  background: #fff;
+}
+
+.home-page .source-rows article:last-child {
+  border-bottom: 0;
+}
+
+.home-page .source-rows span {
+  color: var(--home-ink);
+  font-weight: 900;
+}
+
+.home-page .source-rows p {
+  margin: 0;
+}
+
+.home-page .primary-link,
+.home-page .secondary-link,
+.home-page .hero-proof,
+.home-page .portal-visual-row,
+.home-page .portal-section {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .home-page .notion-hero,
+  .home-page .home-intro,
+  .home-page .source-table-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-page .hero-product-shot {
+    max-width: 620px;
+  }
+
+  .home-page .workspace-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-page .workspace-card.card-large {
+    grid-column: span 2;
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page .portal-nav {
+    justify-content: stretch;
+    background: rgba(247, 247, 245, 0.96);
+  }
+
+  .home-page .portal-nav::before {
+    color: #191919;
+  }
+
+  .home-page .nav-toggle span {
+    background: #191919;
+  }
+
+  .home-page .portal-nav.nav-ready .nav-links {
+    background: rgba(247, 247, 245, 0.98);
+  }
+
+  .home-page .notion-hero {
+    width: 100%;
+    min-height: auto;
+    padding: 44px 16px 28px;
+  }
+
+  .home-page .notion-hero > *,
+  .home-page .home-section > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .home-page .notion-hero .hero-copy {
+    width: min(330px, calc(100vw - 32px));
+    max-width: min(330px, calc(100vw - 32px));
+  }
+
+  .home-page .notion-hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.7rem, 14vw, 3.65rem);
+    line-height: 0.98;
+  }
+
+  .home-page .notion-hero .lede,
+  .home-page .home-section p,
+  .home-page .home-intro h2,
+  .home-page .workspace-card h2,
+  .home-page .method-list h3,
+  .home-page .source-table-head h2 {
+    width: 100%;
+    max-width: min(300px, calc(100vw - 68px));
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    line-break: anywhere;
+  }
+
+  .home-page .hero-actions-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .hero-product-shot {
+    width: 100%;
+  }
+
+  .home-page .home-shell {
+    width: min(100% - 28px, var(--home-max));
+    padding: 28px 0 44px;
+  }
+
+  .home-page .home-section {
+    padding: 20px;
+  }
+
+  .home-page .home-intro h2,
+  .home-page .source-table-head h2 {
+    font-size: clamp(1.7rem, 8.2vw, 2.35rem);
+    line-height: 1.06;
+  }
+
+  .home-page .workspace-grid,
+  .home-page .method-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-page .workspace-card,
+  .home-page .workspace-card.card-large {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 250px;
+  }
+
+  .home-page .workspace-card.card-large h2 {
+    font-size: clamp(2rem, 10vw, 3.1rem);
+  }
+
+  .home-page .method-list article {
+    min-height: 0;
+    border-right: 0;
+  }
+
+  .home-page .source-rows article {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
