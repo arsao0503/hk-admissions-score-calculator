@@ -3183,3 +3183,546 @@ input:focus-visible {
     gap: 8px;
   }
 }
+
+/* Final cascade layer: unified Notion-style workspace skin */
+:root {
+  --bg: #fbfaf8;
+  --surface: #ffffff;
+  --surface-alt: #f7f6f3;
+  --surface-hover: #f1f1ef;
+  --text: #1f1f1f;
+  --muted: #6f6f6f;
+  --muted-strong: #4f4f4f;
+  --line: #e6e3dd;
+  --line-strong: #d8d4cb;
+  --accent: #23827a;
+  --accent-strong: #166b63;
+  --accent-soft: #e7f3f1;
+  --shadow: 0 1px 2px rgba(15, 15, 15, 0.05);
+}
+
+body,
+.home-page {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.portal-nav {
+  justify-content: center;
+  min-height: 56px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(251, 250, 248, 0.92);
+  backdrop-filter: blur(16px);
+}
+
+.portal-nav a {
+  color: var(--muted-strong);
+}
+
+.portal-nav a[aria-current="page"],
+.portal-nav a:hover,
+.portal-nav a:focus-visible {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.app-header,
+.site-header,
+.site-header.compact {
+  max-width: 1280px;
+  margin: 0 auto;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app-header {
+  grid-template-columns: minmax(0, 1fr) 184px;
+  align-items: center;
+  padding-top: 58px;
+  padding-bottom: 34px;
+}
+
+.site-header {
+  padding-top: 54px;
+  padding-bottom: 34px;
+}
+
+.eyebrow,
+.section-kicker,
+.card-label {
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text);
+  letter-spacing: 0;
+}
+
+.lede {
+  color: var(--muted-strong);
+}
+
+.home-page .notion-hero {
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.82fr);
+  gap: clamp(32px, 5vw, 72px);
+  max-width: 1280px;
+  min-height: 520px;
+  margin: 0 auto;
+  padding: 72px clamp(24px, 5vw, 72px) 58px;
+}
+
+.home-page .notion-hero h1 {
+  max-width: 720px;
+  font-size: clamp(3.35rem, 6.6vw, 6.1rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.home-page .notion-hero .lede {
+  max-width: 720px;
+  color: var(--muted-strong);
+}
+
+.home-page .hero-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.home-page .hero-actions-row a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.home-page .hero-actions-row a:first-child,
+.primary-button {
+  border-color: #1f1f1f;
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.home-page .hero-product-shot {
+  align-self: center;
+  max-width: 520px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 18px 52px rgba(15, 15, 15, 0.10);
+}
+
+.home-page .hero-product-shot::before {
+  content: "";
+  display: block;
+  height: 34px;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 22px 17px, #e96054 0 4px, transparent 5px),
+    radial-gradient(circle at 40px 17px, #f1b84b 0 4px, transparent 5px),
+    radial-gradient(circle at 58px 17px, #55b76b 0 4px, transparent 5px),
+    #f7f6f3;
+}
+
+.home-page .hero-product-shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.12;
+  object-fit: cover;
+}
+
+.app-shell,
+.page-shell,
+.home-page .home-shell {
+  width: min(100%, 1280px);
+  margin-inline: auto;
+}
+
+.home-page .home-shell {
+  gap: 18px;
+  padding: 22px clamp(24px, 5vw, 72px) 56px;
+  border-top: 1px solid var(--line);
+}
+
+.home-page .home-section,
+.calculator-panel,
+.results-panel,
+.notes-section,
+.portal-section,
+.portal-overview article,
+.workflow-card,
+.route-card,
+.logic-grid article,
+.source-matrix article,
+.planner-steps article,
+.subject-detail-card,
+.quiz-question,
+.quiz-summary-grid article,
+.recommendation-grid article,
+.quiz-next-steps,
+.interest-panel,
+.recommendation-panel,
+.recommendation-subjects article,
+.subject-card,
+.outcome-card,
+.outcome-row,
+.programme-card,
+.score-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.home-page .home-section {
+  padding: 28px 34px;
+}
+
+.home-page .home-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(280px, 0.78fr);
+  gap: 32px;
+  align-items: end;
+}
+
+.home-page .home-intro h2 {
+  max-width: 720px;
+  margin-top: 28px;
+  font-size: clamp(2rem, 4vw, 4.2rem);
+  line-height: 1.02;
+}
+
+.home-page .home-intro p,
+.home-page .workspace-card p:not(.card-label),
+.home-page .method-section p,
+.home-page .source-table p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.home-page .workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.home-page .workspace-card {
+  min-height: 240px;
+  padding: 20px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.home-page .workspace-card.card-large {
+  grid-column: span 2;
+}
+
+.home-page .workspace-card h2 {
+  margin-top: 6px;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.home-page .card-icon {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+.home-page .method-list,
+.home-page .source-rows {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.home-page .method-list article,
+.home-page .source-rows article {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 22px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.home-page .method-list article:last-child,
+.home-page .source-rows article:last-child {
+  border-bottom: 0;
+}
+
+.home-page .source-table-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.58fr);
+  gap: 30px;
+  align-items: end;
+}
+
+.profile-tools,
+.subject-row,
+.score-summary article,
+.score-stats div,
+.filters input,
+.filters select,
+.filter-trigger,
+.choice-option,
+.quiz-summary-grid article,
+.recommendation-grid article,
+.interest-panel,
+.recommendation-panel,
+.empty-state {
+  background: var(--surface-alt);
+}
+
+select,
+input,
+.filter-trigger,
+.ghost-button,
+.source-links a,
+.interest-chip,
+.add-subject-button {
+  border-color: var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.eligibility-box,
+.projection-block,
+.fact-box,
+.programme-group-filter button.selected,
+.choice-option:has(input:checked),
+.interest-chip.selected {
+  border-color: #b9d8d4;
+  background: var(--accent-soft);
+}
+
+.weighting-block,
+.source-caveat {
+  border-color: #e0c999;
+  background: #fbf4e4;
+}
+
+.score-card .label,
+.score-card span:last-child {
+  color: var(--muted);
+}
+
+.score-card strong {
+  color: var(--text);
+}
+
+@media (max-width: 1040px) {
+  .home-page .notion-hero,
+  .home-page .home-intro,
+  .home-page .source-table-head {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .workspace-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .portal-nav,
+  .home-page .portal-nav {
+    background: rgba(251, 250, 248, 0.96);
+  }
+
+  .home-page .portal-nav::before {
+    color: var(--text);
+  }
+
+  .nav-toggle span,
+  .home-page .nav-toggle span {
+    background: var(--text);
+  }
+
+  .portal-nav.nav-ready .nav-links,
+  .home-page .portal-nav.nav-ready .nav-links {
+    background: rgba(251, 250, 248, 0.99);
+  }
+
+  .portal-nav a,
+  .home-page .portal-nav a {
+    color: var(--text);
+  }
+
+  .home-page .notion-hero {
+    gap: 28px;
+    min-height: 0;
+    padding: 38px 16px 26px;
+  }
+
+  .home-page .notion-hero h1 {
+    max-width: 10ch;
+    font-size: clamp(3rem, 17vw, 4.35rem);
+    line-height: 1;
+  }
+
+  .home-page .hero-actions-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .home-shell {
+    gap: 14px;
+    padding: 14px 16px 34px;
+  }
+
+  .home-page .home-section {
+    padding: 20px 16px;
+  }
+
+  .home-page .home-intro h2 {
+    margin-top: 18px;
+    font-size: 2rem;
+    line-height: 1.15;
+  }
+
+  .home-page .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .workspace-card,
+  .home-page .workspace-card.card-large {
+    grid-column: auto;
+    min-height: 0;
+  }
+
+  .home-page .method-list article,
+  .home-page .source-rows article {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .app-header,
+  .site-header,
+  .site-header.compact {
+    padding: 28px 18px 20px;
+  }
+}
+
+/* Final polish pass */
+.home-page .home-intro h2 {
+  font-size: clamp(1.8rem, 2.6vw, 2.65rem);
+  line-height: 1.12;
+}
+
+.home-page .workspace-card {
+  align-content: start;
+}
+
+.home-page .workspace-card.card-large h2 {
+  font-size: clamp(1.45rem, 2.4vw, 2.15rem);
+}
+
+.home-page .method-section,
+.home-page .source-table {
+  padding-top: 24px;
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .app-header .score-card {
+    display: none;
+  }
+
+  .app-header h1 {
+    max-width: 11ch;
+    font-size: 2.15rem;
+    line-height: 1.12;
+  }
+
+  .app-header .lede,
+  .site-header .lede {
+    max-width: calc(100vw - 36px);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .mobile-scorebar {
+    top: 58px;
+  }
+
+  .profile-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-tools label,
+  .profile-tools input,
+  .profile-tools button {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .home-page .home-intro h2 {
+    max-width: 100%;
+    font-size: 1.78rem;
+    word-break: normal;
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app-shell,
+  .page-shell,
+  .app-header,
+  .site-header,
+  .calculator-panel,
+  .results-panel,
+  .notes-section,
+  .portal-section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .subject-row,
+  .subject-row.elective,
+  .profile-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .subject-row.elective > .subject-row-title {
+    grid-column: auto;
+  }
+
+  .subject-row select,
+  .subject-row input {
+    width: 100%;
+  }
+}
