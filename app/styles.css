@@ -3726,3 +3726,244 @@ input,
     width: 100%;
   }
 }
+
+/* Open Design pass: Notion-style consistency and calmer product illustration */
+:root {
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --focus-ring: 0 0 0 3px rgba(35, 130, 122, 0.18);
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.portal-nav {
+  box-shadow: 0 1px 0 rgba(15, 15, 15, 0.03);
+}
+
+.portal-nav a {
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.portal-nav a[aria-current="page"] {
+  box-shadow: inset 0 0 0 1px rgba(15, 15, 15, 0.02);
+}
+
+.app-header,
+.site-header,
+.site-header.compact,
+.home-page .notion-hero {
+  border-bottom: 0;
+}
+
+.home-page .notion-hero {
+  align-items: center;
+  min-height: 500px;
+}
+
+.home-page .notion-hero h1,
+.app-header h1,
+.site-header h1 {
+  font-weight: 850;
+  letter-spacing: -0.055em;
+}
+
+.home-page .notion-hero h1 {
+  text-wrap: balance;
+}
+
+.home-page .notion-hero .lede,
+.app-header .lede,
+.site-header .lede {
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+.home-page .hero-product-shot {
+  max-width: 500px;
+  transform: translateY(4px);
+  box-shadow: 0 24px 70px rgba(15, 15, 15, 0.08);
+}
+
+.home-page .hero-product-shot img {
+  aspect-ratio: 1.3;
+  object-fit: contain;
+  background: #fbfaf8;
+}
+
+.home-page .home-shell {
+  border-top: 1px solid rgba(230, 227, 221, 0.72);
+}
+
+.home-page .home-section,
+.calculator-panel,
+.results-panel,
+.notes-section,
+.portal-section,
+.portal-overview article,
+.workflow-card,
+.route-card,
+.logic-grid article,
+.source-matrix article,
+.planner-steps article,
+.subject-detail-card,
+.quiz-question,
+.quiz-summary-grid article,
+.recommendation-grid article,
+.quiz-next-steps,
+.interest-panel,
+.recommendation-panel,
+.recommendation-subjects article,
+.subject-card,
+.outcome-card,
+.outcome-row,
+.programme-card,
+.score-card {
+  border-radius: var(--radius-lg);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.home-page .workspace-card:hover,
+.home-page .workspace-card:focus-visible,
+.subject-card:hover,
+.programme-card:hover,
+.outcome-card:hover,
+.route-card:hover,
+.workflow-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: 0 6px 18px rgba(15, 15, 15, 0.06);
+  transform: translateY(-1px);
+}
+
+.home-page .workspace-card:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.filter-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.home-page .workspace-grid {
+  gap: 14px;
+}
+
+.home-page .workspace-card {
+  display: grid;
+  gap: 18px;
+  min-height: 232px;
+  background: var(--surface);
+}
+
+.home-page .workspace-card h2,
+.home-page .home-intro h2,
+.home-page .source-table-head h2 {
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.home-page .card-icon {
+  font-weight: 850;
+  color: var(--muted-strong);
+}
+
+.home-page .workspace-card.card-large .card-icon {
+  background: #1f1f1f;
+  color: #fff;
+  border-color: #1f1f1f;
+}
+
+.home-page .method-list,
+.home-page .source-rows {
+  border-radius: var(--radius-lg);
+}
+
+.home-page .method-list article,
+.home-page .source-rows article {
+  align-items: start;
+}
+
+.home-page .method-list span,
+.home-page .source-rows span {
+  color: var(--muted);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.app-shell,
+.page-shell {
+  gap: 20px;
+}
+
+.calculator-panel,
+.results-panel,
+.notes-section,
+.portal-section {
+  padding-block: clamp(20px, 2.6vw, 28px);
+}
+
+.filters,
+.profile-tools,
+.subject-row,
+.score-summary article,
+.score-stats div,
+.choice-option,
+.empty-state {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.primary-button,
+button.primary-button,
+.save-profile-button,
+.add-subject-button,
+.hero-actions-row a:first-child {
+  font-weight: 800;
+}
+
+.primary-button:hover,
+.save-profile-button:hover,
+.home-page .hero-actions-row a:first-child:hover {
+  background: #111111;
+}
+
+.ghost-button:hover,
+.secondary-link:hover,
+.home-page .hero-actions-row a:not(:first-child):hover,
+.add-subject-button:hover {
+  background: var(--surface-hover);
+}
+
+@media (max-width: 1040px) {
+  .home-page .hero-product-shot {
+    max-width: min(100%, 620px);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page .notion-hero h1,
+  .app-header h1,
+  .site-header h1 {
+    letter-spacing: -0.045em;
+  }
+
+  .home-page .hero-product-shot img {
+    aspect-ratio: 1.12;
+  }
+
+  .home-page .workspace-card {
+    gap: 14px;
+  }
+
+  .home-page .method-list article,
+  .home-page .source-rows article {
+    padding: 16px;
+  }
+}

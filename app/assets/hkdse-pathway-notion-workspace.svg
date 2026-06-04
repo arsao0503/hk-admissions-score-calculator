@@ -1,0 +1,50 @@
+<svg width="1120" height="860" viewBox="0 0 1120 860" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">HKDSE pathway workspace illustration</title>
+  <desc id="desc">A Notion-inspired admissions planning workspace with score, subject, programme, and planning cards.</desc>
+  <rect width="1120" height="860" rx="34" fill="#FBFAF8"/>
+  <rect x="72" y="74" width="976" height="712" rx="24" fill="#FFFFFF" stroke="#E6E3DD" stroke-width="2"/>
+  <rect x="72" y="74" width="976" height="58" rx="24" fill="#F7F6F3"/>
+  <path d="M72 132H1048" stroke="#E6E3DD" stroke-width="2"/>
+  <circle cx="112" cy="103" r="8" fill="#E96054"/>
+  <circle cx="142" cy="103" r="8" fill="#F1B84B"/>
+  <circle cx="172" cy="103" r="8" fill="#55B76B"/>
+  <rect x="226" y="94" width="236" height="18" rx="9" fill="#E6E3DD"/>
+  <rect x="96" y="164" width="260" height="590" rx="18" fill="#F7F6F3" stroke="#E6E3DD" stroke-width="2"/>
+  <rect x="126" y="200" width="118" height="16" rx="8" fill="#A6A29A"/>
+  <rect x="126" y="236" width="188" height="34" rx="8" fill="#FFFFFF" stroke="#E6E3DD"/>
+  <rect x="146" y="248" width="112" height="10" rx="5" fill="#C9C3B8"/>
+  <rect x="126" y="292" width="188" height="34" rx="8" fill="#FFFFFF" stroke="#E6E3DD"/>
+  <rect x="146" y="304" width="136" height="10" rx="5" fill="#C9C3B8"/>
+  <rect x="126" y="348" width="188" height="34" rx="8" fill="#FFFFFF" stroke="#E6E3DD"/>
+  <rect x="146" y="360" width="86" height="10" rx="5" fill="#C9C3B8"/>
+  <rect x="126" y="430" width="188" height="172" rx="14" fill="#FFFFFF" stroke="#E6E3DD"/>
+  <rect x="150" y="458" width="72" height="72" rx="16" fill="#E7F3F1"/>
+  <path d="M166 496L186 516L212 474" stroke="#23827A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="150" y="556" width="122" height="10" rx="5" fill="#C9C3B8"/>
+  <rect x="390" y="166" width="596" height="96" rx="18" fill="#FFFFFF" stroke="#E6E3DD" stroke-width="2"/>
+  <rect x="424" y="198" width="142" height="16" rx="8" fill="#A6A29A"/>
+  <rect x="424" y="228" width="386" height="12" rx="6" fill="#D8D4CB"/>
+  <rect x="848" y="190" width="96" height="46" rx="12" fill="#1F1F1F"/>
+  <rect x="872" y="207" width="48" height="10" rx="5" fill="#FFFFFF"/>
+  <rect x="390" y="294" width="274" height="188" rx="18" fill="#FFFFFF" stroke="#E6E3DD" stroke-width="2"/>
+  <rect x="424" y="330" width="70" height="70" rx="16" fill="#F1F1EF"/>
+  <text x="459" y="377" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="800" fill="#1F1F1F">#</text>
+  <rect x="424" y="424" width="160" height="14" rx="7" fill="#A6A29A"/>
+  <rect x="424" y="452" width="202" height="10" rx="5" fill="#D8D4CB"/>
+  <rect x="702" y="294" width="284" height="188" rx="18" fill="#FFFFFF" stroke="#E6E3DD" stroke-width="2"/>
+  <rect x="736" y="330" width="70" height="70" rx="16" fill="#E7F3F1"/>
+  <text x="771" y="377" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="800" fill="#23827A">S</text>
+  <rect x="736" y="424" width="176" height="14" rx="7" fill="#A6A29A"/>
+  <rect x="736" y="452" width="206" height="10" rx="5" fill="#D8D4CB"/>
+  <rect x="390" y="514" width="596" height="206" rx="18" fill="#FFFFFF" stroke="#E6E3DD" stroke-width="2"/>
+  <rect x="424" y="550" width="168" height="16" rx="8" fill="#A6A29A"/>
+  <rect x="424" y="590" width="500" height="1.5" fill="#E6E3DD"/>
+  <rect x="424" y="620" width="118" height="12" rx="6" fill="#C9C3B8"/>
+  <rect x="600" y="620" width="92" height="12" rx="6" fill="#D8D4CB"/>
+  <rect x="750" y="620" width="126" height="12" rx="6" fill="#D8D4CB"/>
+  <rect x="424" y="660" width="154" height="12" rx="6" fill="#C9C3B8"/>
+  <rect x="600" y="660" width="74" height="12" rx="6" fill="#D8D4CB"/>
+  <rect x="750" y="660" width="148" height="12" rx="6" fill="#D8D4CB"/>
+  <path d="M316 600C424 522 520 526 632 586C764 657 836 630 958 538" stroke="#23827A" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 14"/>
+  <circle cx="632" cy="586" r="12" fill="#23827A" stroke="#FFFFFF" stroke-width="6"/>
+</svg>
