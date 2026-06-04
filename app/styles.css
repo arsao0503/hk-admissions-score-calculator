@@ -4495,3 +4495,292 @@ select:focus-visible,
     font-size: 0.92rem;
   }
 }
+
+/* Homepage hierarchy reset: fewer clickable cards, clearer Notion-style content flow */
+.home-page .hero-product-shot {
+  box-shadow:
+    0 30px 80px rgba(15, 15, 15, 0.16),
+    0 10px 24px rgba(15, 15, 15, 0.09);
+}
+
+.home-page .notion-hero {
+  min-height: clamp(420px, 48vw, 560px);
+  padding-bottom: clamp(36px, 6vw, 72px);
+}
+
+.home-page .home-shell {
+  width: min(100%, 980px);
+  gap: clamp(18px, 4vw, 40px);
+  padding-top: clamp(18px, 3vw, 36px);
+}
+
+.home-page .home-section {
+  padding: clamp(22px, 4vw, 42px) 0;
+}
+
+.home-page .home-intro {
+  max-width: 760px;
+}
+
+.home-page .home-intro h2,
+.home-page .decision-workspace h2,
+.home-page .reference-section h2,
+.home-page .source-table-head h2 {
+  letter-spacing: -0.035em;
+}
+
+.home-page .decision-workspace {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+.home-page .workspace-primary {
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 12px;
+}
+
+.home-page .workspace-primary h2,
+.home-page .reference-copy h2 {
+  margin: 0;
+  font-size: clamp(1.55rem, 3vw, 2.55rem);
+  line-height: 1.08;
+}
+
+.home-page .workspace-primary p,
+.home-page .reference-copy p {
+  margin: 0;
+  color: var(--notion-muted);
+  line-height: 1.65;
+}
+
+.home-page .action-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.home-page .action-panel {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: clamp(18px, 3vw, 28px);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 16px 40px rgba(15, 15, 15, 0.045);
+}
+
+.home-page .action-panel-primary {
+  background: #f2f1ee;
+  box-shadow: none;
+}
+
+.home-page .action-index {
+  color: #9b9892;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.home-page .action-panel h3 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.7vw, 2.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.home-page .action-panel p:not(.card-label) {
+  max-width: 42rem;
+  margin: 10px 0 18px;
+  color: var(--notion-muted);
+  line-height: 1.62;
+}
+
+.home-page .action-panel a,
+.home-page .reference-list a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  width: fit-content;
+  border-radius: 7px;
+  background: var(--notion-ink);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 760;
+  line-height: 1;
+  padding: 0 14px;
+  text-decoration: none;
+}
+
+.home-page .action-panel:not(.action-panel-primary) a,
+.home-page .reference-list a {
+  background: var(--notion-soft);
+  color: var(--notion-ink);
+}
+
+.home-page .action-panel a:hover,
+.home-page .action-panel a:focus-visible,
+.home-page .reference-list a:hover,
+.home-page .reference-list a:focus-visible {
+  background: var(--notion-hover);
+  color: var(--notion-ink);
+  box-shadow: var(--notion-focus);
+}
+
+.home-page .reference-section {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+.home-page .reference-copy {
+  display: grid;
+  gap: 12px;
+}
+
+.home-page .reference-list {
+  display: grid;
+  gap: 2px;
+}
+
+.home-page .reference-list article {
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+  padding: 14px 0;
+}
+
+.home-page .reference-list span,
+.home-page .source-rows span,
+.home-page .method-list span {
+  color: #8d8a84;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.home-page .reference-list h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.home-page .reference-list p {
+  margin: 0;
+  color: var(--notion-muted);
+  line-height: 1.55;
+}
+
+.home-page .method-list article,
+.home-page .source-rows article {
+  border-radius: 0;
+}
+
+.home-page .method-list article:hover,
+.home-page .source-rows article:hover,
+.home-page .static-data-standard .source-rows article:hover {
+  background: transparent;
+}
+
+.home-page .static-data-standard .source-rows article {
+  cursor: default;
+}
+
+.home-page .static-data-standard .source-rows span {
+  color: var(--notion-ink);
+}
+
+@media (max-width: 860px) {
+  .home-page .decision-workspace,
+  .home-page .reference-section {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .home-page .workspace-primary {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page .notion-hero {
+    gap: 18px;
+    padding-top: 24px;
+    padding-bottom: 18px;
+  }
+
+  .home-page .hero-product-shot {
+    box-shadow:
+      0 22px 54px rgba(15, 15, 15, 0.15),
+      0 8px 18px rgba(15, 15, 15, 0.08);
+  }
+
+  .home-page .home-shell {
+    padding-inline: 20px;
+    gap: 18px;
+  }
+
+  .home-page .notion-hero h1 {
+    max-width: 9.8ch;
+    font-size: clamp(2.65rem, 12vw, 3.35rem);
+    line-height: 0.98;
+  }
+
+  .home-page .notion-hero .lede {
+    margin-top: 14px;
+    font-size: 0.98rem;
+    line-height: 1.58;
+  }
+
+  .home-page .hero-product-shot img {
+    aspect-ratio: 1.22;
+  }
+
+  .home-page .home-intro h2,
+  .home-page .source-table-head h2 {
+    max-width: 14ch;
+  }
+
+  .home-page .workspace-primary h2,
+  .home-page .reference-copy h2 {
+    font-size: clamp(1.7rem, 8vw, 2.35rem);
+  }
+
+  .home-page .action-panel {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 18px;
+  }
+
+  .home-page .action-panel h3 {
+    font-size: clamp(1.6rem, 8.5vw, 2.55rem);
+  }
+
+  .home-page .action-panel a,
+  .home-page .reference-list a {
+    width: 100%;
+  }
+
+  .home-page .reference-list article {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 16px 0;
+  }
+
+  .home-page .reference-list span {
+    font-size: 0.82rem;
+  }
+
+  .home-page .method-list article {
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding-inline: 0;
+  }
+
+  .home-page .source-rows article {
+    padding-inline: 0;
+  }
+}

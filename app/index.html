@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HKDSE Pathway Portal</title>
-    <link rel="stylesheet" href="./styles.css?v=20260604-5" />
+    <link rel="stylesheet" href="./styles.css?v=20260604-6" />
   </head>
   <body class="home-page">
     <nav class="portal-nav" aria-label="主要功能">
@@ -23,7 +23,7 @@
         <p class="lede">像整理 Notion page 一樣整理 DSE 選科、分數、課程要求和出路。先建立共同語言，再決定下一步。</p>
         <div class="hero-actions-row" aria-label="主要入口">
           <a href="./calculator.html">開始計分</a>
-          <a href="./subjects.html">探索科目</a>
+          <a href="./quiz.html">建立輪廓</a>
         </div>
       </div>
       <figure class="hero-product-shot">
@@ -32,53 +32,66 @@
     </header>
 
     <main class="home-shell notion-page">
-      <section class="home-section home-intro" aria-label="首頁介紹">
-        <div class="section-kicker">Start here</div>
-        <h2>把升學討論拆成幾個可以核對的 block</h2>
-        <p>這個工作區不急著給「唯一答案」。它先幫你整理興趣、成績範圍、課程要求、資料來源和後備路線，讓每次討論都有脈絡。</p>
+      <section class="home-section decision-workspace" aria-label="主要工作區">
+        <div class="workspace-primary">
+          <div class="section-kicker">Primary actions</div>
+          <h2>由這兩步開始</h2>
+          <p>如果仍未有清楚方向，先建立輪廓；如果已有預計成績，直接進入分數核對。這兩個入口才是主頁的主要互動。</p>
+        </div>
+        <div class="action-stack">
+          <article class="action-panel">
+            <span class="action-index">01</span>
+            <div>
+              <p class="card-label">Profile first</p>
+              <h3>建立興趣與能力輪廓</h3>
+              <p>用簡短測驗整理討論起點，再連到相關科目和可能路線。</p>
+              <a href="./quiz.html">開始心理測驗</a>
+            </div>
+          </article>
+          <article class="action-panel action-panel-primary">
+            <span class="action-index">02</span>
+            <div>
+              <p class="card-label">Score check</p>
+              <h3>核對 DSE 分數範圍</h3>
+              <p>輸入 Best 5 / Best 6、指定科目和加權，將目標課程分成高衝、穩陣和保守。</p>
+              <a href="./calculator.html">打開計分器</a>
+            </div>
+          </article>
+        </div>
       </section>
 
-      <section class="home-section workspace-grid" aria-label="升學工作區入口">
-        <a class="workspace-card card-large" href="./calculator.html">
-          <span class="card-icon">#</span>
-          <div>
-            <p class="card-label">Score calculator</p>
-            <h2>先把分數變成範圍</h2>
-            <p>輸入 Best 5 / Best 6、指定科目與加權，把分數轉成高衝、穩陣、保守的討論起點。</p>
-          </div>
-        </a>
-        <a class="workspace-card" href="./subjects.html">
-          <span class="card-icon">S</span>
-          <div>
-            <p class="card-label">Subject database</p>
-            <h2>理解科目</h2>
-            <p>用 syllabus、評核模式和常見誤解，拆開「聽落有興趣」和「真正適合」。</p>
-          </div>
-        </a>
-        <a class="workspace-card" href="./outcomes.html">
-          <span class="card-icon">O</span>
-          <div>
-            <p class="card-label">Outcomes</p>
-            <h2>校準出路</h2>
-            <p>用畢業出路、就業和薪資基準，避免只靠熱門程度判斷長期路線。</p>
-          </div>
-        </a>
-        <a class="workspace-card" href="./planner.html">
-          <span class="card-icon">P</span>
-          <div>
-            <p class="card-label">Planner</p>
-            <h2>整理流程</h2>
-            <p>整理探索、核對、排序、後備方案和下一步行動，不再只停留在想法。</p>
-          </div>
-        </a>
-        <a class="workspace-card" href="./quiz.html">
-          <span class="card-icon">Q</span>
-          <div>
-            <p class="card-label">Profile quiz</p>
-            <h2>建立輪廓</h2>
-            <p>快速建立討論輪廓，再連到科目、課程和實際收生要求。</p>
-          </div>
-        </a>
+      <section class="home-section reference-section" aria-label="參考資料">
+        <div class="reference-copy">
+          <div class="section-kicker">Reference</div>
+          <h2>再查證你正在比較的資料</h2>
+          <p>這些不是主行動，而是規劃時需要回看的資料頁。保留清楚連結，但不要把整個 row 做成 card button。</p>
+        </div>
+        <div class="reference-list">
+          <article>
+            <span>Subjects</span>
+            <div>
+              <h3>科目資料庫</h3>
+              <p>檢查科目內容、評核模式和常見誤解。</p>
+            </div>
+            <a href="./subjects.html">查看</a>
+          </article>
+          <article>
+            <span>Outcomes</span>
+            <div>
+              <h3>出路與薪資</h3>
+              <p>用畢業出路和薪資基準校準長期想像。</p>
+            </div>
+            <a href="./outcomes.html">查看</a>
+          </article>
+          <article>
+            <span>Planner</span>
+            <div>
+              <h3>規劃流程</h3>
+              <p>把資料缺口、後備方案和下一步整理成流程。</p>
+            </div>
+            <a href="./planner.html">查看</a>
+          </article>
+        </div>
       </section>
 
       <section class="home-section method-section" aria-label="決策方法">
@@ -108,13 +121,13 @@
         </div>
       </section>
 
-      <section class="home-section source-table" aria-label="資料來源標準">
+      <section class="home-section source-table static-data-standard" aria-label="資料來源標準">
         <div class="source-table-head">
           <div>
             <div class="section-kicker">Data standards</div>
-            <h2>用資料支持判斷，但不把資料扮成答案</h2>
+            <h2>資料只用來支持判斷，不代替判斷</h2>
           </div>
-          <p>每個結果都應該可以回到來源、假設和限制。看不到來源的建議，只能當作靈感，不應當作決策依據。</p>
+          <p>這一段是靜態說明，不需要允許交互。每個結果都應該可以回到來源、假設和限制；看不到來源的建議，只能當作靈感。</p>
         </div>
         <div class="source-rows">
           <article>
@@ -136,6 +149,6 @@
         </div>
       </section>
     </main>
-    <script src="./nav.js?v=20260604-5"></script>
+    <script src="./nav.js?v=20260604-6"></script>
   </body>
 </html>
