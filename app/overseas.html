@@ -3,25 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>科目資料庫 | HKDSE Pathway Portal</title>
+    <title>海外升學 | HKDSE Pathway Portal</title>
     <link rel="stylesheet" href="./styles.css?v=20260605-3" />
   </head>
-  <body>
+  <body class="overseas-page">
     <nav class="portal-nav" aria-label="主要功能">
       <a href="./index.html">首頁</a>
       <a href="./quiz.html">性向測試</a>
       <a href="./calculator.html">計分器</a>
-      <a href="./subjects.html" aria-current="page">科目資料庫</a>
+      <a href="./subjects.html">科目資料庫</a>
       <a href="./outcomes.html">出路與薪資</a>
       <a href="./planner.html">本地後備</a>
-      <a href="./overseas.html">海外升學</a>
+      <a href="./overseas.html" aria-current="page">海外升學</a>
     </nav>
 
     <header class="site-header compact">
       <div>
-        <p class="eyebrow">Subject Database</p>
-        <h1>高中選修科資料庫</h1>
-        <p class="lede">集中整理 HKDSE 選修科和延伸數學選項，並以性向測試的 meta tags 配對。DSE 畢業生可以用它回頭理解自己曾修讀或考慮補讀的科目，準備升學面試、課程選擇和海外 pathway 申請。</p>
+        <p class="eyebrow">Overseas Pathways</p>
+        <h1>香港學生常見海外升學地點</h1>
+        <p class="lede">如果香港路線不適合自己，可以用海外升學作另一條主路線。每個地點都按學府、課程申請、住宿、學費、生活費、簽證和準備時間拆開，並附上來源連結。</p>
       </div>
     </header>
 
@@ -29,14 +29,12 @@
       <section class="portal-section">
         <div class="section-head">
           <div>
-            <p class="eyebrow">Filter</p>
-            <h2>按學習領域、meta tag 和關鍵字查科目</h2>
+            <p class="eyebrow">Country Rows</p>
+            <h2>每個目的地先看時間線，再看成本和住宿</h2>
           </div>
         </div>
-        <div class="filters subject-filters" id="subjectFilters"></div>
+        <div class="overseas-route-list" id="overseasRoutes"></div>
       </section>
-
-      <section class="subject-detail-grid" id="subjectCards" aria-live="polite"></section>
     </main>
 
     <script src="./nav.js?v=20260605-3"></script>

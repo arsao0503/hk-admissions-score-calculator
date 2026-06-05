@@ -183,36 +183,63 @@ function renderOutcomes() {
     .join("");
 }
 
+function renderVtcProgrammes() {
+  const container = document.querySelector("#vtcProgrammes");
+  if (!container) return;
+  container.innerHTML = (portalData.vtcProgrammes || [])
+    .map(
+      (programme) => `
+        <article class="vtc-programme-card">
+          <div>
+            <span class="record-code">${h(programme.code)}</span>
+            <h3>${h(programme.title)}</h3>
+            <p>${h(programme.articulation)}</p>
+          </div>
+          <dl>
+            <div><dt>上課地點</dt><dd>${h(programme.campus)}</dd></div>
+            <div><dt>資料來源</dt><dd>VTC 2026 admission programme listing</dd></div>
+          </dl>
+          <a href="${h(programme.link)}" target="_blank" rel="noreferrer">查看課程頁</a>
+        </article>
+      `,
+    )
+    .join("");
+}
+
 function renderOverseasRoutes() {
   const container = document.querySelector("#overseasRoutes");
   if (!container) return;
+  const flags = { uk: "🇬🇧", au: "🇦🇺", ca: "🇨🇦", tw: "🇹🇼", cn: "🇨🇳" };
   container.innerHTML = (portalData.overseasRoutes || [])
     .map(
       (route) => `
-        <article class="overseas-card">
-          <h3>${h(route.destination)}</h3>
-          <dl>
-            <div>
-              <dt>常見學府</dt>
-              <dd>${h(route.institutions)}</dd>
+        <article class="overseas-row">
+          <div class="country-visual" aria-hidden="true">
+            <span>${flags[route.visual] || "✈️"}</span>
+            <i>${h(route.destination.split(" ")[0])}</i>
+          </div>
+          <div class="overseas-content">
+            <header>
+              <p class="eyebrow">Destination</p>
+              <h2>${h(route.destination)}</h2>
+              <p>${h(route.note)}</p>
+            </header>
+            <div class="overseas-facts">
+              <section><h3>提供課程的學府</h3><p>${h(route.institutions)}</p></section>
+              <section><h3>招生 / 申請時間</h3><p>${h(route.intake)}</p></section>
+              <section><h3>簽證 / 入境準備</h3><p>${h(route.visa)}</p></section>
+              <section><h3>住宿安排</h3><p>${h(route.accommodation)}</p></section>
+              <section><h3>學費區間</h3><p>${h(route.tuition)}</p></section>
+              <section><h3>生活費區間</h3><p>${h(route.living)}</p></section>
             </div>
-            <div>
-              <dt>住宿安排</dt>
-              <dd>${h(route.accommodation)}</dd>
+            <div class="timeline-card">
+              <h3>準備時間線</h3>
+              <ol>${(route.checklist || []).map((item) => `<li>${h(item)}</li>`).join("")}</ol>
             </div>
-            <div>
-              <dt>學費區間</dt>
-              <dd>${h(route.tuition)}</dd>
+            <div class="source-links inline-sources">
+              ${(route.sources || []).map(([label, url]) => `<a href="${h(url)}" target="_blank" rel="noreferrer">${h(label)}</a>`).join("")}
             </div>
-            <div>
-              <dt>生活費區間</dt>
-              <dd>${h(route.living)}</dd>
-            </div>
-            <div>
-              <dt>適合情境</dt>
-              <dd>${h(route.note)}</dd>
-            </div>
-          </dl>
+          </div>
         </article>
       `,
     )
@@ -241,100 +268,138 @@ function subjectScore(subject, topInterestIds) {
   }, 0);
 }
 
-function renderQuizResult(totals) {
-  const result = document.querySelector("#quizResult");
-  if (!result) return;
-
+function buildQuizResultModel(totals) {
   const ranked = Object.entries(totals)
     .map(([id, score]) => ({
       ...(portalData.interestTags.find((interest) => interest.id === id) || { id, label: id, description: "" }),
       score,
     }))
     .sort((a, b) => b.score - a.score);
-  const maxScore = Math.max(...ranked.map((item) => item.score), 1);
   const topInterests = ranked.filter((item) => item.score > 0).slice(0, 3);
   const topInterestIds = topInterests.map((item) => item.id);
   const recommendations = portalData.subjects
     .map((subject) => ({ ...subject, matchScore: subjectScore(subject, topInterestIds) }))
     .filter((subject) => subject.matchScore > 0)
     .sort((a, b) => b.matchScore - a.matchScore || a.name.localeCompare(b.name))
-    .slice(0, 8);
+    .slice(0, 10);
+  return { ranked, topInterests, recommendations, generatedAt: new Date().toISOString() };
+}
 
-  result.hidden = false;
-  result.innerHTML = `
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">Result</p>
-        <h2>你的學科興趣傾向</h2>
+function renderQuizResultContent(container, model) {
+  if (!container) return;
+  const ranked = model.ranked || [];
+  const topInterests = model.topInterests || [];
+  const recommendations = model.recommendations || [];
+  const maxScore = Math.max(...ranked.map((item) => item.score), 1);
+
+  if (!ranked.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <h2>未有測驗結果</h2>
+        <p>請先完成性向測試，系統會把答案儲存在本機瀏覽器，再帶你來到這一頁。</p>
+        <a class="primary-button" href="./quiz.html#start">開始測驗</a>
       </div>
-      <button class="ghost-button" id="quizReset" type="button">重新作答</button>
-    </div>
-    <div class="quiz-summary-grid">
-      ${topInterests
-        .map(
-          (interest, index) => `
-            <article>
-              <span>Top ${index + 1}</span>
-              <h3>${h(interest.label)}</h3>
-              <p>${h(interest.description)}</p>
-            </article>
-          `,
-        )
-        .join("")}
-    </div>
-    <div class="score-bars" aria-label="各興趣方向得分">
-      ${ranked
-        .map(
-          (interest) => `
-            <div class="score-bar-row">
-              <span>${h(interest.label)}</span>
-              <div class="bar-track"><i style="width: ${(interest.score / maxScore) * 100}%"></i></div>
-              <strong>${h(interest.score)}</strong>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="result-layout">
+      <aside class="result-sidebar" aria-label="興趣 meta tags 摘要">
+        <p class="eyebrow">Meta tags</p>
+        <h2>你的前三個方向</h2>
+        <div class="result-tag-stack">
+          ${topInterests
+            .map(
+              (interest, index) => `
+                <article>
+                  <span>0${index + 1}</span>
+                  <h3>${h(interest.label)}</h3>
+                  <p>${h(interest.description)}</p>
+                </article>
+              `,
+            )
+            .join("")}
+        </div>
+        <div class="result-actions">
+          <a class="primary-button" href="./calculator.html">下一步：計算 DSE 成績</a>
+          <a class="ghost-button" href="./quiz.html#start">重新作答</a>
+        </div>
+      </aside>
+
+      <section class="result-main">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Score profile</p>
+            <h2>各興趣方向得分</h2>
+          </div>
+        </div>
+        <div class="score-bars" aria-label="各興趣方向得分">
+          ${ranked
+            .map(
+              (interest) => `
+                <div class="score-bar-row">
+                  <span>${h(interest.label)}</span>
+                  <div class="bar-track"><i style="width: ${(interest.score / maxScore) * 100}%"></i></div>
+                  <strong>${h(interest.score)}</strong>
+                </div>
+              `,
+            )
+            .join("")}
+        </div>
+
+        <section class="quiz-recommendations">
+          <div class="section-head compact-head">
+            <div>
+              <p class="eyebrow">Subject match</p>
+              <h2>可以優先比較的科目</h2>
             </div>
-          `,
-        )
-        .join("")}
-    </div>
-    <section class="quiz-recommendations">
-      <h3>可以優先比較的選修科</h3>
-      <div class="recommendation-grid">
-        ${recommendations
-          .map(
-            (subject) => `
-              <article>
-                <span>${h(subject.kla)}</span>
-                <h4>${h(subject.name)}</h4>
-                <p>${h(subject.scope)}</p>
-                <a href="./subjects.html">查看 syllabus</a>
-              </article>
-            `,
-          )
-          .join("")}
-      </div>
-    </section>
-    <section class="quiz-next-steps">
-      <h3>下一步應該怎樣用結果</h3>
-      <ol>
-        <li>先把推薦科目打開，看完整 syllabus、評核方式和 3 條小知識，不要只看科名。</li>
-        <li>從推薦科目中選 2-3 個可能組合，記錄「喜歡原因」和「擔心位」。</li>
-        <li>如果已有目標 programme，再到計分器核對指定科目、weighting 和 admission score 風險。</li>
-      </ol>
-    </section>
-  `;
+          </div>
+          <div class="recommendation-grid">
+            ${recommendations
+              .map(
+                (subject) => `
+                  <article>
+                    <span>${h(subject.kla)}</span>
+                    <h3>${h(subject.name)}</h3>
+                    <p>${h(subject.scope)}</p>
+                    <div class="tag-row">${(subject.pathways || []).slice(0, 4).map((pathway) => `<span>${h(pathway)}</span>`).join("")}</div>
+                    <a href="./subjects.html">查看科目資料庫</a>
+                  </article>
+                `,
+              )
+              .join("")}
+          </div>
+        </section>
 
-  document.querySelector("#quizReset")?.addEventListener("click", () => {
-    const form = document.querySelector("#quizForm");
-    const intro = document.querySelector(".quiz-intro");
-    form?.reset();
-    quizState.currentIndex = 0;
-    quizState.answers = {};
-    if (intro) intro.hidden = true;
-    if (form) form.hidden = false;
-    result.hidden = true;
-    renderQuizQuestion();
-    document.querySelector("#quizProgress")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-  result.scrollIntoView({ behavior: "smooth", block: "start" });
+        <section class="quiz-next-steps database-card">
+          <h2>建議流程</h2>
+          <ol>
+            <li>保留這 3 個 meta tags，去計分器輸入 predicted / actual DSE 成績。</li>
+            <li>用分數先篩出可報讀課程，再回到科目資料庫查指定科目、能力要求和課程方向。</li>
+            <li>如果學士 / 副學位門檻未穩，查看本地後備；如果香港路徑不合適，再比較海外升學。</li>
+          </ol>
+        </section>
+      </section>
+    </div>
+  `;
+}
+
+function renderQuizResult(totals) {
+  const model = buildQuizResultModel(totals);
+  localStorage.setItem("dseAptitudeResult.v1", JSON.stringify(model));
+  window.location.href = "./result.html";
+}
+
+function renderStoredQuizResult() {
+  const container = document.querySelector("#quizResultPage");
+  if (!container) return;
+  try {
+    const model = JSON.parse(localStorage.getItem("dseAptitudeResult.v1") || "null");
+    renderQuizResultContent(container, model || {});
+  } catch {
+    renderQuizResultContent(container, {});
+  }
 }
 
 function updateQuizProgress() {
@@ -458,5 +523,7 @@ renderSubjects();
 renderInterestPlanner();
 renderOutcomeControls();
 renderOutcomes();
+renderVtcProgrammes();
 renderOverseasRoutes();
 renderQuiz();
+renderStoredQuizResult();
