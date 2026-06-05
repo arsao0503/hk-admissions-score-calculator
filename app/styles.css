@@ -3941,6 +3941,11 @@ button.primary-button,
   background: var(--surface-hover);
 }
 
+.site-header .secondary-link {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
 @media (max-width: 1040px) {
   .home-page .hero-product-shot {
     max-width: min(100%, 620px);
@@ -4381,6 +4386,9 @@ select:focus-visible,
   }
 
   .home-page .notion-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: 22px;
     padding: 34px 18px 22px;
   }
@@ -4782,5 +4790,240 @@ select:focus-visible,
 
   .home-page .source-rows article {
     padding-inline: 0;
+  }
+}
+
+/* DSE graduate repositioning: wider workspace, outcome gridlines, pathway library */
+:root {
+  --workspace-max: 1380px;
+}
+
+.app-header,
+.site-header,
+.site-header.compact,
+.app-shell,
+.page-shell,
+.home-page .notion-hero {
+  max-width: var(--workspace-max);
+}
+
+.page-shell,
+.app-shell {
+  width: min(100%, var(--workspace-max));
+  padding-inline: clamp(20px, 4.8vw, 88px);
+}
+
+.home-page .home-shell {
+  width: min(100%, 1120px);
+}
+
+.home-page .notion-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+}
+
+.home-page .notion-hero h1 {
+  max-width: 820px;
+  font-size: clamp(3.15rem, 6.4vw, 6.4rem);
+}
+
+.outcome-list {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.outcome-row {
+  grid-template-columns: minmax(220px, 0.92fr) 160px minmax(220px, 0.78fr) minmax(260px, 1fr);
+  gap: 0;
+  padding: 0;
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.outcome-row + .outcome-row {
+  border-top: 1px solid var(--line) !important;
+}
+
+.outcome-row > * {
+  min-height: 100%;
+  padding: 16px 18px;
+}
+
+.outcome-row > * + * {
+  border-left: 1px solid var(--line) !important;
+}
+
+.outcome-row strong {
+  display: flex;
+  align-items: center;
+  font-size: clamp(1.08rem, 1.4vw, 1.35rem);
+}
+
+.career-title-list {
+  display: grid;
+  gap: 7px;
+  align-content: start;
+}
+
+.career-title-list span {
+  display: block;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.pathway-grid,
+.overseas-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.pathway-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pathway-grid article,
+.overseas-card,
+.vtc-panel {
+  padding: 18px;
+  border-radius: 10px;
+  background: var(--surface-alt);
+}
+
+.pathway-grid span,
+.overseas-card dt,
+.vtc-panel h3 {
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.pathway-grid h3,
+.overseas-card h3,
+.vtc-panel h3 {
+  margin: 6px 0 8px;
+}
+
+.pathway-grid p,
+.overseas-card dd,
+.vtc-panel p,
+.vtc-panel li {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.vtc-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.72fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.vtc-panel ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.overseas-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.overseas-card dl {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.overseas-card dt {
+  margin-bottom: 4px;
+}
+
+.overseas-card dd {
+  margin: 0;
+}
+
+@media (max-width: 1040px) {
+  .outcome-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .outcome-row > * + * {
+    border-top: 1px solid var(--line) !important;
+    border-left: 0 !important;
+  }
+
+  .pathway-grid,
+  .vtc-panel,
+  .overseas-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell,
+  .app-shell {
+    padding-inline: 16px;
+  }
+
+  .home-page .notion-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(2.55rem, 11.6vw, 3.28rem);
+  }
+
+  .home-page .notion-hero .lede {
+    max-width: 34ch;
+  }
+
+  .outcome-row > * {
+    padding: 14px;
+  }
+
+  .home-page .notion-hero .hero-copy,
+  .home-page .notion-hero h1,
+  .home-page .notion-hero .lede {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    writing-mode: horizontal-tb;
+    white-space: normal;
+  }
+
+  .home-page .notion-hero h1,
+  .home-page .home-intro h2,
+  .home-page .source-table-head h2,
+  .home-page .workspace-primary h2,
+  .home-page .reference-copy h2,
+  .home-page .action-panel h3 {
+    word-break: keep-all;
+    overflow-wrap: normal;
+    line-break: strict;
+  }
+
+  .home-page .notion-hero h1 {
+    font-size: clamp(2.35rem, 11vw, 3.25rem);
+    line-height: 1.04;
+  }
+
+  .home-page .hero-product-shot {
+    order: 2;
+    margin-top: 0;
+  }
+
+  .home-page .notion-hero .lede {
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-break: auto;
+  }
+
+  .home-page .notion-hero .eyebrow,
+  .home-page .notion-hero .lede,
+  .home-page .notion-hero .hero-actions-row {
+    display: none;
   }
 }

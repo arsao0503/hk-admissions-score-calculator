@@ -148,7 +148,7 @@ function renderOutcomeControls() {
       修課程度
       <select id="outcomeLevel">
         <option value="">全部</option>
-        ${levels.map((level) => `<option value="${h(level)}" ${level === "Undergraduate" ? "selected" : ""}>${h(level)}</option>`).join("")}
+        ${levels.map((level) => `<option value="${h(level)}" ${level === "學士 Undergraduate" ? "selected" : ""}>${h(level)}</option>`).join("")}
       </select>
     </label>
   `;
@@ -158,7 +158,7 @@ function renderOutcomeControls() {
 function renderOutcomes() {
   const container = document.querySelector("#outcomeRows");
   if (!container) return;
-  const level = document.querySelector("#outcomeLevel")?.value || "Undergraduate";
+  const level = document.querySelector("#outcomeLevel")?.value || "學士 Undergraduate";
   const rows = portalData.salaryOutcomes
     .filter((row) => !level || row.level === level)
     .sort((a, b) => b.annualK - a.annualK);
@@ -173,10 +173,49 @@ function renderOutcomes() {
             <h2>${h(row.category)}</h2>
           </div>
           <strong>HK$${h(row.annualK)}k / 年</strong>
-          <p>約 HK$${h(monthly.toLocaleString("en-HK"))} / 月。資料層級：UGC broad academic programme category，只包括全職就業畢業生。</p>
+          <p>約 HK$${h(monthly.toLocaleString("en-HK"))} / 月。UGC broad academic programme category，只包括全職就業畢業生。</p>
+          <div class="career-title-list">
+            ${(row.careers || []).map((career) => `<span>${h(career)}</span>`).join("")}
+          </div>
         </article>
       `;
     })
+    .join("");
+}
+
+function renderOverseasRoutes() {
+  const container = document.querySelector("#overseasRoutes");
+  if (!container) return;
+  container.innerHTML = (portalData.overseasRoutes || [])
+    .map(
+      (route) => `
+        <article class="overseas-card">
+          <h3>${h(route.destination)}</h3>
+          <dl>
+            <div>
+              <dt>常見學府</dt>
+              <dd>${h(route.institutions)}</dd>
+            </div>
+            <div>
+              <dt>住宿安排</dt>
+              <dd>${h(route.accommodation)}</dd>
+            </div>
+            <div>
+              <dt>學費區間</dt>
+              <dd>${h(route.tuition)}</dd>
+            </div>
+            <div>
+              <dt>生活費區間</dt>
+              <dd>${h(route.living)}</dd>
+            </div>
+            <div>
+              <dt>適合情境</dt>
+              <dd>${h(route.note)}</dd>
+            </div>
+          </dl>
+        </article>
+      `,
+    )
     .join("");
 }
 
@@ -419,4 +458,5 @@ renderSubjects();
 renderInterestPlanner();
 renderOutcomeControls();
 renderOutcomes();
+renderOverseasRoutes();
 renderQuiz();

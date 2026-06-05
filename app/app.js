@@ -625,7 +625,7 @@ function eligibility() {
   return {
     tone: "warn",
     title: "可能未滿足常見基本門檻",
-    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；部分課程可能有替代安排或額外評核。", electiveWarning, duplicateWarning]
+    body: ["建議先核對中文、英文、數學、公民科和指定科目要求；如果未滿足副學位 / 高級文憑常見要求，可到升學路線頁查看 VTC Diploma of Foundation Studies，作為銜接 Higher Diploma 的本地後備。", electiveWarning, duplicateWarning]
       .filter(Boolean)
       .join(" "),
   };
