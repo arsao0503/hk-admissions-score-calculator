@@ -209,41 +209,73 @@ function renderVtcProgrammes() {
 function renderOverseasRoutes() {
   const container = document.querySelector("#overseasRoutes");
   if (!container) return;
-  const flags = { uk: "🇬🇧", au: "🇦🇺", ca: "🇨🇦", tw: "🇹🇼", cn: "🇨🇳" };
-  container.innerHTML = (portalData.overseasRoutes || [])
-    .map(
-      (route) => `
-        <article class="overseas-row">
-          <div class="country-visual" aria-hidden="true">
-            <span>${flags[route.visual] || "✈️"}</span>
-            <i>${h(route.destination.split(" ")[0])}</i>
-          </div>
-          <div class="overseas-content">
-            <header>
-              <p class="eyebrow">Destination</p>
-              <h2>${h(route.destination)}</h2>
-              <p>${h(route.note)}</p>
-            </header>
-            <div class="overseas-facts">
-              <section><h3>提供課程的學府</h3><p>${h(route.institutions)}</p></section>
-              <section><h3>招生 / 申請時間</h3><p>${h(route.intake)}</p></section>
-              <section><h3>簽證 / 入境準備</h3><p>${h(route.visa)}</p></section>
-              <section><h3>住宿安排</h3><p>${h(route.accommodation)}</p></section>
-              <section><h3>學費區間</h3><p>${h(route.tuition)}</p></section>
-              <section><h3>生活費區間</h3><p>${h(route.living)}</p></section>
-            </div>
-            <div class="timeline-card">
-              <h3>準備時間線</h3>
-              <ol>${(route.checklist || []).map((item) => `<li>${h(item)}</li>`).join("")}</ol>
-            </div>
-            <div class="source-links inline-sources">
-              ${(route.sources || []).map(([label, url]) => `<a href="${h(url)}" target="_blank" rel="noreferrer">${h(label)}</a>`).join("")}
-            </div>
-          </div>
-        </article>
-      `,
-    )
-    .join("");
+  const routes = portalData.overseasRoutes || [];
+  if (!routes.length) {
+    container.innerHTML = `<div class="empty-state">暫時未有海外升學資料。</div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="carousel-frame">
+      <div class="carousel-track">
+        ${routes
+          .map(
+            (route, index) => `
+              <article class="overseas-slide${index === 0 ? " is-active" : ""}" data-slide="${index}">
+                <figure class="country-landmark">
+                  <img src="${h(route.image)}" alt="${h(route.imageAlt)}" loading="${index === 0 ? "eager" : "lazy"}" />
+                  <figcaption>${h(route.landmark)}</figcaption>
+                </figure>
+                <div class="overseas-content">
+                  <header>
+                    <p class="eyebrow">Destination ${h(String(index + 1).padStart(2, "0"))}</p>
+                    <h2>${h(route.destination)}</h2>
+                    <p>${h(route.summary || route.note)}</p>
+                  </header>
+                  <ul class="country-highlights">
+                    ${(route.highlights || []).map((item) => `<li>${h(item)}</li>`).join("")}
+                  </ul>
+                  <div class="route-snapshot" aria-label="升學摘要">
+                    <span>${h(route.intake.split("。")[0])}</span>
+                    <span>${h(route.tuition.split("；")[0])}</span>
+                  </div>
+                  <div class="source-links inline-sources">
+                    ${(route.sources || []).slice(0, 3).map(([label, url]) => `<a href="${h(url)}" target="_blank" rel="noreferrer">${h(label)}</a>`).join("")}
+                  </div>
+                </div>
+              </article>
+            `,
+          )
+          .join("")}
+      </div>
+    </div>
+    <div class="carousel-controls" aria-label="海外升學目的地">
+      <button class="ghost-button carousel-prev" type="button" aria-label="上一個國家">上一個</button>
+      <div class="carousel-dots">
+        ${routes.map((route, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-carousel-dot="${index}" aria-label="查看 ${h(route.destination)}"></button>`).join("")}
+      </div>
+      <button class="ghost-button carousel-next" type="button" aria-label="下一個國家">下一個</button>
+    </div>
+  `;
+
+  let activeIndex = 0;
+  const track = container.querySelector(".carousel-track");
+  const slides = [...container.querySelectorAll(".overseas-slide")];
+  const dots = [...container.querySelectorAll("[data-carousel-dot]")];
+  const setActiveSlide = (nextIndex) => {
+    activeIndex = (nextIndex + routes.length) % routes.length;
+    track.style.transform = `translateX(-${activeIndex * 100}%)`;
+    slides.forEach((slide, index) => {
+      slide.classList.toggle("is-active", index === activeIndex);
+      slide.setAttribute("aria-hidden", index === activeIndex ? "false" : "true");
+    });
+    dots.forEach((dot, index) => dot.classList.toggle("is-active", index === activeIndex));
+  };
+
+  container.querySelector(".carousel-prev")?.addEventListener("click", () => setActiveSlide(activeIndex - 1));
+  container.querySelector(".carousel-next")?.addEventListener("click", () => setActiveSlide(activeIndex + 1));
+  dots.forEach((dot) => dot.addEventListener("click", () => setActiveSlide(Number(dot.dataset.carouselDot))));
+  setActiveSlide(0);
 }
 
 function scoreQuiz(answers) {
