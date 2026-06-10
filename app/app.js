@@ -726,8 +726,9 @@ function renderProgrammeGroupFilter() {
         group.id === "all"
           ? rows.length
           : rows.filter((programme) => programmeGroupId(programme) === group.id).length;
+      const isSelected = state.programmeGroup === group.id;
       return `
-        <button class="${state.programmeGroup === group.id ? "selected" : ""}" type="button" data-programme-group="${escapeHtml(group.id)}">
+        <button class="${isSelected ? "selected" : ""}" type="button" data-programme-group="${escapeHtml(group.id)}" aria-pressed="${isSelected ? "true" : "false"}">
           <strong>${escapeHtml(group.label)}</strong>
           <span>${escapeHtml(group.description)} · ${count}</span>
         </button>
