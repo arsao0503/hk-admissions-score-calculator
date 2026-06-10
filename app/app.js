@@ -272,19 +272,18 @@ function allSubjects() {
 }
 
 function renderSubjects() {
-  els.subjectsGrid.innerHTML = allSubjects()
-    .map((subject) => {
-      const options =
-        subject.type === "citizenship"
-          ? [
-              ["", "-"],
-              ["A", "達標"],
-              ["N", "未達標"],
-            ]
-          : gradeOptions;
+  const subjectControl = (subject) => {
+    const options =
+      subject.type === "citizenship"
+        ? [
+            ["", "-"],
+            ["A", "達標"],
+            ["N", "未達標"],
+          ]
+        : gradeOptions;
 
-      if (subject.type === "elective") {
-        return `
+    if (subject.type === "elective") {
+      return `
         <div class="subject-row elective">
           <div class="subject-row-title">
             <label>${subject.label}</label>
@@ -308,21 +307,39 @@ function renderSubjects() {
           </label>
         </div>
       `;
-      }
+    }
 
-      return `
-        <div class="subject-row">
-          <label for="${subject.key}">${subject.label}</label>
-          <select id="${subject.key}" data-subject="${subject.key}" aria-label="${subject.label}">
-            ${options
-              .map(([value, label]) => `<option value="${value}">${label}</option>`)
-              .join("")}
-          </select>
-        </div>
-      `;
-    })
-    .join("") +
-    `<button class="add-subject-button" id="addSubject" type="button" ${electiveKeys().length >= maxElectives ? "disabled" : ""}>新增學科</button>`;
+    return `
+      <div class="subject-row core">
+        <label for="${subject.key}">${subject.label}</label>
+        <select id="${subject.key}" data-subject="${subject.key}" aria-label="${subject.label}">
+          ${options
+            .map(([value, label]) => `<option value="${value}">${label}</option>`)
+            .join("")}
+        </select>
+      </div>
+    `;
+  };
+
+  const subjects = allSubjects();
+  const coreControls = subjects.filter((subject) => subject.type !== "elective").map(subjectControl).join("");
+  const electiveControls = subjects.filter((subject) => subject.type === "elective").map(subjectControl).join("");
+
+  els.subjectsGrid.innerHTML = `
+    <div class="core-subjects-grid">
+      ${coreControls}
+    </div>
+    <div class="elective-subjects-section">
+      <div class="elective-subjects-head">
+        <strong>選修科</strong>
+        <span>一科一個 column，可按需要新增至最多 ${maxElectives} 科。</span>
+      </div>
+      <div class="elective-columns">
+        ${electiveControls}
+      </div>
+    </div>
+    <button class="add-subject-button" id="addSubject" type="button" ${electiveKeys().length >= maxElectives ? "disabled" : ""}>新增學科</button>
+  `;
 
   els.subjectsGrid.querySelectorAll("[data-subject]").forEach((select) => {
     select.addEventListener("change", (event) => {
