@@ -601,6 +601,7 @@ dd { margin: 4px 0 0; color: var(--muted); }
   .section-head, .result-card header, .programme-card header { flex-direction: column; align-items: flex-start; }
   .score-bar-row { grid-template-columns: 1fr; gap: 6px; }
   .filters, .profile-tools, .hero-actions, .hero-actions-row, .result-actions { align-items: stretch; flex-direction: column; }
+  .filters > label, .filters > .filter-menu { flex: 0 0 auto; min-width: 0; }
   .filters label, .filters > .filter-menu, .profile-tools label, .profile-tools input, .primary-button, .ghost-button, .primary-link, .secondary-link { width: 100%; max-width: none; }
   .filter-panel { position: static; width: 100%; max-height: 280px; margin-top: 4px; box-shadow: var(--shadow-soft); }
   .programme-group-filter button { min-height: 58px; }
