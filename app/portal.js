@@ -4,6 +4,13 @@ const quizState = {
   answers: {},
 };
 
+const salaryLevelNotes = {
+  "副學位 Sub-degree": "副學位資料較適合看入職支援、技術助理和銜接前的市場基準。",
+  "學士 Undergraduate": "學士資料適合 DSE 畢業生比較本地大學主修方向的初步市場回報。",
+  "授課式研究院 Taught Postgraduate": "授課式研究院資料常受專業轉向、在職進修和資格要求影響，不應直接和學士起薪比較。",
+  "研究式研究院 Research Postgraduate": "研究式研究院資料較接近科研、學術和高技術職能，樣本結構和普通入職市場不同。",
+};
+
 function h(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -131,7 +138,7 @@ function renderInterestPlanner() {
           <span>${h(interest.label)}</span>
           <h3>${h(interest.description)}</h3>
           <div class="tag-row">
-            ${subjects.map((subject) => `<a href="./subjects.html">${h(subject.name)}</a>`).join("")}
+            ${subjects.map((subject) => `<span>${h(subject.name)}</span>`).join("")}
           </div>
         </article>
       `;
@@ -151,6 +158,7 @@ function renderOutcomeControls() {
         ${levels.map((level) => `<option value="${h(level)}" ${level === "學士 Undergraduate" ? "selected" : ""}>${h(level)}</option>`).join("")}
       </select>
     </label>
+    <div class="level-summary" id="outcomeLevelSummary" aria-live="polite"></div>
   `;
   container.addEventListener("change", renderOutcomes);
 }
@@ -158,16 +166,38 @@ function renderOutcomeControls() {
 function renderOutcomes() {
   const container = document.querySelector("#outcomeRows");
   if (!container) return;
-  const level = document.querySelector("#outcomeLevel")?.value || "學士 Undergraduate";
+  const level = document.querySelector("#outcomeLevel")?.value ?? "學士 Undergraduate";
   const rows = portalData.salaryOutcomes
     .filter((row) => !level || row.level === level)
     .sort((a, b) => b.annualK - a.annualK);
+  const summary = document.querySelector("#outcomeLevelSummary");
+
+  if (summary) {
+    if (!rows.length) {
+      summary.innerHTML = `<strong>未有資料</strong><span>這個修課程度暫時未接入薪資 rows。</span>`;
+    } else {
+      const values = rows.map((row) => row.annualK);
+      const low = Math.min(...values);
+      const high = Math.max(...values);
+      const average = Math.round(values.reduce((total, value) => total + value, 0) / values.length);
+      summary.innerHTML = `
+        <strong>${level ? h(level) : "全部修課程度"}</strong>
+        <span>${rows.length} 個範疇，年薪約 HK$${h(low)}k-HK$${h(high)}k，平均約 HK$${h(average)}k。</span>
+        <small>${h(level ? salaryLevelNotes[level] || "請同時看職銜、樣本範圍和來源限制。" : "全部模式會混合不同學歷層級，只適合快速掃描，不適合直接排序。")}</small>
+      `;
+    }
+  }
+
+  if (!rows.length) {
+    container.innerHTML = `<div class="empty-state">未有符合這個修課程度的薪資資料。</div>`;
+    return;
+  }
 
   container.innerHTML = rows
     .map((row) => {
       const monthly = Math.round((row.annualK * 1000) / 12 / 100) * 100;
       return `
-        <article class="outcome-row">
+        <article class="outcome-row" data-salary-level="${h(row.level)}">
           <div>
             <span>${h(row.year)} · ${h(row.level)}</span>
             <h2>${h(row.category)}</h2>
@@ -396,7 +426,7 @@ function renderQuizResultContent(container, model) {
                     <h3>${h(subject.name)}</h3>
                     <p>${h(subject.scope)}</p>
                     <div class="tag-row">${(subject.pathways || []).slice(0, 4).map((pathway) => `<span>${h(pathway)}</span>`).join("")}</div>
-                    <a href="./subjects.html">查看科目資料庫</a>
+                    <a href="./calculator.html">下一步計分</a>
                   </article>
                 `,
               )
@@ -408,7 +438,7 @@ function renderQuizResultContent(container, model) {
           <h2>建議流程</h2>
           <ol>
             <li>保留這 3 個 meta tags，去計分器輸入 predicted / actual DSE 成績。</li>
-            <li>用分數先篩出可報讀課程，再回到科目資料庫查指定科目、能力要求和課程方向。</li>
+            <li>用分數先篩出可報讀課程，再核對指定科目、能力要求和課程方向。</li>
             <li>如果學士 / 副學位門檻未穩，查看本地後備；如果香港路徑不合適，再比較海外升學。</li>
           </ol>
         </section>
